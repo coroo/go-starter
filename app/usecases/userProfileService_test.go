@@ -36,24 +36,24 @@ type repoMockUserProfile struct {
 	mock.Mock
 }
 
-func (r *repoMockUserProfile) SaveUserProfile(masterQuestion entity.UserProfile) (int, error) {
-	args := r.Called(masterQuestion)
+func (r *repoMockUserProfile) SaveUserProfile(userProfile entity.UserProfile) (int, error) {
+	args := r.Called(userProfile)
 	if args.Get(0) == nil {
 		return 0, nil
 	}
 	return 0, args.Get(0).(error)
 }
 
-func (r *repoMockUserProfile) UpdateUserProfile(masterQuestion entity.UserProfile) error {
-	args := r.Called(masterQuestion)
+func (r *repoMockUserProfile) UpdateUserProfile(userProfile entity.UserProfile) error {
+	args := r.Called(userProfile)
 	if args.Get(0) == nil {
 		return nil
 	}
 	return args.Get(0).(error)
 }
 
-func (r *repoMockUserProfile) DeleteUserProfile(masterQuestion entity.UserProfile) error {
-	args := r.Called(masterQuestion)
+func (r *repoMockUserProfile) DeleteUserProfile(userProfile entity.UserProfile) error {
+	args := r.Called(userProfile)
 	if args.Get(0) == nil {
 		return nil
 	}
@@ -68,19 +68,23 @@ func (r *repoMockUserProfile) GetUserProfile(ctx *gin.Context) []entity.UserProf
 	return dummyUserProfile
 }
 
+func (r *repoMockUserProfile) AuthUserProfile(userProfile entity.UserProfile) entity.UserProfile {
+	return dummyUserProfile[0]
+}
+
 func (r *repoMockUserProfile) CloseDB() {
 }
 
-type UserProfileDeliveryTestSuite struct {
+type UserProfileUsecaseTestSuite struct {
 	suite.Suite
 	repositoryTest repositories.UserProfileRepository
 }
 
-func (suite *UserProfileDeliveryTestSuite) SetupTest() {
+func (suite *UserProfileUsecaseTestSuite) SetupTest() {
 	suite.repositoryTest = new(repoMockUserProfile)
 }
 
-func (suite *UserProfileDeliveryTestSuite) TestBuildUserProfileService() {
+func (suite *UserProfileUsecaseTestSuite) TestBuildUserProfileService() {
 	resultTest := NewUserProfile(suite.repositoryTest)
 	var dummyImpl *UserProfileService
 	assert.NotNil(suite.T(), resultTest)
@@ -88,35 +92,35 @@ func (suite *UserProfileDeliveryTestSuite) TestBuildUserProfileService() {
 	// assert.NotNil(suite.T(), resultTest.(*UserProfileService).repositories)
 }
 
-func (suite *UserProfileDeliveryTestSuite) TestSaveUserProfileDelivery() {
+func (suite *UserProfileUsecaseTestSuite) TestSaveUserProfileUsecase() {
 	suite.repositoryTest.(*repoMockUserProfile).On("SaveUserProfile", dummyUserProfile[0]).Return(nil)
 	useCaseTest := NewUserProfile(suite.repositoryTest)
 	_, err := useCaseTest.SaveUserProfile(dummyUserProfile[0])
 	assert.Nil(suite.T(), err)
 }
 
-func (suite *UserProfileDeliveryTestSuite) TestUpdateUserProfileDelivery() {
+func (suite *UserProfileUsecaseTestSuite) TestUpdateUserProfileUsecase() {
 	suite.repositoryTest.(*repoMockUserProfile).On("UpdateUserProfile", dummyUserProfile[0]).Return(nil)
 	useCaseTest := NewUserProfile(suite.repositoryTest)
 	err := useCaseTest.UpdateUserProfile(dummyUserProfile[0])
 	assert.Nil(suite.T(), err)
 }
 
-func (suite *UserProfileDeliveryTestSuite) TestDeleteUserProfileDelivery() {
+func (suite *UserProfileUsecaseTestSuite) TestDeleteUserProfileUsecase() {
 	suite.repositoryTest.(*repoMockUserProfile).On("DeleteUserProfile", dummyUserProfile[0]).Return(nil)
 	useCaseTest := NewUserProfile(suite.repositoryTest)
 	err := useCaseTest.DeleteUserProfile(dummyUserProfile[0])
 	assert.Nil(suite.T(), err)
 }
 
-func (suite *UserProfileDeliveryTestSuite) TestGetAllUserProfiles() {
+func (suite *UserProfileUsecaseTestSuite) TestGetAllUserProfiles() {
 	suite.repositoryTest.(*repoMockUserProfile).On("GetAllUserProfiles", dummyUserProfile).Return(dummyUserProfile)
 	useCaseTest := NewUserProfile(suite.repositoryTest)
 	dummyUserProfile := useCaseTest.GetAllUserProfiles()
 	assert.Equal(suite.T(), dummyUserProfile, dummyUserProfile)
 }
 
-func (suite *UserProfileDeliveryTestSuite) TestGetUserProfile() {
+func (suite *UserProfileUsecaseTestSuite) TestGetUserProfile() {
 	suite.repositoryTest.(*repoMockUserProfile).On("GetUserProfile", dummyUserProfile[0].ID).Return(dummyUserProfile[0], nil)
 	useCaseTest := NewUserProfile(suite.repositoryTest)
 
@@ -127,6 +131,13 @@ func (suite *UserProfileDeliveryTestSuite) TestGetUserProfile() {
 	assert.Equal(suite.T(), dummyUserProfile[0], dummyUserProfile[0])
 }
 
-func TestUserProfileDeliveryTestSuite(t *testing.T) {
-	suite.Run(t, new(UserProfileDeliveryTestSuite))
+func (suite *UserProfileUsecaseTestSuite) TestAuthUserProfileUsecase() {
+	suite.repositoryTest.(*repoMockUserProfile).On("AuthUserProfile", dummyUserProfile[0]).Return(nil)
+	useCaseTest := NewUserProfile(suite.repositoryTest)
+	err := useCaseTest.AuthUserProfile(dummyUserProfile[0])
+	assert.NotNil(suite.T(), err)
+}
+
+func TestUserProfileUsecaseTestSuite(t *testing.T) {
+	suite.Run(t, new(UserProfileUsecaseTestSuite))
 }

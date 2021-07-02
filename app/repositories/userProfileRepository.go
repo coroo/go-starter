@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"time"
-	"fmt"
 
 	entity "github.com/coroo/go-lemonilo/app/entity"
 	"github.com/coroo/go-lemonilo/config"
@@ -19,6 +18,7 @@ type UserProfileRepository interface {
 	DeleteUserProfile(userProfile entity.UserProfile) error
 	GetAllUserProfiles() []entity.UserProfile
 	GetUserProfile(ctx *gin.Context) []entity.UserProfile
+	AuthUserProfile(userProfile entity.UserProfile) entity.UserProfile
 }
 
 type userProfileDatabase struct {
@@ -41,10 +41,7 @@ func (db *userProfileDatabase) SaveUserProfile(userProfile entity.UserProfile) (
 	if(err.Error != nil){
 		return 0, err.Error
 	}
-	// result := db.connection.Last(data)
-	fmt.Print(data.ID)
 	return data.ID, nil
-	// return nil
 }
 
 func (db *userProfileDatabase) UpdateUserProfile(userProfile entity.UserProfile) error {
@@ -69,4 +66,15 @@ func (db *userProfileDatabase) GetUserProfile(ctx *gin.Context) []entity.UserPro
 	var userProfile []entity.UserProfile
 	db.connection.Set("gorm:auto_preload", true).Where("id = ?", ctx.Param("id")).First(&userProfile)
 	return userProfile
+}
+
+func (db *userProfileDatabase) AuthUserProfile(userProfile entity.UserProfile) entity.UserProfile {
+	data := &userProfile
+	// err := db.connection.Create(data)
+	db.connection.Set("gorm:auto_preload", true).Where("email = ?", data.Email).First(&userProfile)
+	return userProfile
+	// if(err.Error != nil){
+	// 	return 0, err.Error
+	// }
+	// return data.ID, nil
 }

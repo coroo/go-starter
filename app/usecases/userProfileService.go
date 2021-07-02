@@ -1,6 +1,7 @@
 package usecases
 
 import (
+	"fmt"
 	entity "github.com/coroo/go-lemonilo/app/entity"
 	repositories "github.com/coroo/go-lemonilo/app/repositories"
 	// utils "github.com/coroo/go-lemonilo/app/utils"
@@ -15,6 +16,7 @@ type UserProfileService interface {
 	DeleteUserProfile(entity.UserProfile) error
 	GetAllUserProfiles() []entity.UserProfile
 	GetUserProfile(ctx *gin.Context) []entity.UserProfile
+	AuthUserProfile(entity.UserProfile) int
 }
 
 type userProfileService struct {
@@ -51,4 +53,13 @@ func (usecases *userProfileService) UpdateUserProfile(userProfile entity.UserPro
 
 func (usecases *userProfileService) DeleteUserProfile(userProfile entity.UserProfile) error {
 	return usecases.repositories.DeleteUserProfile(userProfile)
+}
+
+func (usecases *userProfileService) AuthUserProfile(userProfile entity.UserProfile) int {
+	data := usecases.repositories.AuthUserProfile(userProfile)
+	if(data.Password == userProfile.Password){
+		return 200
+	}
+	fmt.Println(data)
+	return 401
 }

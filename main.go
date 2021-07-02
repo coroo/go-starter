@@ -5,7 +5,8 @@ import (
 	"os"
 
 	"github.com/coroo/go-lemonilo/app/middlewares"
-	"github.com/coroo/go-lemonilo/app/routes"
+	// "github.com/coroo/go-lemonilo/app/routes"
+	"github.com/coroo/go-lemonilo/app/deliveries"
 	"github.com/coroo/go-lemonilo/docs"
 
 	"github.com/gin-gonic/gin"
@@ -42,7 +43,7 @@ func main() {
 	}
 
 	router := gin.Default()
-	router.Use(middlewares.BasicAuth(), middlewares.Logger())
+	// router.Use(middlewares.BasicAuth(), middlewares.Logger())
 
 	API_PREFIX := os.Getenv("API_PREFIX")
 
@@ -54,12 +55,12 @@ func main() {
 
 	userProfilesGroup := router.Group(API_PREFIX + "userProfile")
 	{
-		userProfilesGroup.GET("login", routes.UserProfilesDetail)
-		userProfilesGroup.GET("index", routes.UserProfilesIndex)
-		userProfilesGroup.GET("detail/:id", routes.UserProfilesDetail)
-		userProfilesGroup.POST("create", routes.UserProfileCreate)
-		userProfilesGroup.PUT("update", routes.UserProfileUpdate)
-		userProfilesGroup.DELETE("delete", routes.UserProfileDelete)
+		userProfilesGroup.POST("login", deliveries.AuthProfilesDetail)
+		userProfilesGroup.GET("index", deliveries.UserProfilesIndex)
+		userProfilesGroup.GET("detail/:id", middlewares.Auth, deliveries.UserProfilesDetail)
+		userProfilesGroup.POST("create", middlewares.Auth, deliveries.UserProfileCreate)
+		userProfilesGroup.PUT("update", deliveries.UserProfileUpdate)
+		userProfilesGroup.DELETE("delete", deliveries.UserProfileDelete)
 	}
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

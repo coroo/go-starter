@@ -1,28 +1,33 @@
 package deliveries
 
 import (
+	"bytes"
+	"encoding/json"
+	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
 
-	entity "github.com/coroo/go-lemonilo/app/entity"
-	usecases "github.com/coroo/go-lemonilo/app/usecases"
-	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
+
+	usecases "github.com/coroo/go-lemonilo/app/usecases"
+	entity "github.com/coroo/go-lemonilo/app/entity"
+
+	"github.com/gin-gonic/gin"
 )
 
 // dummy data
-var dummyUserProfile = []entity.UserProfile{
-	entity.UserProfile{
+var dummyUserProfile = []*entity.UserProfile{
+	&entity.UserProfile{
 		ID				: 1,
 		Email			: "kuncoro@test.com",
 		Password		: "password",
 		Address			: "jl lorem ipsum",
 		CreatedAt		: time.Now(),
 		UpdatedAt		: time.Now(),
-	}, entity.UserProfile{
+	}, &entity.UserProfile{
 		ID				: 2,
 		Email			: "kuncoro@test.com",
 		Password		: "password",
@@ -32,100 +37,139 @@ var dummyUserProfile = []entity.UserProfile{
 	},
 }
 
-type serviceMockUserProfile struct {
+type userProfileRouteMock struct {
 	mock.Mock
 }
 
-func (r *serviceMockUserProfile) SaveUserProfile(userProfile entity.UserProfile) (int, error) {
-	args := r.Called(userProfile)
-	if args.Get(0) == nil {
-		return 0, nil
-	}
-	return 0, args.Get(0).(error)
+func (s *userProfileRouteMock) SaveUserProfile(userProfile entity.UserProfile) (int, error) {
+	return 0, nil
 }
 
-func (r *serviceMockUserProfile) UpdateUserProfile(userProfile entity.UserProfile) error {
-	args := r.Called(userProfile)
-	if args.Get(0) == nil {
-		return nil
-	}
-	return args.Get(0).(error)
+func (s *userProfileRouteMock) UpdateUserProfile(userProfile entity.UserProfile) error {
+	return nil
 }
 
-func (r *serviceMockUserProfile) DeleteUserProfile(userProfile entity.UserProfile) error {
-	args := r.Called(userProfile)
-	if args.Get(0) == nil {
-		return nil
-	}
-	return args.Get(0).(error)
+func (s *userProfileRouteMock) DeleteUserProfile(userProfile entity.UserProfile) error {
+	return nil
 }
 
-func (r *serviceMockUserProfile) GetAllUserProfiles() []entity.UserProfile {
-	return dummyUserProfile
+func (s *userProfileRouteMock) GetAllUserProfiles() []entity.UserProfile {
+	return nil
 }
 
-func (r *serviceMockUserProfile) GetUserProfile(ctx *gin.Context) []entity.UserProfile {
-	return dummyUserProfile
+func (s *userProfileRouteMock) GetUserProfile(ctx *gin.Context) []entity.UserProfile {
+	return nil
 }
 
-type UserProfileDeliveryTestSuite struct {
+func (s *userProfileRouteMock) AuthUserProfile(userProfile entity.UserProfile) int {
+	return 200
+}
+
+type UserProfileRouteTestSuite struct {
 	suite.Suite
 	serviceTest usecases.UserProfileService
 }
 
-func (suite *UserProfileDeliveryTestSuite) SetupTest() {
-	suite.serviceTest = new(serviceMockUserProfile)
+func (suite *UserProfileRouteTestSuite) SetupTest() {
+	suite.serviceTest = new(userProfileRouteMock)
 }
 
-func (suite *UserProfileDeliveryTestSuite) TestBuildUserProfileController() {
-	resultTest := NewUserProfile(suite.serviceTest)
-	var dummyImpl *UserProfileController
-	assert.NotNil(suite.T(), resultTest)
-	assert.Implements(suite.T(), dummyImpl, resultTest)
-}
-
-func (suite *UserProfileDeliveryTestSuite) TestSaveUserProfileDelivery() {
-	suite.serviceTest.(*serviceMockUserProfile).On("SaveUserProfile", dummyUserProfile[0]).Return(nil)
-	deliveryTest := NewUserProfile(suite.serviceTest)
-	_, err := deliveryTest.Save(dummyUserProfile[0])
-	assert.Nil(suite.T(), err)
-}
-
-func (suite *UserProfileDeliveryTestSuite) TestUpdateUserProfileDelivery() {
-	suite.serviceTest.(*serviceMockUserProfile).On("UpdateUserProfile", dummyUserProfile[0]).Return(nil)
-	deliveryTest := NewUserProfile(suite.serviceTest)
-	err := deliveryTest.Update(dummyUserProfile[0])
-	assert.Nil(suite.T(), err)
-}
-
-func (suite *UserProfileDeliveryTestSuite) TestDeleteUserProfileDelivery() {
-	suite.serviceTest.(*serviceMockUserProfile).On("DeleteUserProfile", dummyUserProfile[0]).Return(nil)
-	deliveryTest := NewUserProfile(suite.serviceTest)
-	err := deliveryTest.Delete(dummyUserProfile[0])
-	assert.Nil(suite.T(), err)
-}
-
-func (suite *UserProfileDeliveryTestSuite) TestGetAllUserProfiles() {
-	suite.serviceTest.(*serviceMockUserProfile).On("GetAllUserProfiles", dummyUserProfile).Return(dummyUserProfile)
-	deliveryTest := NewUserProfile(suite.serviceTest)
-	dummyUserProfile := deliveryTest.GetAllUserProfiles()
-	assert.Equal(suite.T(), dummyUserProfile, dummyUserProfile)
-}
-
-func (suite *UserProfileDeliveryTestSuite) TestGetUserProfile() {
+func (suite *UserProfileRouteTestSuite) TestSaveDelivery() {
 	// Switch to test mode so you don't get such noisy output
 	gin.SetMode(gin.TestMode)
 
-	suite.serviceTest.(*serviceMockUserProfile).On("GetUserProfile", dummyUserProfile[0].ID).Return(dummyUserProfile[0], nil)
-	deliveryTest := NewUserProfile(suite.serviceTest)
+	w := httptest.NewRecorder()
 
-	c, _ := gin.CreateTestContext(httptest.NewRecorder())
-	c.Params = gin.Params{gin.Param{Key: "id", Value: "1"}}
-	dummyUserProfile := deliveryTest.GetUserProfile(c)
-	assert.NotNil(suite.T(), dummyUserProfile[0])
-	assert.Equal(suite.T(), dummyUserProfile[0], dummyUserProfile[0])
+	r := gin.Default()
+	r.POST("userProfile/create", UserProfileCreate)
+
+	jsonValue, _ := json.Marshal(dummyUserProfile[0])
+	req, _ := http.NewRequest(http.MethodPost, "/userProfile/create", bytes.NewBuffer(jsonValue))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	r.ServeHTTP(w, req)
+	assert.Equal(suite.T(), w.Code, 200)
 }
 
-func TestUserProfileDeliveryTestSuite(t *testing.T) {
-	suite.Run(t, new(UserProfileDeliveryTestSuite))
+func (suite *UserProfileRouteTestSuite) TestUpdateDelivery() {
+	// Switch to test mode so you don't get such noisy output
+	gin.SetMode(gin.TestMode)
+
+	w := httptest.NewRecorder()
+
+	r := gin.Default()
+	r.POST("userProfile/update", UserProfileUpdate)
+
+	jsonValue, _ := json.Marshal(dummyUserProfile[0])
+	req, _ := http.NewRequest(http.MethodPost, "/userProfile/update", bytes.NewBuffer(jsonValue))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	r.ServeHTTP(w, req)
+	assert.Equal(suite.T(), w.Code, 200)
+}
+
+func (suite *UserProfileRouteTestSuite) TestDeleteDelivery() {
+	// Switch to test mode so you don't get such noisy output
+	gin.SetMode(gin.TestMode)
+
+	w := httptest.NewRecorder()
+
+	r := gin.Default()
+	r.POST("userProfile/delete", UserProfileDelete)
+
+	jsonValue, _ := json.Marshal(dummyUserProfile[0])
+	req, _ := http.NewRequest(http.MethodPost, "/userProfile/delete", bytes.NewBuffer(jsonValue))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	r.ServeHTTP(w, req)
+	assert.Equal(suite.T(), w.Code, 200)
+}
+
+func (suite *UserProfileRouteTestSuite) TestUserProfilesIndexRoute() {
+	// Switch to test mode so you don't get such noisy output
+	gin.SetMode(gin.TestMode)
+
+	w := httptest.NewRecorder()
+
+	r := gin.Default()
+	r.GET("userProfile/index", UserProfilesIndex)
+	req, _ := http.NewRequest(http.MethodGet, "/userProfile/index", nil)
+
+	r.ServeHTTP(w, req)
+	assert.Equal(suite.T(), w.Code, 200)
+}
+
+func (suite *UserProfileRouteTestSuite) TestUserProfilesDetailRoute() {
+	// Switch to test mode so you don't get such noisy output
+	gin.SetMode(gin.TestMode)
+
+	w := httptest.NewRecorder()
+
+	r := gin.Default()
+	r.GET("userProfile/detail/1", UserProfilesDetail)
+	req, _ := http.NewRequest(http.MethodGet, "/userProfile/detail/1", nil)
+
+	r.ServeHTTP(w, req)
+	assert.Equal(suite.T(), w.Code, 200)
+}
+
+func (suite *UserProfileRouteTestSuite) TestAuthUserProfilesRoute() {
+	// Switch to test mode so you don't get such noisy output
+	gin.SetMode(gin.TestMode)
+
+	w := httptest.NewRecorder()
+
+	r := gin.Default()
+	r.POST("userProfile/login", UserProfileCreate)
+
+	jsonValue, _ := json.Marshal(dummyUserProfile[0])
+	req, _ := http.NewRequest(http.MethodPost, "/userProfile/login", bytes.NewBuffer(jsonValue))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	r.ServeHTTP(w, req)
+	assert.Equal(suite.T(), w.Code, 200)
+}
+
+func TestUserProfileRouteTestSuite(t *testing.T) {
+	suite.Run(t, new(UserProfileRouteTestSuite))
 }
