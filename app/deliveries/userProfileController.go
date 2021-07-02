@@ -2,7 +2,6 @@ package deliveries
 
 import (
 	"net/http"
-	"fmt"
 
 	// deliveries "github.com/coroo/go-lemonilo/app/deliveries"
 	entity "github.com/coroo/go-lemonilo/app/entity"
@@ -21,6 +20,7 @@ var (
 )
 
 // GetUserProfilesIndex godoc
+// @Param Authorization header string true "Bearer"
 // @Security basicAuth
 // @Summary Show all existing User_Profiles
 // @Description Get all existing User_Profiles
@@ -53,7 +53,6 @@ func UserProfilesDetail(c *gin.Context) {
 }
 
 // CreateUserProfiles godoc
-// @Param Authorization header string true "Bearer"
 // @Security basicAuth
 // @Summary Create new User_Profiles
 // @Description Create a new User_Profiles
@@ -61,7 +60,7 @@ func UserProfilesDetail(c *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param userProfile body entity.UserProfileCreate true "Create userProfile"
-// @Success 200 {object} dto.Response
+// @Success 200 {object} entity.UserProfile
 // @Failure 400 {object} dto.Response
 // @Failure 401 {object} dto.Response
 // @Router /userProfile/create [post]
@@ -123,7 +122,7 @@ func UserProfileDelete(c *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param userProfile body entity.UserProfileLogin true "Login userProfile"
-// @Success 200 {object} dto.Response
+// @Success 200 {object} dto.Token
 // @Failure 400 {object} dto.Response
 // @Failure 401 {object} dto.Response
 // @Router /userProfile/login [post]
@@ -144,7 +143,6 @@ func AuthProfilesDetail(c *gin.Context) {
 			"token": token,
 		})
 	} else {
-		fmt.Println("ME CATCH 2")
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "Terjadi kesalahan pada penulisan email atau password kamu, harap periksa kembali"})
 	}
 }

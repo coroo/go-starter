@@ -1,10 +1,9 @@
 package usecases
 
 import (
-	"fmt"
 	entity "github.com/coroo/go-lemonilo/app/entity"
 	repositories "github.com/coroo/go-lemonilo/app/repositories"
-	// utils "github.com/coroo/go-lemonilo/app/utils"
+	utils "github.com/coroo/go-lemonilo/app/utils"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -20,15 +19,10 @@ type UserProfileService interface {
 }
 
 type userProfileService struct {
-	// userProfile []entity.UserProfile
-	// models models.UserProfileModel
 	repositories repositories.UserProfileRepository
 }
 
 func NewUserProfile(userProfileRepository repositories.UserProfileRepository) UserProfileService {
-	// return &userProfileService{
-	// 	models: models,
-	// }
 	return &userProfileService{
 		repositories: userProfileRepository,
 	}
@@ -43,7 +37,7 @@ func (usecases *userProfileService) GetUserProfile(ctx *gin.Context) []entity.Us
 }
 
 func (usecases *userProfileService) SaveUserProfile(userProfile entity.UserProfile) (int, error) {
-	// userProfile.Password, _ = utils.HashPassword(userProfile.Password)
+	userProfile.Password, _ = utils.HashPassword(userProfile.Password)
 	return usecases.repositories.SaveUserProfile(userProfile)
 }
 
@@ -56,10 +50,10 @@ func (usecases *userProfileService) DeleteUserProfile(userProfile entity.UserPro
 }
 
 func (usecases *userProfileService) AuthUserProfile(userProfile entity.UserProfile) int {
-	data := usecases.repositories.AuthUserProfile(userProfile)
-	if(data.Password == userProfile.Password){
+	res := usecases.repositories.AuthUserProfile(userProfile)
+    match := utils.CheckPasswordHash(userProfile.Password, res.Password)
+	if(match){
 		return 200
 	}
-	fmt.Println(data)
 	return 401
 }

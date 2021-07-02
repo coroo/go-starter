@@ -56,9 +56,9 @@ func main() {
 	userProfilesGroup := router.Group(API_PREFIX + "userProfile")
 	{
 		userProfilesGroup.POST("login", deliveries.AuthProfilesDetail)
-		userProfilesGroup.GET("index", deliveries.UserProfilesIndex)
+		userProfilesGroup.GET("index", middlewares.Auth, deliveries.UserProfilesIndex)
 		userProfilesGroup.GET("detail/:id", middlewares.Auth, deliveries.UserProfilesDetail)
-		userProfilesGroup.POST("create", middlewares.Auth, deliveries.UserProfileCreate)
+		userProfilesGroup.POST("create", deliveries.UserProfileCreate)
 		userProfilesGroup.PUT("update", deliveries.UserProfileUpdate)
 		userProfilesGroup.DELETE("delete", deliveries.UserProfileDelete)
 	}
