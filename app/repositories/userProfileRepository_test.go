@@ -76,6 +76,16 @@ func (suite *UserProfileRepositoryTestSuite) TestGetUserProfile() {
 	assert.NotNil(suite.T(), userProfileDummy)
 }
 
+func (suite *UserProfileRepositoryTestSuite) TestAuthUserProfile() {
+	repoTest := NewUserProfileRepository()
+	dummyUserProfile := entity.UserProfile{
+		Email			: "kuncoro@test.com",
+		Password		: "password",
+	}
+	userProfileDummy := repoTest.AuthUserProfile(dummyUserProfile)
+	assert.NotNil(suite.T(), userProfileDummy)
+}
+
 func TestUserProfileRepositoryTestSuite(t *testing.T) {
 	suite.Run(t, new(UserProfileRepositoryTestSuite))
 }

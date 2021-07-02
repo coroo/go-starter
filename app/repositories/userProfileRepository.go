@@ -70,11 +70,6 @@ func (db *userProfileDatabase) GetUserProfile(ctx *gin.Context) []entity.UserPro
 
 func (db *userProfileDatabase) AuthUserProfile(userProfile entity.UserProfile) entity.UserProfile {
 	data := &userProfile
-	// err := db.connection.Create(data)
 	db.connection.Set("gorm:auto_preload", true).Where("email = ?", data.Email).First(&userProfile)
 	return userProfile
-	// if(err.Error != nil){
-	// 	return 0, err.Error
-	// }
-	// return data.ID, nil
 }

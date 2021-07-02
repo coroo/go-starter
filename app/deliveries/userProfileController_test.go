@@ -160,14 +160,39 @@ func (suite *UserProfileRouteTestSuite) TestAuthUserProfilesRoute() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.POST("userProfile/login", UserProfileCreate)
-
 	jsonValue, _ := json.Marshal(dummyUserProfile[0])
+	// PREPARATION
+	r.POST("userProfile/create", UserProfileCreate)
+
+	reqPrep, _ := http.NewRequest(http.MethodPost, "/userProfile/create", bytes.NewBuffer(jsonValue))
+	reqPrep.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	r.ServeHTTP(w, reqPrep)
+
+	// AFTER ANY PREPARATION
+	r.POST("userProfile/login", AuthProfilesDetail)
+
 	req, _ := http.NewRequest(http.MethodPost, "/userProfile/login", bytes.NewBuffer(jsonValue))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	r.ServeHTTP(w, req)
 	assert.Equal(suite.T(), w.Code, 200)
+}
+
+func (suite *UserProfileRouteTestSuite) NegativeTestAuthUserProfilesRoute() {
+	// Switch to test mode so you don't get such noisy output
+	gin.SetMode(gin.TestMode)
+
+	w := httptest.NewRecorder()
+
+	r := gin.Default()
+	jsonValue, _ := json.Marshal(dummyUserProfile[0])
+	r.POST("userProfile/login", AuthProfilesDetail)
+
+	req, _ := http.NewRequest(http.MethodPost, "/userProfile/login", bytes.NewBuffer(jsonValue))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	r.ServeHTTP(w, req)
+	assert.Equal(suite.T(), w.Code, 401)
 }
 
 func TestUserProfileRouteTestSuite(t *testing.T) {
