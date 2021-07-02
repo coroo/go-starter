@@ -2,9 +2,9 @@
 
 :bulb: Create a backend using GoLang for User Profile CRUD (UserID, Email, Address, Password) and Login Process (Username & Password) Process which follow SOLID Principles.
 
-> Please read [how the app work section](#mag-how-the-app-works-) for overall flow or view this video below:
+> Please read [how the app work section](###app-information) for overall flow or view this video below:
 
-<a href="https://www.loom.com/share/bf4b9e7e4c944158a5179c1837301bad" target="_blank"> <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/bf4b9e7e4c944158a5179c1837301bad-with-play.gif"> <p>Create your own dynamic form - Watch Video</p> </a>
+<a href="https://www.awesomescreenshot.com/video/4348716?key=92f7365360c36cd4aad5bbe5ebb4509f" target="_blank"> <img style="max-width:300px;" src="storage/assets/img/video.png"> <p>Tutorial Run This Application</p> </a>
 
 ### App Information
 This app use [gin](https://github.com/gin-gonic/gin) as a framework, [gorm](https://gorm.io/index.html) as an ORM and [go-swagger](https://github.com/go-swagger/go-swagger) as API documentation.
@@ -33,7 +33,7 @@ For make it easier to do configuration in Go Limonilo, I create shell script tha
 
 > If you need to run manual, please see [manual handling section](#wheelchair-manual-handling)
 
-![Go Limonilo Configuration](storage/assets/img/form-generator-run-sh.png)
+![Go Limonilo Configuration](storage/assets/img/run-sh.png)
 
 You need to use this step-by-step for running the app at the first time:
 ```go
@@ -57,13 +57,7 @@ redirect to this link --> /swagger/index.html
 ```
 e.g. http://localhost:3000/swagger/index.html
 
-![Go Limonilo Swagger Viewer](storage/assets/img/form-generator-swagger-view.png)
-
----
-
-# :mag: How The App Works ?
-
-![Go Limonilo Diagram](storage/assets/img/form-generator-diagram.png)
+![Go Limonilo Swagger Viewer](storage/assets/img/screenshot.png)
 
 ---
 
