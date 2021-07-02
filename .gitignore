@@ -1,0 +1,6 @@
+storage/logs/*
+.env
+test/.env
+test/tmp
+docs
+cp.out
