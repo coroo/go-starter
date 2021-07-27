@@ -131,8 +131,8 @@ func (suite *UserUsecaseTestSuite) TestGetUser() {
 func (suite *UserUsecaseTestSuite) TestAuthUserUsecase() {
 	suite.repositoryTest.(*repoMockUser).On("AuthUser", dummyUser[0]).Return(nil)
 	useCaseTest := NewUser(suite.repositoryTest)
-	err := useCaseTest.AuthUser(dummyUser[0])
-	assert.NotNil(suite.T(), err)
+	code, _ := useCaseTest.AuthUser(dummyUser[0])
+	assert.NotNil(suite.T(), code)
 }
 
 func TestUserUsecaseTestSuite(t *testing.T) {

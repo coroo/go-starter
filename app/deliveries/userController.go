@@ -3,7 +3,6 @@ package deliveries
 import (
 	"net/http"
     // "time"
-	"fmt"
 
 	utils "github.com/coroo/go-pawoon-user/app/utils"
 	entity "github.com/coroo/go-pawoon-user/app/entity"
@@ -186,7 +185,6 @@ func AuthLogin(c *gin.Context) {
 func AuthRefreshToken(c *gin.Context) {
 	var tokenRequest entity.TokenReqBody
 	c.ShouldBindJSON(&tokenRequest)
-	// stats, res := userService.AuthUser(tokenRequest)
 	token, _ := jwt.Parse(tokenRequest.RefreshToken, func(token *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -233,8 +231,6 @@ func AuthRefreshToken(c *gin.Context) {
 func AuthDestroyToken(c *gin.Context) {
 	var tokenRequest entity.Token
 	c.ShouldBindJSON(&tokenRequest)
-	// stats, res := userService.AuthUser(tokenRequest)
-	// err := utils.Logout(tokenRequest.AccessToken, token *jwt.Token)
 	token, _ := jwt.Parse(tokenRequest.RefreshToken, func(token *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {

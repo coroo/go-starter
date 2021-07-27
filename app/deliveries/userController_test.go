@@ -61,8 +61,8 @@ func (s *userRouteMock) GetUser(ctx *gin.Context) []entity.User {
 	return nil
 }
 
-func (s *userRouteMock) AuthUser(user entity.User) int {
-	return 200
+func (s *userRouteMock) AuthUser(user entity.User) (int, entity.User) {
+	return 200, user
 }
 
 type UserRouteTestSuite struct {
@@ -172,9 +172,28 @@ func (suite *UserRouteTestSuite) TestAuthUsersRoute() {
 	r.POST("user/login", AuthLogin)
 
 	req, _ := http.NewRequest(http.MethodPost, "/user/login", bytes.NewBuffer(jsonValue))
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")	
 	r.ServeHTTP(w, req)
+	assert.Equal(suite.T(), w.Code, 200)
+
+	loginValue, _ := json.Marshal(req.Body)
+	
+	// REFRESH
+	r.POST("user/refresh", AuthRefreshToken)
+
+	reqRefresh, _ := http.NewRequest(http.MethodPost, "/user/refresh", bytes.NewBuffer(loginValue))
+	reqRefresh.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	r.ServeHTTP(w, reqRefresh)
+	assert.Equal(suite.T(), w.Code, 200)
+		
+	// DESTROY
+	r.POST("user/logout", AuthDestroyToken)
+
+	reqLogout, _ := http.NewRequest(http.MethodPost, "/user/logout", bytes.NewBuffer(loginValue))
+	reqLogout.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	r.ServeHTTP(w, reqLogout)
 	assert.Equal(suite.T(), w.Code, 200)
 }
 
