@@ -1,10 +1,11 @@
 package dto
 
 type Credentials struct {
-	UserProfilename string `form:"userProfilename"`
+	Username string `form:"username"`
 	Password string `form:"password"`
 }
 
 type Token struct {
-	Token 	string `json:"token"`
+	AccessToken 	string `json:"access_token"`
+	RefreshToken 	string `json:"refresh_token"`
 }

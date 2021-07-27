@@ -4,10 +4,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/coroo/go-lemonilo/app/middlewares"
-	// "github.com/coroo/go-lemonilo/app/routes"
-	"github.com/coroo/go-lemonilo/app/deliveries"
-	"github.com/coroo/go-lemonilo/docs"
+	"github.com/coroo/go-pawoon-user/app/middlewares"
+	// "github.com/coroo/go-pawoon-user/app/routes"
+	"github.com/coroo/go-pawoon-user/app/deliveries"
+	"github.com/coroo/go-pawoon-user/docs"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -53,18 +53,20 @@ func main() {
 		})
 	})
 
-	userProfilesGroup := router.Group(API_PREFIX + "userProfile")
+	usersGroup := router.Group(API_PREFIX + "user")
 	{
-		userProfilesGroup.POST("login", deliveries.AuthProfilesDetail)
-		userProfilesGroup.GET("index", middlewares.Auth, deliveries.UserProfilesIndex)
-		userProfilesGroup.GET("detail/:id", middlewares.Auth, deliveries.UserProfilesDetail)
-		userProfilesGroup.POST("create", deliveries.UserProfileCreate)
-		userProfilesGroup.PUT("update", deliveries.UserProfileUpdate)
-		userProfilesGroup.DELETE("delete", deliveries.UserProfileDelete)
+		usersGroup.POST("login", deliveries.AuthLogin)
+		usersGroup.POST("refresh", deliveries.AuthRefreshToken)
+		usersGroup.POST("logout", deliveries.AuthDestroyToken)
+		usersGroup.GET("index", middlewares.Auth, deliveries.UsersIndex)
+		usersGroup.GET("detail/:id", middlewares.Auth, deliveries.UsersDetail)
+		usersGroup.POST("create", deliveries.UserCreate)
+		usersGroup.PUT("update", deliveries.UserUpdate)
+		usersGroup.DELETE("delete", deliveries.UserDelete)
 	}
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	router.Run(":3000")
+	router.Run(":"+os.Getenv("MAIN_PORT"))
 
 }

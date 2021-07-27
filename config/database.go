@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"gorm.io/gorm"
+	"gorm.io/driver/mysql"
+	"gorm.io/driver/sqlite"
 	_ "github.com/joho/godotenv/autoload"
 )
 
@@ -21,14 +21,19 @@ func ConnectDB() (c *gorm.DB, err error) {
 	DB_TEST := os.Getenv("DB_TEST")
 	DB_DETAIL := DB_USERNAME + ":" + DB_PASSWORD + "@tcp(" + DB_HOST + ":" + DB_PORT + ")/" + DB_DATABASE + "?parseTime=true"
 	if DB_CONNECTION == "" {
-		DB_CONNECTION = "sqlite3"
 		DB_DETAIL = DB_TEST
+		conn, err := gorm.Open(sqlite.Open(DB_DETAIL), &gorm.Config{})
+		if err != nil || conn == nil {
+			fmt.Println("Error connecting to DB")
+			fmt.Println(err.Error())
+		}
+		return conn, err
+	} else {
+		conn, err := gorm.Open(mysql.Open(DB_DETAIL), &gorm.Config{})
+		if err != nil || conn == nil {
+			fmt.Println("Error connecting to DB")
+			fmt.Println(err.Error())
+		}
+		return conn, err
 	}
-
-	conn, err := gorm.Open(DB_CONNECTION, DB_DETAIL)
-	if err != nil || conn == nil {
-		fmt.Println("Error connecting to DB")
-		fmt.Println(err.Error())
-	}
-	return conn, err
 }

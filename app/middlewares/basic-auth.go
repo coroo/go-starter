@@ -8,6 +8,7 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
+	utils "github.com/coroo/go-pawoon-user/app/utils"
 )
 
 func BasicAuth() gin.HandlerFunc {
@@ -26,8 +27,15 @@ func Auth(c *gin.Context) {
 		return []byte("secret"), nil
 	})
 
-	if token != nil && err == nil {
+	if token != nil && err == nil && !utils.IsInBlacklist(tokenString) {
 		fmt.Println("token verified")
+	} else if utils.IsInBlacklist(tokenString) {
+		result := gin.H{
+			"message": "not authorized",
+			"error":   "already logout",
+		}
+		c.JSON(http.StatusUnauthorized, result)
+		c.Abort()
 	} else {
 		result := gin.H{
 			"message": "not authorized",
