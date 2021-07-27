@@ -4,7 +4,7 @@
 
 > Please read [how the app work section](###app-information) for overall flow or view this video below:
 
-<a href="https://www.awesomescreenshot.com/video/4348716?key=92f7365360c36cd4aad5bbe5ebb4509f" target="_blank"> <img style="max-width:300px;" src="storage/assets/img/video.png"> <p>Tutorial Run This Application</p> </a>
+<a href="https://www.awesomescreenshot.com/video/4621611?key=ecadd9ebcff5a6a4b6284736e38e7b5c" target="_blank"> <img style="max-width:300px;" src="storage/assets/img/video.png"> <p>Tutorial Run This Application</p> </a>
 
 ### App Information
 This app use [gin](https://github.com/gin-gonic/gin) as a framework, [gorm](https://gorm.io/index.html) as an ORM and [go-swagger](https://github.com/go-swagger/go-swagger) as API documentation.
