@@ -4,7 +4,7 @@ main_question(){
     echo "1. Set Up Environment (.env)"
     echo "2. Do Unit Test"
     echo "3. Update Swagger Documentation"
-    echo "4. Run Go Pawoon\n"
+    echo "4. Run Go Starter\n"
     echo "0. Exit\n\n"
     echo "Your Answer:"
 }
@@ -15,7 +15,7 @@ bye_statement(){
 }
 
 echo "============================================"
-echo "Hi, `whoami`\n. Welcome to Go Pawoon Configuration"
+echo "Hi, `whoami`\n. Welcome to Go Starter Configuration"
 main_question
 while :
 do

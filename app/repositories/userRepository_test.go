@@ -4,8 +4,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	entity "github.com/coroo/go-pawoon-user/app/entity"
-	"github.com/coroo/go-pawoon-user/config"
+	entity "github.com/coroo/go-starter/app/entity"
+	"github.com/coroo/go-starter/config"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"github.com/stretchr/testify/assert"

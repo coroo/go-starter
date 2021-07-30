@@ -1,13 +1,13 @@
 package utils
 
 import (
-	redis "github.com/coroo/go-pawoon-user/config/redis"
+	redis "github.com/coroo/go-starter/config/redis"
 	jwt "github.com/dgrijalva/jwt-go"
 	"encoding/base64"
 	"os"
 	
-	entity "github.com/coroo/go-pawoon-user/app/entity"
-	dto "github.com/coroo/go-pawoon-user/app/dto"
+	entity "github.com/coroo/go-starter/app/entity"
+	dto "github.com/coroo/go-starter/app/dto"
 	"time"
 )
 

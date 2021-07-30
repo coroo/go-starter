@@ -1,4 +1,4 @@
-# Go Pawoon User
+# Go Starter User
 
 :bulb: Create a backend using GoLang for User Profile CRUD (UserID, Email, Name, Password) and Login Process (Username & Password) Process which follow SOLID Principles.
 
@@ -17,7 +17,7 @@ This app use [gin](https://github.com/gin-gonic/gin) as a framework, [gorm](http
 
 2. You need to have database and set it later in .env:
 ```
-Create your own form-generator database, lets call it `go-pawoon-user`
+Create your own form-generator database, lets call it `go-starter`
 ```
 
 ## Install Swagger Library
@@ -30,15 +30,15 @@ go get -u github.com/swaggo/swag/cmd/swag
 go run database/seed.go
 ```
 
-## Easy Setup & Run Go Pawoon User
-For make it easier to do configuration in Go Pawoon User, I create shell script that you can use by type:
+## Easy Setup & Run Go Starter User
+For make it easier to do configuration in Go Starter User, I create shell script that you can use by type:
 ```bash
 ./run.sh
 ```
 
 > If you need to run manual, please see [manual handling section](#wheelchair-manual-handling)
 
-![Go Pawoon User Configuration](storage/assets/img/run-sh.png)
+![Go Starter User Configuration](storage/assets/img/run-sh.png)
 
 You need to use this step-by-step for running the app at the first time:
 ```go
@@ -49,9 +49,9 @@ You need to use this step-by-step for running the app at the first time:
 // You can always running unit test by this feature
 
 3. Update Swagger Documentation 
-// You use swagger for maintain API restful documentation. You can check it later after running app (4. Run Go Pawoon User) and redirect to your app_link/swagger/index.html
+// You use swagger for maintain API restful documentation. You can check it later after running app (4. Run Go Starter User) and redirect to your app_link/swagger/index.html
 
-4. Run Go Pawoon User 
+4. Run Go Starter User 
 // This feature is used for running the app
 ```
 
@@ -62,7 +62,7 @@ redirect to this link --> /swagger/index.html
 ```
 e.g. http://localhost:3002/swagger/index.html
 
-![Go Pawoon User Swagger Viewer](storage/assets/img/screenshot.png)
+![Go Starter User Swagger Viewer](storage/assets/img/screenshot.png)
 
 ---
 

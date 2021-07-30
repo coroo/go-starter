@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"github.com/coroo/go-pawoon-user/app/utils"
+	"github.com/coroo/go-starter/app/utils"
 	"time"
 
 	"github.com/gin-gonic/gin"

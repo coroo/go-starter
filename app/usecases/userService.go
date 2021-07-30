@@ -1,9 +1,9 @@
 package usecases
 
 import (
-	entity "github.com/coroo/go-pawoon-user/app/entity"
-	repositories "github.com/coroo/go-pawoon-user/app/repositories"
-	utils "github.com/coroo/go-pawoon-user/app/utils"
+	entity "github.com/coroo/go-starter/app/entity"
+	repositories "github.com/coroo/go-starter/app/repositories"
+	utils "github.com/coroo/go-starter/app/utils"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"

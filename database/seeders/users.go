@@ -4,9 +4,9 @@ import (
 	"log"
 	"github.com/google/uuid"
 
-	utils "github.com/coroo/go-pawoon-user/app/utils"
-	"github.com/coroo/go-pawoon-user/config"
-	entity "github.com/coroo/go-pawoon-user/app/entity"
+	utils "github.com/coroo/go-starter/app/utils"
+	"github.com/coroo/go-starter/config"
+	entity "github.com/coroo/go-starter/app/entity"
 )
 
 var defaultPass, _ = utils.HashPassword("secretsekali")
@@ -15,13 +15,13 @@ var users = []entity.User{
 	entity.User{
 		Name	: "Kuncoro Wicaksono",
 		Uuid	: uuid.New().String(),
-		Email	: "kuncoro@gmail.com",
+		Email	: "coroo.wicaksono@gmail.com",
 		Password: defaultPass,
 	},
 	entity.User{
-		Name	: "Hafni Pawoon",
+		Name	: "Peter James",
 		Uuid	: uuid.New().String(),
-		Email	: "hafni@gmail.com",
+		Email	: "pjw.peterjames@gmail.com",
 		Password: defaultPass,
 	},
 }

@@ -8,7 +8,7 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
-	utils "github.com/coroo/go-pawoon-user/app/utils"
+	utils "github.com/coroo/go-starter/app/utils"
 )
 
 func BasicAuth() gin.HandlerFunc {

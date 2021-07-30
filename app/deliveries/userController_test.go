@@ -12,8 +12,8 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
 
-	usecases "github.com/coroo/go-pawoon-user/app/usecases"
-	entity "github.com/coroo/go-pawoon-user/app/entity"
+	usecases "github.com/coroo/go-starter/app/usecases"
+	entity "github.com/coroo/go-starter/app/entity"
 
 	"github.com/gin-gonic/gin"
 )

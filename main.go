@@ -4,10 +4,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/coroo/go-pawoon-user/app/middlewares"
-	// "github.com/coroo/go-pawoon-user/app/routes"
-	"github.com/coroo/go-pawoon-user/app/deliveries"
-	"github.com/coroo/go-pawoon-user/docs"
+	"github.com/coroo/go-starter/app/middlewares"
+	// "github.com/coroo/go-starter/app/routes"
+	"github.com/coroo/go-starter/app/deliveries"
+	"github.com/coroo/go-starter/docs"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"

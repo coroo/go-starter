@@ -4,10 +4,10 @@ import (
 	"net/http"
     // "time"
 
-	utils "github.com/coroo/go-pawoon-user/app/utils"
-	entity "github.com/coroo/go-pawoon-user/app/entity"
-	repositories "github.com/coroo/go-pawoon-user/app/repositories"
-	usecases "github.com/coroo/go-pawoon-user/app/usecases"
+	utils "github.com/coroo/go-starter/app/utils"
+	entity "github.com/coroo/go-starter/app/entity"
+	repositories "github.com/coroo/go-starter/app/repositories"
+	usecases "github.com/coroo/go-starter/app/usecases"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"

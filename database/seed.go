@@ -1,7 +1,7 @@
 package main
 
 import (
-	seeds "github.com/coroo/go-pawoon-user/database/seeders"
+	seeds "github.com/coroo/go-starter/database/seeders"
 )
 
 func main() {

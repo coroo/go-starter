@@ -1,4 +1,4 @@
-module github.com/coroo/go-pawoon-user
+module github.com/coroo/go-starter
 
 go 1.14
 

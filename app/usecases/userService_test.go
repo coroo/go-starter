@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	entity "github.com/coroo/go-pawoon-user/app/entity"
-	repositories "github.com/coroo/go-pawoon-user/app/repositories"
+	entity "github.com/coroo/go-starter/app/entity"
+	repositories "github.com/coroo/go-starter/app/repositories"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
