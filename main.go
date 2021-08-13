@@ -4,16 +4,18 @@ import (
 	"log"
 	"os"
 
-	"github.com/coroo/go-starter/app/middlewares"
+	// "github.com/coroo/go-starter/app/middlewares"
 	// "github.com/coroo/go-starter/app/routes"
-	"github.com/coroo/go-starter/app/deliveries"
+	// "github.com/coroo/go-starter/app/deliveries"
+	"github.com/coroo/go-starter/app/console"
+	"github.com/coroo/go-starter/routes"
 	"github.com/coroo/go-starter/docs"
 
-	"github.com/gin-gonic/gin"
+	// "github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/joho/godotenv/autoload"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
+	// swaggerFiles "github.com/swaggo/files"
+	// ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func main() {
@@ -42,31 +44,6 @@ func main() {
 		}
 	}
 
-	router := gin.Default()
-	// router.Use(middlewares.BasicAuth(), middlewares.Logger())
-
-	API_PREFIX := os.Getenv("API_PREFIX")
-
-	router.GET("/", func(c *gin.Context) {
-		c.JSON(404, gin.H{
-			"message": os.Getenv("MAIN_DESCRIPTION"),
-		})
-	})
-
-	usersGroup := router.Group(API_PREFIX + "user")
-	{
-		usersGroup.POST("login", deliveries.AuthLogin)
-		usersGroup.POST("refresh", deliveries.AuthRefreshToken)
-		usersGroup.POST("logout", deliveries.AuthDestroyToken)
-		usersGroup.GET("index", middlewares.Auth, deliveries.UsersIndex)
-		usersGroup.GET("detail/:id", middlewares.Auth, deliveries.UsersDetail)
-		usersGroup.POST("create", deliveries.UserCreate)
-		usersGroup.PUT("update", deliveries.UserUpdate)
-		usersGroup.DELETE("delete", deliveries.UserDelete)
-	}
-
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
-	router.Run(":"+os.Getenv("MAIN_PORT"))
-
+	routes.Api()
+	console.Schedule()
 }
