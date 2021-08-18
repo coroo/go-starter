@@ -7,7 +7,6 @@ import (
 	// "github.com/coroo/go-starter/app/middlewares"
 	// "github.com/coroo/go-starter/app/routes"
 	// "github.com/coroo/go-starter/app/deliveries"
-	"github.com/coroo/go-starter/app/console"
 	"github.com/coroo/go-starter/routes"
 	"github.com/coroo/go-starter/docs"
 
@@ -45,5 +44,4 @@ func main() {
 	}
 
 	routes.Api()
-	console.Schedule()
 }

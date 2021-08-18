@@ -7,8 +7,8 @@ import (
 	"time"
 
 	// "github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"gorm.io/gorm"
+	_ "gorm.io/driver/mysql"
 	_ "github.com/joho/godotenv/autoload"
 )
 
@@ -39,9 +39,13 @@ func NewOdsEtlPaymentRepository() OdsEtlPaymentRepository {
 }
 
 func (db *odsEtlPaymentDatabase) CloseDB() {
-	err := db.connection.Close()
+	sqlDB,err := db.connection.DB()
 	if err != nil {
-		panic("Failed to close odsEtlPaymentDatabase")
+		panic("Failed to close database")
+	}
+	closeDB := sqlDB.Close()
+	if closeDB != nil {
+		panic("Failed to close database")
 	}
 }
 

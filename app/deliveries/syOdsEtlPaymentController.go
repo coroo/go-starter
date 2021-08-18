@@ -16,6 +16,7 @@ var (
 )
 
 // GetAllSyOdsEtlPayments godoc
+// @Param Authorization header string true "Bearer"
 // @Security basicAuth
 // @Summary List existing syOdsEtlPayments
 // @Description Get all the existing syOdsEtlPayments
@@ -32,6 +33,7 @@ func GetAllSyOdsEtlPayments(ctx *gin.Context){
 }
 
 // GetSyOdsEtlPaymentsDetail godoc
+// @Param Authorization header string true "Bearer"
 // @Security basicAuth
 // @Summary Show an existing syOdsEtlPayments
 // @Description Get detail the existing syOdsEtlPayments
@@ -49,6 +51,7 @@ func GetSyOdsEtlPaymentByPolicyNumber(ctx *gin.Context){
 }
 
 // SyOdsOdsMapEtlLatestPayment godoc
+// @Param Authorization header string true "Bearer"
 // @Security basicAuth
 // @Summary List existing syOdsEtlPayments by Status
 // @Description Get all the existing syOdsEtlPayments by Status
@@ -66,6 +69,7 @@ func GetSyOdsEtlPaymentByStatus(ctx *gin.Context){
 }
 
 // SyOdsEtlPaymentsDailyByStatus godoc
+// @Param Authorization header string true "Bearer"
 // @Security basicAuth
 // @Summary List existing syOdsEtlPayments by Status and Updated by Today
 // @Description Get all the existing syOdsEtlPayments by Status and Updated by Today
@@ -83,6 +87,7 @@ func GetSyOdsEtlPaymentDailyByStatus(ctx *gin.Context){
 }
 
 // SyOdsEtlPaymentsCreate godoc
+// @Param Authorization header string true "Bearer"
 // @Security basicAuth
 // @Summary Create new syOdsEtlPayments
 // @Description Create a new syOdsEtlPayment
@@ -109,6 +114,7 @@ func CreateSyOdsEtlPayment(ctx *gin.Context){
 }
 
 // RemoveSyOdsEtlBeforeMap godoc
+// @Param Authorization header string true "Bearer"
 // @Security basicAuth
 // @Summary Truncate existing syOdsEtlPayments
 // @Description Remove all the existing syOdsEtlPayments

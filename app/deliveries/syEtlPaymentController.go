@@ -39,6 +39,7 @@ var (
 // }
 
 // GetAllSyEtlPayments godoc
+// @Param Authorization header string true "Bearer"
 // @Security basicAuth
 // @Summary List existing syEtlPayments
 // @Description Get all the existing syEtlPayments
@@ -54,6 +55,7 @@ func GetAllSyEtlPayments(ctx *gin.Context){
 }
 
 // SyOdsMapEtlLatestPayment godoc
+// @Param Authorization header string true "Bearer"
 // @Security basicAuth
 // @Summary Map existing syEtlPayments to syOdsEtlPayments
 // @Description Map all the existing syEtlPayments to syOdsEtlPayments
@@ -69,6 +71,7 @@ func SyOdsMapEtlLatestPayment(ctx *gin.Context){
 }
 
 // GetSyEtlPaymentsDetail godoc
+// @Param Authorization header string true "Bearer"
 // @Security basicAuth
 // @Summary Show an existing syEtlPayments
 // @Description Get detail the existing syEtlPayments
@@ -85,6 +88,7 @@ func GetSyEtlPayment(ctx *gin.Context){
 }
 
 // SyEtlPaymentsCreate godoc
+// @Param Authorization header string true "Bearer"
 // @Security basicAuth
 // @Summary Create new syEtlPayments
 // @Description Create a new syEtlPayment
@@ -111,6 +115,7 @@ func Save(ctx *gin.Context){
 }
 
 // RemoveSyEtlBeforeMap godoc
+// @Param Authorization header string true "Bearer"
 // @Security basicAuth
 // @Summary Truncate existing syEtlPayments
 // @Description Remove all the existing syEtlPayments

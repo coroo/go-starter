@@ -17,6 +17,7 @@ var (
 )
 
 // GetAllOdsEtlPayments godoc
+// @Param Authorization header string true "Bearer"
 // @Security basicAuth
 // @Summary List existing odsEtlPayments
 // @Description Get all the existing odsEtlPayments
@@ -32,6 +33,7 @@ func GetAllOdsEtlPayments(ctx *gin.Context){
 }
 
 // GetOdsEtlPaymentsDetail godoc
+// @Param Authorization header string true "Bearer"
 // @Security basicAuth
 // @Summary Show an existing odsEtlPayments
 // @Description Get detail the existing odsEtlPayments
@@ -48,6 +50,7 @@ func GetOdsEtlPayment(ctx *gin.Context){
 }
 
 // OdsEtlPaymentsCreate godoc
+// @Param Authorization header string true "Bearer"
 // @Security basicAuth
 // @Summary Create new odsEtlPayments
 // @Description Create a new odsEtlPayment
@@ -73,6 +76,7 @@ func CreateOdsEtlPayment(ctx *gin.Context){
 }
 
 // RemoveOdsEtlBeforeMap godoc
+// @Param Authorization header string true "Bearer"
 // @Security basicAuth
 // @Summary Truncate existing odsEtlPayments
 // @Description Remove all the existing odsEtlPayments

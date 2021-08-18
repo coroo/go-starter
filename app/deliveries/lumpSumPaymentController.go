@@ -17,7 +17,7 @@ var (
 )
 
 // GetAllLumpSumPayments godoc
-// @Security basicAuth
+// @Param Authorization header string true "Bearer"
 // @Summary List existing ods userInvoices
 // @Description Get all the existing ods userInvoices
 // @Tags odsLumpSumPayments

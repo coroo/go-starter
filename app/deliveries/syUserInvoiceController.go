@@ -32,6 +32,7 @@ var (
 
 // GetUserInvoices godoc
 // @Security basicAuth
+// @Param Authorization header string true "Bearer"
 // @Summary List existing superyou userInvoices
 // @Description Get all the existing superyou userInvoices
 // @Tags syUserInvoices
@@ -47,6 +48,7 @@ func GetAllSyUserInvoices(ctx gin.Context) {
 }
 
 // SyMapEtlLatestPayment godoc
+// @Param Authorization header string true "Bearer"
 // @Security basicAuth
 // @Summary Map existing superyou userInvoices to syEtlPayments
 // @Description Map all the existing superyou userInvoices to ODS syEtlPayments db
