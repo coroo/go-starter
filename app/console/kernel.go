@@ -13,7 +13,7 @@ func Schedule() {
 	c := cron.New()
 
 	// Truncate Sy ETL Payment & ODS ETL Payment : Runs At : 7:30
-	c.AddFunc("15 16 * * *", func() {
+	c.AddFunc("30 7 * * *", func() {
 		_, errSy := utils.CreateHttpRequest("GET", os.Getenv("MAIN_SCHEMES")+"://"+os.Getenv("MAIN_URL")+"/"+os.Getenv("API_PREFIX")+"syEtl/payment/remove-before-map", nil)
 		if errSy != nil {
 			utils.ErrorLogger(errSy)
@@ -30,7 +30,7 @@ func Schedule() {
 	})
 
 	// Mapping Ods ETL Payment : Runs At : 7:31
-	c.AddFunc("16 16 * * *", func() {
+	c.AddFunc("31 7 * * *", func() {
 		_, err := utils.CreateHttpRequest("GET", os.Getenv("MAIN_SCHEMES")+"://"+os.Getenv("MAIN_URL")+"/"+os.Getenv("API_PREFIX")+"lumpSumPayment/map-etl-payment", nil)
 		if err != nil {
 			utils.ErrorLogger(err)
@@ -40,7 +40,7 @@ func Schedule() {
 	})
 
 	// Mapping Sy ETL Payment & Truncate Sy Ods ETL Payment: Runs At : 7:33
-	c.AddFunc("18 16 * * *", func() {
+	c.AddFunc("33 7 * * *", func() {
 		_, err := utils.CreateHttpRequest("GET", os.Getenv("MAIN_SCHEMES")+"://"+os.Getenv("MAIN_URL")+"/"+os.Getenv("API_PREFIX")+"syUserInvoice/map-etl-payment", nil)
 		if err != nil {
 			utils.ErrorLogger(err)
@@ -57,7 +57,7 @@ func Schedule() {
 	})
 
 	// Mapping Sy Ods ETL Payment : Runs At : 7:35
-	c.AddFunc("20 16 * * *", func() {
+	c.AddFunc("35 7 * * *", func() {
 		_, err := utils.CreateHttpRequest("GET", os.Getenv("MAIN_SCHEMES")+"://"+os.Getenv("MAIN_URL")+"/"+os.Getenv("API_PREFIX")+"syEtl/payment/map-etl-payment", nil)
 		if err != nil {
 			utils.ErrorLogger(err)
