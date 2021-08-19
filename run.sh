@@ -101,7 +101,7 @@ do
 	3)
         { # try 1 // Running Swag
             echo
-            swag init
+            swag init --parseDependency --parseInternal
         } || { # catch 1
             { # try 2 // Running Swag
                 echo "============================================"
