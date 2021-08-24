@@ -6,7 +6,6 @@ import (
 	entity "github.com/coroo/go-starter/app/entity"
 	"github.com/coroo/go-starter/config"
 
-	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	_ "gorm.io/driver/mysql"
 	_ "github.com/joho/godotenv/autoload"
