@@ -46,7 +46,7 @@ func GetAllSyOdsEtlPayments(ctx *gin.Context){
 // @Router /syOdsEtl/payment/detail/{policyNumber} [get]
 func GetSyOdsEtlPaymentByPolicyNumber(ctx *gin.Context){
 	// return syOdsEtlPaymentService.GetSyOdsEtlPaymentByPolicyNumber(ctx)
-	syOdsEtlPayments :=  syOdsEtlPaymentService.GetSyOdsEtlPaymentByPolicyNumber(ctx)
+	syOdsEtlPayments :=  syOdsEtlPaymentService.GetSyOdsEtlPaymentByPolicyNumber(ctx.Param("policyNumber"))
 	ctx.JSON(http.StatusOK, gin.H{"data": syOdsEtlPayments})
 }
 

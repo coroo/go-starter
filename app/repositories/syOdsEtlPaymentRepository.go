@@ -5,7 +5,6 @@ import (
 	entity "github.com/coroo/go-starter/app/entity"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	_ "gorm.io/driver/mysql"
 	_ "github.com/joho/godotenv/autoload"
@@ -19,7 +18,7 @@ type SyOdsEtlPaymentRepository interface {
 	GetAllLatestGroupSyOdsEtlPayments() []entity.SyOdsEtlPayment
 	GetSyOdsEtlPaymentByStatus(status string) []entity.SyOdsEtlPayment
 	GetSyOdsEtlPaymentDailyByStatus(status string) []entity.SyOdsEtlPayment
-	GetSyOdsEtlPaymentByPolicyNumber(ctx *gin.Context) []entity.SyOdsEtlPayment
+	GetSyOdsEtlPaymentByPolicyNumber(policyNumber string) []entity.SyOdsEtlPayment
 	CancelOutstandingSyOdsEtlPayments() []entity.SyOdsEtlPayment
 	CloseDB()
 }
@@ -80,9 +79,9 @@ func (db *syOdsEtlPaymentDatabase) GetAllSyOdsEtlPayments() []entity.SyOdsEtlPay
 	return syOdsEtlPayments
 }
 
-func (db *syOdsEtlPaymentDatabase) GetSyOdsEtlPaymentByPolicyNumber(ctx *gin.Context) []entity.SyOdsEtlPayment {
+func (db *syOdsEtlPaymentDatabase) GetSyOdsEtlPaymentByPolicyNumber(policyNumber string) []entity.SyOdsEtlPayment {
 	var syOdsEtlPayment []entity.SyOdsEtlPayment
-	db.connection.Set("gorm:auto_preload", true).Where("policy_number = ?", ctx.Param("policyNumber")).Order("id desc").Find(&syOdsEtlPayment)
+	db.connection.Set("gorm:auto_preload", true).Where("policy_number = ?", policyNumber).Order("id desc").Find(&syOdsEtlPayment)
 	return syOdsEtlPayment
 }
 

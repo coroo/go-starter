@@ -11,7 +11,7 @@ import (
 type SyOdsEtlPaymentService interface {
 	CreateSyOdsEtlPayment(entity.SyOdsEtlPayment) error
 	GetAllSyOdsEtlPayments() []entity.SyOdsEtlPayment
-	GetSyOdsEtlPaymentByPolicyNumber(ctx *gin.Context) []entity.SyOdsEtlPayment
+	GetSyOdsEtlPaymentByPolicyNumber(policyNumber string) []entity.SyOdsEtlPayment
 	GetSyOdsEtlPaymentByStatus(status string) []entity.SyOdsEtlPayment
 	GetSyOdsEtlPaymentDailyByStatus(status string) []entity.SyOdsEtlPayment
 	CancelOutstandingSyOdsEtlPayments() []entity.SyOdsEtlPayment
@@ -31,10 +31,6 @@ func NewSyOdsEtlPaymentService(syOdsEtlPaymentRepository repositories.SyOdsEtlPa
 	}
 }
 
-// func (service *syOdsEtlPaymentService) GetAllSyOdsEtlPayments() []entity.SyOdsEtlPayment {
-// 	return service.repositories.GetAllSyOdsEtlPayments()
-// }
-
 func (service *syOdsEtlPaymentService) CreateSyOdsEtlPayment(syOdsEtlPayment entity.SyOdsEtlPayment) error {
 	service.repositories.CreateSyOdsEtlPayment(syOdsEtlPayment)
 	return nil
@@ -45,8 +41,8 @@ func (service *syOdsEtlPaymentService) GetAllSyOdsEtlPayments() []entity.SyOdsEt
 	return syOdsEtlPayment
 }
 
-func (service *syOdsEtlPaymentService) GetSyOdsEtlPaymentByPolicyNumber(ctx *gin.Context) []entity.SyOdsEtlPayment {
-	syOdsEtlPayment := service.repositories.GetSyOdsEtlPaymentByPolicyNumber(ctx)
+func (service *syOdsEtlPaymentService) GetSyOdsEtlPaymentByPolicyNumber(policyNumber string) []entity.SyOdsEtlPayment {
+	syOdsEtlPayment := service.repositories.GetSyOdsEtlPaymentByPolicyNumber(policyNumber)
 	return syOdsEtlPayment
 }
 
@@ -64,13 +60,3 @@ func (service *syOdsEtlPaymentService) CancelOutstandingSyOdsEtlPayments() []ent
 	syOdsEtlPayment := service.repositories.CancelOutstandingSyOdsEtlPayments()
 	return syOdsEtlPayment
 }
-
-// func (service *syOdsEtlPaymentService) GetAllSyOdsEtlPayments(ctx *gin.Context) ([]entity.SyOdsEtlPayment, error) {
-// 	db, _ := ctx.Get("db")
-// 	conn := db.(sql.DB)
-// 	syOdsEtlPayments, err := models.GetAllSyOdsEtlPayments(&conn)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 	}
-// 	return syOdsEtlPayments, err
-// }

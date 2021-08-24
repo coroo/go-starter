@@ -50,7 +50,7 @@ func UsersIndex(c *gin.Context) {
 // @Failure 401 {object} dto.Response
 // @Router /user/detail/{id} [get]
 func UsersDetail(c *gin.Context) {
-	user := userService.GetUser(c)
+	user := userService.GetUser(c.Param("id"))
 	c.JSON(http.StatusOK, gin.H{"data": user})
 }
 

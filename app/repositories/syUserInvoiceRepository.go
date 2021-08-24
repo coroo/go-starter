@@ -4,7 +4,6 @@ import (
 	"github.com/coroo/go-starter/config"
 	entity "github.com/coroo/go-starter/app/entity"
 
-	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	_ "gorm.io/driver/mysql"
 	_ "github.com/joho/godotenv/autoload"
@@ -15,8 +14,8 @@ type SyUserInvoiceRepository interface {
 	Update(syUserInvoice entity.SyUserInvoice)
 	Delete(syUserInvoice entity.SyUserInvoice)
 	GetAllPaidUserInvoices() []entity.SyUserInvoice
-	GetUserInvoice(ctx *gin.Context) []entity.SyUserInvoice
-	// CloseDB()
+	GetUserInvoice(id string) []entity.SyUserInvoice
+	CloseDB()
 }
 
 type syUserInvoiceDatabase struct {
@@ -64,8 +63,8 @@ func (db *syUserInvoiceDatabase) GetAllPaidUserInvoices() []entity.SyUserInvoice
 	return syUserInvoices
 }
 
-func (db *syUserInvoiceDatabase) GetUserInvoice(ctx *gin.Context) []entity.SyUserInvoice {
+func (db *syUserInvoiceDatabase) GetUserInvoice(id string) []entity.SyUserInvoice {
 	var syUserInvoice []entity.SyUserInvoice
-	db.connection.Set("gorm:auto_preload", true).First(&syUserInvoice, ctx.Param("id"))
+	db.connection.Set("gorm:auto_preload", true).First(&syUserInvoice, id)
 	return syUserInvoice
 }

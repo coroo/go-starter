@@ -29,10 +29,6 @@ func NewOdsEtlPaymentService(odsEtlPaymentRepository repositories.OdsEtlPaymentR
 	}
 }
 
-// func (service *odsEtlPaymentService) GetAllOdsEtlPayments() []entity.OdsEtlPayment {
-// 	return service.repository.GetAllOdsEtlPayments()
-// }
-
 func (service *odsEtlPaymentService) CreateOdsEtlPayment(odsEtlPayment entity.OdsEtlPayment) error {
 	mappingData := odsEtlPayment
 	if mappingData.PaymentMethod == "Credit Card" {
@@ -56,13 +52,3 @@ func (service *odsEtlPaymentService) TruncateTableOdsEtlPayments() error {
 	service.repository.TruncateTableOdsEtlPayments()
 	return nil
 }
-
-// func (service *odsEtlPaymentService) GetAllOdsEtlPayments(ctx *gin.Context) ([]entity.OdsEtlPayment, error) {
-// 	db, _ := ctx.Get("db")
-// 	conn := db.(sql.DB)
-// 	odsEtlPayments, err := models.GetAllOdsEtlPayments(&conn)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 	}
-// 	return odsEtlPayments, err
-// }

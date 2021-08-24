@@ -41,7 +41,7 @@ var (
 // @Success 200 {array} entity.SyUserInvoice
 // @Failure 401 {object} dto.Response
 // @Router /syUserInvoice/index [get]
-func GetAllSyUserInvoices(ctx gin.Context) {
+func GetAllSyUserInvoices(ctx *gin.Context) {
 	// return c.service.GetAllSyUserInvoices()
 	syUserInvoices :=  syUserInvoiceService.GetAllSyUserInvoices()
 	ctx.JSON(http.StatusOK, gin.H{"data": syUserInvoices})
@@ -58,7 +58,7 @@ func GetAllSyUserInvoices(ctx gin.Context) {
 // @Success 200 {array} entity.SyUserInvoice
 // @Failure 401 {object} dto.Response
 // @Router /syUserInvoice/map-etl-payment [get]
-func SyMapEtlLatestPayment(ctx gin.Context) {
+func SyMapEtlLatestPayment(ctx *gin.Context) {
 	// return c.service.SyMapEtlLatestPayment()
 	syUserInvoices :=  syUserInvoiceService.SyMapEtlLatestPayment()
 	ctx.JSON(http.StatusOK, gin.H{"data": syUserInvoices})
