@@ -60,7 +60,7 @@ func (r *repoMockUser) GetAllUsers() []entity.User {
 	return dummyUser
 }
 
-func (r *repoMockUser) GetUser(ctx *gin.Context) []entity.User {
+func (r *repoMockUser) GetUser(id string) []entity.User {
 	return dummyUser
 }
 
@@ -123,7 +123,7 @@ func (suite *UserUsecaseTestSuite) TestGetUser() {
 
 	c, _ := gin.CreateTestContext(httptest.NewRecorder())
 	c.Params = gin.Params{gin.Param{Key: "id", Value: "1"}}
-	dummyUser := useCaseTest.GetUser(c)
+	dummyUser := useCaseTest.GetUser(c.Param("id"))
 	assert.NotNil(suite.T(), dummyUser[0])
 	assert.Equal(suite.T(), dummyUser[0], dummyUser[0])
 }

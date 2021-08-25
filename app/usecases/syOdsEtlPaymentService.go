@@ -3,8 +3,7 @@ package usecases
 import (
 	entity "github.com/coroo/go-starter/app/entity"
 	repositories "github.com/coroo/go-starter/app/repositories"
-
-	"github.com/gin-gonic/gin"
+	
 	_ "github.com/go-sql-driver/mysql"
 )
 

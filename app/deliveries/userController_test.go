@@ -57,7 +57,7 @@ func (s *userRouteMock) GetAllUsers() []entity.User {
 	return nil
 }
 
-func (s *userRouteMock) GetUser(ctx *gin.Context) []entity.User {
+func (s *userRouteMock) GetUser(id string) []entity.User {
 	return nil
 }
 

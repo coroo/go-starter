@@ -13,7 +13,7 @@ import (
 )
 
 type SyEtlPaymentService interface {
-	Save(entity.SyEtlPayment) error
+	CreateSyEtlPayment(entity.SyEtlPayment) error
 	SyOdsMapEtlLatestPayment() []entity.SyEtlPayment
 	GetAllSyEtlPayments() []entity.SyEtlPayment
 	GetSyEtlPayment(policyNumber string) []entity.SyEtlPayment
@@ -31,8 +31,8 @@ func NewSyEtlPaymentService(syEtlPaymentRepository repositories.SyEtlPaymentRepo
 	}
 }
 
-func (service *syEtlPaymentService) Save(syEtlPayment entity.SyEtlPayment) error {
-	service.repositories.Save(syEtlPayment)
+func (service *syEtlPaymentService) CreateSyEtlPayment(syEtlPayment entity.SyEtlPayment) error {
+	service.repositories.CreateSyEtlPayment(syEtlPayment)
 	return nil
 }
 

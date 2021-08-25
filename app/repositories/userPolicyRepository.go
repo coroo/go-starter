@@ -12,9 +12,9 @@ import (
 )
 
 type UserPolicyRepository interface {
-	Save(userPolicy entity.UserPolicy)
-	Update(userPolicy entity.UserPolicy)
-	Delete(userPolicy entity.UserPolicy)
+	SaveUserPolicy(userPolicy entity.UserPolicy)
+	UpdateUserPolicy(userPolicy entity.UserPolicy)
+	DeleteUserPolicy(userPolicy entity.UserPolicy)
 	GetAllUserPolicies(is_overdue string) []entity.UserPolicy
 	GetUserPolicy(id string) []entity.UserPolicy
 	CloseDB()
@@ -47,15 +47,15 @@ func (db *userPolicyDatabase) CloseDB() {
 	}
 }
 
-func (db *userPolicyDatabase) Save(userPolicy entity.UserPolicy) {
+func (db *userPolicyDatabase) SaveUserPolicy(userPolicy entity.UserPolicy) {
 	db.connection.Create(&userPolicy)
 }
 
-func (db *userPolicyDatabase) Update(userPolicy entity.UserPolicy) {
+func (db *userPolicyDatabase) UpdateUserPolicy(userPolicy entity.UserPolicy) {
 	db.connection.Save(&userPolicy)
 }
 
-func (db *userPolicyDatabase) Delete(userPolicy entity.UserPolicy) {
+func (db *userPolicyDatabase) DeleteUserPolicy(userPolicy entity.UserPolicy) {
 	db.connection.Delete(&userPolicy)
 }
 

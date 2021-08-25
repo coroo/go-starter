@@ -13,9 +13,9 @@ import (
 )
 
 type SyEtlPaymentRepository interface {
-	Save(syEtlPayment entity.SyEtlPayment)
-	Update(syEtlPayment entity.SyEtlPayment)
-	Delete(syEtlPayment entity.SyEtlPayment)
+	CreateSyEtlPayment(syEtlPayment entity.SyEtlPayment)
+	UpdateSyEtlPayment(syEtlPayment entity.SyEtlPayment)
+	DeleteSyEtlPayment(syEtlPayment entity.SyEtlPayment)
 	GetAllSyEtlPayments() []entity.SyEtlPayment
 	GetAllLatestGroupSyEtlPayments() []entity.SyEtlPayment
 	GetSyEtlPayment(policyNumber string) []entity.SyEtlPayment
@@ -50,7 +50,7 @@ func (db *syEtlPaymentDatabase) CloseDB() {
 	}
 }
 
-func (db *syEtlPaymentDatabase) Save(syEtlPayment entity.SyEtlPayment) {
+func (db *syEtlPaymentDatabase) CreateSyEtlPayment(syEtlPayment entity.SyEtlPayment) {
 	data := &syEtlPayment
 	data.UpdatedAt = time.Now()
 	if err := db.connection.Where("policy_number = ?", data.PolicyNumber).First(&data).Error; err != nil {
@@ -58,11 +58,11 @@ func (db *syEtlPaymentDatabase) Save(syEtlPayment entity.SyEtlPayment) {
 	}
 }
 
-func (db *syEtlPaymentDatabase) Update(syEtlPayment entity.SyEtlPayment) {
+func (db *syEtlPaymentDatabase) UpdateSyEtlPayment(syEtlPayment entity.SyEtlPayment) {
 	db.connection.Save(&syEtlPayment)
 }
 
-func (db *syEtlPaymentDatabase) Delete(syEtlPayment entity.SyEtlPayment) {
+func (db *syEtlPaymentDatabase) DeleteSyEtlPayment(syEtlPayment entity.SyEtlPayment) {
 	db.connection.Delete(&syEtlPayment)
 }
 

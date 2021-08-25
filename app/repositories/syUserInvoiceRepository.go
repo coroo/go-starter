@@ -10,9 +10,9 @@ import (
 )
 
 type SyUserInvoiceRepository interface {
-	Save(syUserInvoice entity.SyUserInvoice)
-	Update(syUserInvoice entity.SyUserInvoice)
-	Delete(syUserInvoice entity.SyUserInvoice)
+	SaveSyUserInvoice(syUserInvoice entity.SyUserInvoice)
+	UpdateSyUserInvoice(syUserInvoice entity.SyUserInvoice)
+	DeleteSyUserInvoice(syUserInvoice entity.SyUserInvoice)
 	GetAllPaidUserInvoices() []entity.SyUserInvoice
 	GetUserInvoice(id string) []entity.SyUserInvoice
 	CloseDB()
@@ -45,15 +45,15 @@ func (db *syUserInvoiceDatabase) CloseDB() {
 	}
 }
 
-func (db *syUserInvoiceDatabase) Save(syUserInvoice entity.SyUserInvoice) {
+func (db *syUserInvoiceDatabase) SaveSyUserInvoice(syUserInvoice entity.SyUserInvoice) {
 	db.connection.Create(&syUserInvoice)
 }
 
-func (db *syUserInvoiceDatabase) Update(syUserInvoice entity.SyUserInvoice) {
+func (db *syUserInvoiceDatabase) UpdateSyUserInvoice(syUserInvoice entity.SyUserInvoice) {
 	db.connection.Save(&syUserInvoice)
 }
 
-func (db *syUserInvoiceDatabase) Delete(syUserInvoice entity.SyUserInvoice) {
+func (db *syUserInvoiceDatabase) DeleteSyUserInvoice(syUserInvoice entity.SyUserInvoice) {
 	db.connection.Delete(&syUserInvoice)
 }
 

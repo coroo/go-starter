@@ -72,7 +72,7 @@ func (suite *UserRepositoryTestSuite) TestGetUser() {
 	c.Params = gin.Params{gin.Param{Key: "id", Value: "1"}}
 
 	repoTest := NewUserRepository()
-	userDummy := repoTest.GetUser(c)
+	userDummy := repoTest.GetUser(c.Param("id"))
 	assert.NotNil(suite.T(), userDummy)
 }
 

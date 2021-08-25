@@ -61,7 +61,7 @@ func Api() {
 		syETLGroup.GET("payment/index", deliveries.GetAllSyEtlPayments)
 		syETLGroup.GET("payment/map-etl-payment", deliveries.SyOdsMapEtlLatestPayment)
 		syETLGroup.GET("payment/detail/:policyNumber", deliveries.GetSyEtlPayment)
-		syETLGroup.POST("payment/create", deliveries.Save)
+		syETLGroup.POST("payment/create", deliveries.CreateSyEtlPayment)
 		syETLGroup.GET("payment/remove-before-map", deliveries.TruncateTableSyEtlPayments)
 	}
 

@@ -100,7 +100,7 @@ func GetSyEtlPayment(ctx *gin.Context){
 // @Failure 400 {object} dto.Response
 // @Failure 401 {object} dto.Response
 // @Router /syEtl/payment/create [post]
-func Save(ctx *gin.Context){
+func CreateSyEtlPayment(ctx *gin.Context){
 	var syEtlPayment entity.SyEtlPayment
 	err := ctx.ShouldBindJSON(&syEtlPayment)
 	if err != nil {
@@ -110,7 +110,7 @@ func Save(ctx *gin.Context){
 	// if err != nil {
 	// 	return err
 	// }
-	syEtlPaymentService.Save(syEtlPayment)
+	syEtlPaymentService.CreateSyEtlPayment(syEtlPayment)
 	ctx.JSON(http.StatusOK, syEtlPayment)
 }
 

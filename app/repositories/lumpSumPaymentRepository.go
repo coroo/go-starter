@@ -11,9 +11,9 @@ import (
 )
 
 type LumpSumPaymentRepository interface {
-	Save(lumpSumPayment entity.LumpSumPayment)
-	Update(lumpSumPayment entity.LumpSumPayment)
-	Delete(lumpSumPayment entity.LumpSumPayment)
+	CreateLumSumPayment(lumpSumPayment entity.LumpSumPayment)
+	UpdateLumSumPayment(lumpSumPayment entity.LumpSumPayment)
+	DeleteLumSumPayment(lumpSumPayment entity.LumpSumPayment)
 	GetAllLumpSumPayments() []entity.LumpSumPayment
 	GetAllLatestGroupLumpSumPayments() []entity.LumpSumPayment
 	GetLumpSumPayment(policyNumber string) []entity.LumpSumPayment
@@ -48,18 +48,18 @@ func (db *database) CloseDB() {
 	}
 }
 
-func (db *database) Save(lumpSumPayment entity.LumpSumPayment) {
+func (db *database) CreateLumSumPayment(lumpSumPayment entity.LumpSumPayment) {
 	if err := db.connection.Where("policy_number = ?", &lumpSumPayment.PolicyNumber).First(&lumpSumPayment).Error; err != nil {
 		// error handling...
 		db.connection.Create(&lumpSumPayment)
 	}
 }
 
-func (db *database) Update(lumpSumPayment entity.LumpSumPayment) {
+func (db *database) UpdateLumSumPayment(lumpSumPayment entity.LumpSumPayment) {
 	db.connection.Save(&lumpSumPayment)
 }
 
-func (db *database) Delete(lumpSumPayment entity.LumpSumPayment) {
+func (db *database) DeleteLumSumPayment(lumpSumPayment entity.LumpSumPayment) {
 	db.connection.Delete(&lumpSumPayment)
 }
 

@@ -12,8 +12,8 @@ import (
 
 type SyOdsEtlPaymentRepository interface {
 	CreateSyOdsEtlPayment(syOdsEtlPayment entity.SyOdsEtlPayment)
-	Update(syOdsEtlPayment entity.SyOdsEtlPayment)
-	Delete(syOdsEtlPayment entity.SyOdsEtlPayment)
+	UpdateSyOdsEtlPayment(syOdsEtlPayment entity.SyOdsEtlPayment)
+	DeleteSyOdsEtlPayment(syOdsEtlPayment entity.SyOdsEtlPayment)
 	GetAllSyOdsEtlPayments() []entity.SyOdsEtlPayment
 	GetAllLatestGroupSyOdsEtlPayments() []entity.SyOdsEtlPayment
 	GetSyOdsEtlPaymentByStatus(status string) []entity.SyOdsEtlPayment
@@ -59,11 +59,11 @@ func (db *syOdsEtlPaymentDatabase) CreateSyOdsEtlPayment(syOdsEtlPayment entity.
 	}
 }
 
-func (db *syOdsEtlPaymentDatabase) Update(syOdsEtlPayment entity.SyOdsEtlPayment) {
+func (db *syOdsEtlPaymentDatabase) UpdateSyOdsEtlPayment(syOdsEtlPayment entity.SyOdsEtlPayment) {
 	db.connection.Save(&syOdsEtlPayment)
 }
 
-func (db *syOdsEtlPaymentDatabase) Delete(syOdsEtlPayment entity.SyOdsEtlPayment) {
+func (db *syOdsEtlPaymentDatabase) DeleteSyOdsEtlPayment(syOdsEtlPayment entity.SyOdsEtlPayment) {
 	db.connection.Delete(&syOdsEtlPayment)
 }
 

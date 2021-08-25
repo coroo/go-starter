@@ -5,7 +5,6 @@ import (
 	repositories "github.com/coroo/go-starter/app/repositories"
 	utils "github.com/coroo/go-starter/app/utils"
 
-	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
