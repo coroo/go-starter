@@ -6,6 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/coroo/go-starter/app/middlewares"
 	"github.com/coroo/go-starter/app/deliveries"
+	"github.com/coroo/go-starter/app/usecases"
+	"github.com/coroo/go-starter/app/repositories"
 	"github.com/coroo/go-starter/app/console"
 
 	swaggerFiles "github.com/swaggo/files"
@@ -25,17 +27,12 @@ func Api() {
 	})
 
 	// for the mean time commented for ods refactoring
-	usersGroup := router.Group(API_PREFIX + "user")
-	{
-		usersGroup.POST("login", deliveries.AuthLogin)
-		usersGroup.POST("refresh", deliveries.AuthRefreshToken)
-		usersGroup.POST("logout", deliveries.AuthDestroyToken)
-		usersGroup.GET("index", middlewares.Auth, deliveries.UsersIndex)
-		usersGroup.GET("detail/:id", middlewares.Auth, deliveries.UsersDetail)
-		usersGroup.POST("create", deliveries.UserCreate)
-		usersGroup.PUT("update", deliveries.UserUpdate)
-		usersGroup.DELETE("delete", deliveries.UserDelete)
-	}
+
+	var (
+		userRepository repositories.UserRepository = repositories.NewUserRepository()
+		userService    usecases.UserService        = usecases.NewUser(userRepository)
+	)
+	deliveries.NewUserController(router, API_PREFIX, userService)
 
 	userPoliciesGroup := router.Group(API_PREFIX + "userPolicies", middlewares.Auth)
 	{
@@ -85,5 +82,5 @@ func Api() {
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	console.Schedule()
-	router.Run(":"+os.Getenv("APP_PORT"))
+	router.Run(":"+os.Getenv("MAIN_PORT"))
 }
