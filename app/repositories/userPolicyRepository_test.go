@@ -30,7 +30,7 @@ func (suite *userPolicyRepositoryTestSuite) TestBuildNewUserRepository() {
 	assert.Implements(suite.T(), dummyImpl, repoTest)
 }
 
-func (suite *userPolicyRepositoryTestSuite) TestSaveUserPolicy() {
+func (suite *userPolicyRepositoryTestSuite) CreateUserPolicy() {
 	repoTest := NewUserPolicyRepository()
 	dummyUserPolicy := entity.UserPolicy{
 		ID				: 1,
@@ -74,7 +74,7 @@ func (suite *userPolicyRepositoryTestSuite) TestSaveUserPolicy() {
 	repoTest.SaveUserPolicy(dummyUserPolicy)
 }
 
-func (suite *UserRepositoryTestSuite) TestUpdateUserPolicy() {
+func (suite *userPolicyRepositoryTestSuite) UpdateUserPolicy() {
 	repoTest := NewUserPolicyRepository()
 	dummyUserPolicy := entity.UserPolicy{
 		ID				: 1,
@@ -118,13 +118,13 @@ func (suite *UserRepositoryTestSuite) TestUpdateUserPolicy() {
 	repoTest.UpdateUserPolicy(dummyUserPolicy)
 }
 
-func (suite *UserRepositoryTestSuite) TestGetAllUserPolicies() {
+func (suite *userPolicyRepositoryTestSuite) GetAllUserPolicies() {
 	repoTest := NewUserPolicyRepository()
 	userPolicyDummy := repoTest.GetAllUserPolicies("")
 	assert.NotNil(suite.T(), userPolicyDummy)
 }
 
-func (suite *UserRepositoryTestSuite) TestGetUserPolicy() {
+func (suite *userPolicyRepositoryTestSuite) GetUserPolicy() {
 	c, _ := gin.CreateTestContext(httptest.NewRecorder())
 	c.Params = gin.Params{gin.Param{Key: "id", Value: "1"}}
 
@@ -133,7 +133,7 @@ func (suite *UserRepositoryTestSuite) TestGetUserPolicy() {
 	assert.NotNil(suite.T(), userPolicyDummy)
 }
 
-func (suite *UserRepositoryTestSuite) DeleteUserPolicy() {
+func (suite *userPolicyRepositoryTestSuite) RemoveUserPolicy() {
 	repoTest := NewUserPolicyRepository()
 	userPolicyDummy := entity.UserPolicy{
 		ID: 1,

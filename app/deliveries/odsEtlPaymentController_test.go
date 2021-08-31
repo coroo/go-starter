@@ -66,7 +66,10 @@ func (suite *odsEtlPaymentRouteTestSuite) TestGetAllOdsEtlPaymentsRoute() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.GET("odsEtl/payment/index", GetAllOdsEtlPayments)
+	handlerUser := &odsEtlPaymentController{
+		usecases: suite.serviceTest,
+	}
+	r.GET("odsEtl/payment/index", handlerUser.GetAllOdsEtlPayments)
 	req, _ := http.NewRequest(http.MethodGet, "/odsEtl/payment/index", nil)
 
 	r.ServeHTTP(w, req)
@@ -80,7 +83,10 @@ func (suite *odsEtlPaymentRouteTestSuite) TestGetOdsEtlPaymentRoute() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.GET("odsEtl/payment/detail/:id", GetOdsEtlPayment)
+	handlerUser := &odsEtlPaymentController{
+		usecases: suite.serviceTest,
+	}
+	r.GET("odsEtl/payment/detail/:id", handlerUser.GetOdsEtlPayment)
 	req, _ := http.NewRequest(http.MethodGet, "/odsEtl/payment/detail/1", nil)
 
 	r.ServeHTTP(w, req)
@@ -94,7 +100,10 @@ func (suite *odsEtlPaymentRouteTestSuite) TestCreateOdsEtlPaymentRoute() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.POST("odsEtl/payment/create", CreateOdsEtlPayment)
+	handlerUser := &odsEtlPaymentController{
+		usecases: suite.serviceTest,
+	}
+	r.POST("odsEtl/payment/create", handlerUser.CreateOdsEtlPayment)
 
 	jsonValue, _ := json.Marshal(dummyOdsEtlPayment[0])
 	req, _ := http.NewRequest(http.MethodPost, "odsEtl/payment/create", bytes.NewBuffer(jsonValue))
@@ -111,7 +120,10 @@ func (suite *odsEtlPaymentRouteTestSuite) TestTruncateTableOdsEtlPaymentsRoute()
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.GET("odsEtl/payment/remove-before-map", TruncateTableOdsEtlPayments)
+	handlerUser := &odsEtlPaymentController{
+		usecases: suite.serviceTest,
+	}
+	r.GET("odsEtl/payment/remove-before-map", handlerUser.TruncateTableOdsEtlPayments)
 	req, _ := http.NewRequest(http.MethodGet, "/odsEtl/payment/remove-before-map", nil)
 
 	r.ServeHTTP(w, req)

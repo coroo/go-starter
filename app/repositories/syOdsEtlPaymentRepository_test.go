@@ -29,7 +29,7 @@ func (suite *syOdsEtlPaymentRepositoryTestSuite) TestBuildNewSyOdsEtlPaymentRepo
 	assert.Implements(suite.T(), dummyImpl, repoTest)
 }
 
-func (suite *syOdsEtlPaymentRepositoryTestSuite) TestCreateSyOdsEtlPayment() {
+func (suite *syOdsEtlPaymentRepositoryTestSuite) CreateSyOdsEtlPayment() {
 	repoTest := NewSyOdsEtlPaymentRepository()
 	dummySyOdsEtlPayment := entity.SyOdsEtlPayment{
 		ID					: 1,
@@ -50,7 +50,7 @@ func (suite *syOdsEtlPaymentRepositoryTestSuite) TestCreateSyOdsEtlPayment() {
 	repoTest.CreateSyOdsEtlPayment(dummySyOdsEtlPayment)
 }
 
-func (suite *UserRepositoryTestSuite) TestUpdateSyOdsEtlPayment() {
+func (suite *syOdsEtlPaymentRepositoryTestSuite) UpdateSyOdsEtlPayment() {
 	repoTest := NewSyOdsEtlPaymentRepository()
 	dummySyOdsEtlPayment := entity.SyOdsEtlPayment{
 		ID					: 1,
@@ -71,43 +71,43 @@ func (suite *UserRepositoryTestSuite) TestUpdateSyOdsEtlPayment() {
 	repoTest.UpdateSyOdsEtlPayment(dummySyOdsEtlPayment)
 }
 
-func (suite *UserRepositoryTestSuite) GetAllLatestGroupSyOdsEtlPayments() {
+func (suite *syOdsEtlPaymentRepositoryTestSuite) GetAllLatestGroupSyOdsEtlPayments() {
 	repoTest := NewSyOdsEtlPaymentRepository()
 	userPolicyDummy := repoTest.GetAllLatestGroupSyOdsEtlPayments()
 	assert.NotNil(suite.T(), userPolicyDummy)
 }
 
-func (suite *UserRepositoryTestSuite) GetAllSyOdsEtlPayments() {
+func (suite *syOdsEtlPaymentRepositoryTestSuite) GetAllSyOdsEtlPayments() {
 	repoTest := NewSyOdsEtlPaymentRepository()
 	userPolicyDummy := repoTest.GetAllSyOdsEtlPayments()
 	assert.NotNil(suite.T(), userPolicyDummy)
 }
 
-func (suite *UserRepositoryTestSuite) GetSyOdsEtlPaymentByPolicyNumber() {
+func (suite *syOdsEtlPaymentRepositoryTestSuite) GetSyOdsEtlPaymentByPolicyNumber() {
 	repoTest := NewSyOdsEtlPaymentRepository()
-	userPolicyDummy := repoTest.GetSyOdsEtlPaymentByPolicyNumber("30012341234121")
+	userPolicyDummy := repoTest.GetSyOdsEtlPaymentByPolicyNumber("30012341234122")
 	assert.NotNil(suite.T(), userPolicyDummy)
 }
 
-func (suite *UserRepositoryTestSuite) GetSyOdsEtlPaymentByStatus() {
+func (suite *syOdsEtlPaymentRepositoryTestSuite) GetSyOdsEtlPaymentByStatus() {
 	repoTest := NewSyOdsEtlPaymentRepository()
 	userPolicyDummy := repoTest.GetSyOdsEtlPaymentByStatus("closed")
 	assert.NotNil(suite.T(), userPolicyDummy)
 }
 
-func (suite *UserRepositoryTestSuite) GetSyOdsEtlPaymentDailyByStatus() {
+func (suite *syOdsEtlPaymentRepositoryTestSuite) GetSyOdsEtlPaymentDailyByStatus() {
 	repoTest := NewSyOdsEtlPaymentRepository()
 	userPolicyDummy := repoTest.GetSyOdsEtlPaymentDailyByStatus("closed")
 	assert.NotNil(suite.T(), userPolicyDummy)
 }
 
-func (suite *UserRepositoryTestSuite) CancelOutstandingSyOdsEtlPayments() {
+func (suite *syOdsEtlPaymentRepositoryTestSuite) CancelOutstandingSyOdsEtlPayments() {
 	repoTest := NewSyOdsEtlPaymentRepository()
 	userPolicyDummy := repoTest.CancelOutstandingSyOdsEtlPayments()
 	assert.NotNil(suite.T(), userPolicyDummy)
 }
 
-func (suite *UserRepositoryTestSuite) DeleteSyOdsEtlPayment() {
+func (suite *syOdsEtlPaymentRepositoryTestSuite) RemoveSyOdsEtlPayment() {
 	repoTest := NewSyOdsEtlPaymentRepository()
 	dummySyOdsEtlPayment := entity.SyOdsEtlPayment{
 		ID: 1,

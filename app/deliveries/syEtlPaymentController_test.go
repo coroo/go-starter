@@ -68,7 +68,10 @@ func (suite *syEtlPaymentRouteTestSuite) TestGetAllSyEtlPaymentsRoute() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.GET("syEtl/payment/index", GetAllSyEtlPayments)
+	handlerSyEtlPayment := &syEtlPaymentController{
+		usecases: suite.serviceTest,
+	}
+	r.GET("syEtl/payment/index", handlerSyEtlPayment.GetAllSyEtlPayments)
 	req, _ := http.NewRequest(http.MethodGet, "/syEtl/payment/index", nil)
 
 	r.ServeHTTP(w, req)
@@ -82,7 +85,10 @@ func (suite *syEtlPaymentRouteTestSuite) TestSyOdsMapEtlLatestPaymentRoute() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.GET("syEtl/payment/map-etl-payment", SyOdsMapEtlLatestPayment)
+	handlerSyEtlPayment := &syEtlPaymentController{
+		usecases: suite.serviceTest,
+	}
+	r.GET("syEtl/payment/map-etl-payment", handlerSyEtlPayment.SyOdsMapEtlLatestPayment)
 	req, _ := http.NewRequest(http.MethodGet, "/syEtl/payment/map-etl-payment", nil)
 
 	r.ServeHTTP(w, req)
@@ -96,7 +102,10 @@ func (suite *syEtlPaymentRouteTestSuite) TestGetSyEtlPaymentRoute() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.GET("syEtl/payment/detail/:policyNumber", GetSyEtlPayment)
+	handlerSyEtlPayment := &syEtlPaymentController{
+		usecases: suite.serviceTest,
+	}
+	r.GET("syEtl/payment/detail/:policyNumber", handlerSyEtlPayment.GetSyEtlPayment)
 	req, _ := http.NewRequest(http.MethodGet, "/syEtl/payment/detail/300123456", nil)
 
 	r.ServeHTTP(w, req)
@@ -110,7 +119,10 @@ func (suite *syEtlPaymentRouteTestSuite) TestCreateSyEtlPaymentRoute() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.POST("syOdsEtl/payment/create", CreateSyEtlPayment)
+	handlerSyEtlPayment := &syEtlPaymentController{
+		usecases: suite.serviceTest,
+	}
+	r.POST("syOdsEtl/payment/create", handlerSyEtlPayment.CreateSyEtlPayment)
 
 	jsonValue, _ := json.Marshal(dummySyEtlPayment[0])
 	req, _ := http.NewRequest(http.MethodPost, "syOdsEtl/payment/create", bytes.NewBuffer(jsonValue))
@@ -127,7 +139,10 @@ func (suite *syEtlPaymentRouteTestSuite) TestTruncateTableSyEtlPaymentsRoute() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.GET("syEtl/payment/remove-before-map", TruncateTableSyEtlPayments)
+	handlerSyEtlPayment := &syEtlPaymentController{
+		usecases: suite.serviceTest,
+	}
+	r.GET("syEtl/payment/remove-before-map", handlerSyEtlPayment.TruncateTableSyEtlPayments)
 	req, _ := http.NewRequest(http.MethodGet, "/syEtl/payment/remove-before-map", nil)
 
 	r.ServeHTTP(w, req)

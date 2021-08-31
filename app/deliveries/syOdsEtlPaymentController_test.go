@@ -77,7 +77,10 @@ func (suite *syOdsEtlPaymentRouteTestSuite) TestSyOdsEtlPaymentIndexRoute() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.GET("syOdsEtl/payment/index", GetAllSyOdsEtlPayments)
+	handlerSyOdsEtlPayment := &syOdsEtlPaymentController{
+		usecases: suite.serviceTest,
+	}
+	r.GET("syOdsEtl/payment/index", handlerSyOdsEtlPayment.GetAllSyOdsEtlPayments)
 	req, _ := http.NewRequest(http.MethodGet, "/syOdsEtl/payment/index", nil)
 
 	r.ServeHTTP(w, req)
@@ -91,7 +94,10 @@ func (suite *syOdsEtlPaymentRouteTestSuite) TestSyOdsEtlPaymentByPolicyNumberRou
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.GET("syOdsEtl/payment/detail/:policyNumber", GetSyOdsEtlPaymentByPolicyNumber)
+	handlerSyOdsEtlPayment := &syOdsEtlPaymentController{
+		usecases: suite.serviceTest,
+	}
+	r.GET("syOdsEtl/payment/detail/:policyNumber", handlerSyOdsEtlPayment.GetSyOdsEtlPaymentByPolicyNumber)
 	req, _ := http.NewRequest(http.MethodGet, "/syOdsEtl/payment/detail/3006088126", nil)
 
 	r.ServeHTTP(w, req)
@@ -105,7 +111,10 @@ func (suite *syOdsEtlPaymentRouteTestSuite) TestSyOdsEtlPaymentIndexByStatusRout
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.GET("syOdsEtl/payment/status/:status", GetUserPolicy)
+	handlerSyOdsEtlPayment := &syOdsEtlPaymentController{
+		usecases: suite.serviceTest,
+	}
+	r.GET("syOdsEtl/payment/status/:status", handlerSyOdsEtlPayment.GetSyOdsEtlPaymentByStatus)
 	req, _ := http.NewRequest(http.MethodGet, "/syOdsEtl/payment/status/closed", nil)
 
 	r.ServeHTTP(w, req)
@@ -119,7 +128,10 @@ func (suite *syOdsEtlPaymentRouteTestSuite) TestSyOdsEtlPaymentDailyByStatusRout
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.GET("syOdsEtl/payment/daily-by-status/:status", GetSyOdsEtlPaymentByStatus)
+	handlerSyOdsEtlPayment := &syOdsEtlPaymentController{
+		usecases: suite.serviceTest,
+	}
+	r.GET("syOdsEtl/payment/daily-by-status/:status", handlerSyOdsEtlPayment.GetSyOdsEtlPaymentByStatus)
 	req, _ := http.NewRequest(http.MethodGet, "/syOdsEtl/payment/daily-by-status/closed", nil)
 
 	r.ServeHTTP(w, req)
@@ -133,7 +145,10 @@ func (suite *syOdsEtlPaymentRouteTestSuite) TestCreateSyOdsEtlPaymentRoute() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.POST("syOdsEtl/payment/create", UserCreate)
+	handlerSyOdsEtlPayment := &syOdsEtlPaymentController{
+		usecases: suite.serviceTest,
+	}
+	r.POST("syOdsEtl/payment/create", handlerSyOdsEtlPayment.CreateSyOdsEtlPayment)
 
 	jsonValue, _ := json.Marshal(dummyPayment[0])
 	req, _ := http.NewRequest(http.MethodPost, "syOdsEtl/payment/create", bytes.NewBuffer(jsonValue))
@@ -150,7 +165,10 @@ func (suite *syOdsEtlPaymentRouteTestSuite) TestCancelOutstandingSyOdsEtlPayment
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.GET("syOdsEtl/payment/remove-before-map", CancelOutstandingSyOdsEtlPayments)
+	handlerSyOdsEtlPayment := &syOdsEtlPaymentController{
+		usecases: suite.serviceTest,
+	}
+	r.GET("syOdsEtl/payment/remove-before-map", handlerSyOdsEtlPayment.CancelOutstandingSyOdsEtlPayments)
 	req, _ := http.NewRequest(http.MethodGet, "/syOdsEtl/payment/remove-before-map", nil)
 
 	r.ServeHTTP(w, req)

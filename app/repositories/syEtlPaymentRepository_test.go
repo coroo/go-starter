@@ -24,12 +24,12 @@ func (suite *syEtlPaymentRepositoryTestSuite) SetupSyEtlPaymentRepositoryTest() 
 
 func (suite *syEtlPaymentRepositoryTestSuite) TestBuildNewSyEtlPaymentRepository() {
 	repoTest := NewSyEtlPaymentRepository()
-	var dummyImpl *SyOdsEtlPaymentRepository
+	var dummyImpl *SyEtlPaymentRepository
 	assert.NotNil(suite.T(), repoTest)
 	assert.Implements(suite.T(), dummyImpl, repoTest)
 }
 
-func (suite *syEtlPaymentRepositoryTestSuite) TestCreateSyEtlPayment() {
+func (suite *syEtlPaymentRepositoryTestSuite) CreateSyEtlPayment() {
 	repoTest := NewSyEtlPaymentRepository()
 	dummyEtlPayment := entity.SyEtlPayment{
 		ID					: 1,
@@ -44,7 +44,7 @@ func (suite *syEtlPaymentRepositoryTestSuite) TestCreateSyEtlPayment() {
 	repoTest.CreateSyEtlPayment(dummyEtlPayment)
 }
 
-func (suite *syEtlPaymentRepositoryTestSuite) TestUpdateSyEtlPayment() {
+func (suite *syEtlPaymentRepositoryTestSuite) UpdateSyEtlPayment() {
 	repoTest := NewSyEtlPaymentRepository()
 	dummyEtlPayment := entity.SyEtlPayment{
 		ID					: 1,
@@ -73,7 +73,7 @@ func (suite *syEtlPaymentRepositoryTestSuite) GetAllSyEtlPayments() {
 
 func (suite *syEtlPaymentRepositoryTestSuite) GetSyEtlPayment() {
 	repoTest := NewSyEtlPaymentRepository()
-	userPolicyDummy := repoTest.GetSyEtlPayment("30012341234121")
+	userPolicyDummy := repoTest.GetSyEtlPayment("30012341234122")
 	assert.NotNil(suite.T(), userPolicyDummy)
 }
 
@@ -82,7 +82,7 @@ func (suite *syEtlPaymentRepositoryTestSuite) TruncateTableSyEtlPayments() {
 	repoTest.TruncateTableSyEtlPayments()
 }
 
-func (suite *syEtlPaymentRepositoryTestSuite) DeleteSyEtlPayment() {
+func (suite *syEtlPaymentRepositoryTestSuite) RemoveSyEtlPayment() {
 	repoTest := NewSyEtlPaymentRepository()
 	dummyEtlPayment := entity.SyEtlPayment{
 		ID: 1,

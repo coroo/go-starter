@@ -45,7 +45,10 @@ func (suite *lumpSumPaymentRouteTestSuite) TestGetAllLumpSumPaymentsRoute() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.GET("lumpSumPayment/index", GetAllLumpSumPayments)
+	handlerUser := &lumpSumPaymentController{
+		usecases: suite.serviceTest,
+	}
+	r.GET("lumpSumPayment/index", handlerUser.GetAllLumpSumPayments)
 	req, _ := http.NewRequest(http.MethodGet, "/lumpSumPayment/index", nil)
 
 	r.ServeHTTP(w, req)
@@ -59,7 +62,10 @@ func (suite *lumpSumPaymentRouteTestSuite) TestOdsMapEtlLatestPaymentRoute() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.GET("lumpSumPayment/map-etl-payment", OdsMapEtlLatestPayment)
+	handlerUser := &lumpSumPaymentController{
+		usecases: suite.serviceTest,
+	}
+	r.GET("lumpSumPayment/map-etl-payment", handlerUser.OdsMapEtlLatestPayment)
 	req, _ := http.NewRequest(http.MethodGet, "/lumpSumPayment/map-etl-payment", nil)
 
 	r.ServeHTTP(w, req)
@@ -73,7 +79,10 @@ func (suite *lumpSumPaymentRouteTestSuite) TestGetLumpSumPaymentRoute() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.GET("lumpSumPayment/detail/:policyNumber", TruncateTableOdsEtlPayments)
+	handlerUser := &lumpSumPaymentController{
+		usecases: suite.serviceTest,
+	}
+	r.GET("lumpSumPayment/detail/:policyNumber", handlerUser.GetLumpSumPayment)
 	req, _ := http.NewRequest(http.MethodGet, "/lumpSumPayment/detail/300123456", nil)
 
 	r.ServeHTTP(w, req)

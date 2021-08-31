@@ -42,7 +42,10 @@ func (suite *UserPolicyRouteTestSuite) TestUserPolicyIndexRoute() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.GET("userPolicies/index", GetAllUserPolicies)
+	handlerUserPolicy := &userPolicyController{
+		usecases: suite.serviceTest,
+	}
+	r.GET("userPolicies/index", handlerUserPolicy.GetAllUserPolicies)
 	req, _ := http.NewRequest(http.MethodGet, "/userPolicies/index", nil)
 
 	r.ServeHTTP(w, req)
@@ -56,7 +59,10 @@ func (suite *UserPolicyRouteTestSuite) TestUserPolicyDetailRoute() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.GET("userPolicies/detail/1", GetUserPolicy)
+	handlerUserPolicy := &userPolicyController{
+		usecases: suite.serviceTest,
+	}
+	r.GET("userPolicies/detail/1", handlerUserPolicy.GetUserPolicy)
 	req, _ := http.NewRequest(http.MethodGet, "/userPolicies/detail/1", nil)
 
 	r.ServeHTTP(w, req)

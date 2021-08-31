@@ -1,6 +1,7 @@
 package usecases
 
 import (
+	"fmt"
 	"net/http/httptest"
 	"testing"
 	"time"
@@ -37,6 +38,7 @@ type repoMockUser struct {
 }
 
 func (r *repoMockUser) SaveUser(user entity.User) (int, error) {
+	fmt.Println("SAVEUSERMOCK REPO")
 	return 0, nil
 }
 

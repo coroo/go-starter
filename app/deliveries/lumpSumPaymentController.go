@@ -6,15 +6,26 @@ import (
 
 	// entity "github.com/coroo/go-starter/app/entity"
 	usecases "github.com/coroo/go-starter/app/usecases"
-	repositories "github.com/coroo/go-starter/app/repositories"
+	"github.com/coroo/go-starter/app/middlewares"
 
 	"github.com/gin-gonic/gin"
 )
 
-var (
-	lumpSumPaymentRepository 	repositories.LumpSumPaymentRepository = repositories.NewLumpSumPaymentRepository()
-	lumpSumPaymentService		usecases.LumpSumPaymentService = usecases.NewLumpSumPaymentService(lumpSumPaymentRepository)
-)
+type lumpSumPaymentController struct {
+	usecases usecases.LumpSumPaymentService
+}
+
+func NewLumpSumPaymentController(router *gin.Engine, apiPrefix string, lumpSumPaymentService usecases.LumpSumPaymentService) {
+	handlerUser := &lumpSumPaymentController{
+		usecases: lumpSumPaymentService,
+	}
+	lumpSumPaymentGroup := router.Group(apiPrefix + "lumpSumPayment", middlewares.Auth)
+	{
+		lumpSumPaymentGroup.GET("index", handlerUser.GetAllLumpSumPayments)
+		lumpSumPaymentGroup.GET("detail/:policyNumber", handlerUser.GetLumpSumPayment)
+		lumpSumPaymentGroup.GET("map-etl-payment", handlerUser.OdsMapEtlLatestPayment)
+	}
+}
 
 // GetAllLumpSumPayments godoc
 // @Param Authorization header string true "Bearer"
@@ -26,11 +37,11 @@ var (
 // @Success 200 {array} entity.LumpSumPayment
 // @Failure 401 {object} dto.Response
 // @Router /lumpSumPayment/index [get]
-func GetAllLumpSumPayments(ctx *gin.Context) {
+func (deliveries *lumpSumPaymentController) GetAllLumpSumPayments(ctx *gin.Context) {
 	// return c.service.GetAllLumpSumPayments()
 	// lumpSumPayments :=  lumpSumPaymentService.GetAllLumpSumPayments()
 	// ctx.JSON(http.StatusOK, gin.H{"data": lumpSumPayments})
-	lumpSumPayment :=  lumpSumPaymentService.GetAllLumpSumPayments()
+	lumpSumPayment :=  deliveries.usecases.GetAllLumpSumPayments()
 	ctx.JSON(http.StatusOK, gin.H{"data": lumpSumPayment})
 }
 
@@ -44,9 +55,9 @@ func GetAllLumpSumPayments(ctx *gin.Context) {
 // @Success 200 {array} entity.LumpSumPayment
 // @Failure 401 {object} dto.Response
 // @Router /lumpSumPayment/map-etl-payment [get]
-func OdsMapEtlLatestPayment(ctx *gin.Context) {
+func (deliveries *lumpSumPaymentController) OdsMapEtlLatestPayment(ctx *gin.Context) {
 	// return c.service.OdsMapEtlLatestPayment()
-	latestLumpSumPayment :=  lumpSumPaymentService.OdsMapEtlLatestPayment()
+	latestLumpSumPayment :=  deliveries.usecases.OdsMapEtlLatestPayment()
 	ctx.JSON(http.StatusOK, gin.H{"data": latestLumpSumPayment})
 }
 
@@ -61,8 +72,8 @@ func OdsMapEtlLatestPayment(ctx *gin.Context) {
 // @Success 200 {array} entity.LumpSumPayment
 // @Failure 401 {object} dto.Response
 // @Router /lumpSumPayment/detail/{policyNumber} [get]
-func GetLumpSumPayment(ctx *gin.Context) {
-	lumpSumPayment :=  lumpSumPaymentService.GetLumpSumPayment(ctx.Param("policyNumber"))
+func (deliveries *lumpSumPaymentController) GetLumpSumPayment(ctx *gin.Context) {
+	lumpSumPayment :=  deliveries.usecases.GetLumpSumPayment(ctx.Param("policyNumber"))
 	ctx.JSON(http.StatusOK, gin.H{"data": lumpSumPayment})
 }
 

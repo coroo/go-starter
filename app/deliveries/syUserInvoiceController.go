@@ -5,30 +5,26 @@ import (
 
 	// entity "github.com/coroo/go-starter/app/entity"
 	usecases "github.com/coroo/go-starter/app/usecases"
-	repositories "github.com/coroo/go-starter/app/repositories"
+	"github.com/coroo/go-starter/app/middlewares"
 
 	"github.com/gin-gonic/gin"
 )
 
-var (
-	syUserInvoiceRepository 	repositories.SyUserInvoiceRepository = repositories.NewSyUserInvoiceRepository()
-	syUserInvoiceService		usecases.SyUserInvoiceService = usecases.NewSyUserInvoiceService(syUserInvoiceRepository)
-)
+type syUserInvoiceController struct {
+	usecases usecases.SyUserInvoiceService
+}
 
-// type SyUserInvoiceController interface {
-// 	GetAllSyUserInvoices() []entity.SyUserInvoice
-// 	SyMapEtlLatestPayment() []entity.SyUserInvoice
-// }
+func NewSyUserInvoiceController(router *gin.Engine, apiPrefix string, syUserInvoiceService usecases.SyUserInvoiceService) {
+	handlerSyUserInvoice := &syUserInvoiceController{
+		usecases: syUserInvoiceService,
+	}
 
-// type syUserInvoiceController struct {
-// 	service service.SyUserInvoiceService
-// }
-
-// func NewSyUserInvoice(service service.SyUserInvoiceService) SyUserInvoiceController {
-// 	return &syUserInvoiceController{
-// 		service: service,
-// 	}
-// }
+	syUserInvoiceGroup := router.Group(apiPrefix + "syUserInvoice", middlewares.Auth)
+	{
+		syUserInvoiceGroup.GET("index", handlerSyUserInvoice.GetAllSyUserInvoices)
+		syUserInvoiceGroup.GET("map-etl-payment", handlerSyUserInvoice.SyMapEtlLatestPayment)
+	}
+}
 
 // GetUserInvoices godoc
 // @Security basicAuth
@@ -41,9 +37,9 @@ var (
 // @Success 200 {array} entity.SyUserInvoice
 // @Failure 401 {object} dto.Response
 // @Router /syUserInvoice/index [get]
-func GetAllSyUserInvoices(ctx *gin.Context) {
+func (deliveries *syUserInvoiceController) GetAllSyUserInvoices(ctx *gin.Context) {
 	// return c.service.GetAllSyUserInvoices()
-	syUserInvoices :=  syUserInvoiceService.GetAllSyUserInvoices()
+	syUserInvoices :=  deliveries.usecases.GetAllSyUserInvoices()
 	ctx.JSON(http.StatusOK, gin.H{"data": syUserInvoices})
 }
 
@@ -58,8 +54,8 @@ func GetAllSyUserInvoices(ctx *gin.Context) {
 // @Success 200 {array} entity.SyUserInvoice
 // @Failure 401 {object} dto.Response
 // @Router /syUserInvoice/map-etl-payment [get]
-func SyMapEtlLatestPayment(ctx *gin.Context) {
+func (deliveries *syUserInvoiceController) SyMapEtlLatestPayment(ctx *gin.Context) {
 	// return c.service.SyMapEtlLatestPayment()
-	syUserInvoices :=  syUserInvoiceService.SyMapEtlLatestPayment()
+	syUserInvoices :=  deliveries.usecases.SyMapEtlLatestPayment()
 	ctx.JSON(http.StatusOK, gin.H{"data": syUserInvoices})
 }

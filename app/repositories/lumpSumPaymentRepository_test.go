@@ -29,7 +29,7 @@ func (suite *lumpSumPaymentRepositoryTestSuite) TestBuildNewLumpSumPaymentReposi
 	assert.Implements(suite.T(), dummyImpl, repoTest)
 }
 
-func (suite *syEtlPaymentRepositoryTestSuite) CreateLumSumPayment() {
+func (suite *lumpSumPaymentRepositoryTestSuite) CreateLumSumPayment() {
 	repoTest := NewLumpSumPaymentRepository()
 	dummyLumpSumPayment := entity.LumpSumPayment{
 		ID					: 1,
@@ -47,7 +47,7 @@ func (suite *syEtlPaymentRepositoryTestSuite) CreateLumSumPayment() {
 	repoTest.CreateLumSumPayment(dummyLumpSumPayment)
 }
 
-func (suite *UserRepositoryTestSuite) TestUpdateLumSumPayment() {
+func (suite *lumpSumPaymentRepositoryTestSuite) UpdateLumSumPayment() {
 	repoTest := NewLumpSumPaymentRepository()
 	dummyLumpSumPayment := entity.LumpSumPayment{
 		ID					: 1,
@@ -65,31 +65,31 @@ func (suite *UserRepositoryTestSuite) TestUpdateLumSumPayment() {
 	repoTest.UpdateLumSumPayment(dummyLumpSumPayment)
 }
 
-func (suite *UserRepositoryTestSuite) TestGetAllLatestGroupLumpSumPayments() {
+func (suite *lumpSumPaymentRepositoryTestSuite) GetAllLatestGroupLumpSumPayments() {
 	repoTest := NewLumpSumPaymentRepository()
 	lumpSumPaymentDummy := repoTest.GetAllLatestGroupLumpSumPayments()
 	assert.NotNil(suite.T(), lumpSumPaymentDummy)
 }
 
-func (suite *UserRepositoryTestSuite) TestGetAllLumpSumPayments() {
+func (suite *lumpSumPaymentRepositoryTestSuite) GetAllLumpSumPayments() {
 	repoTest := NewLumpSumPaymentRepository()
 	lumpSumPaymentDummy := repoTest.GetAllLumpSumPayments()
 	assert.NotNil(suite.T(), lumpSumPaymentDummy)
 }
-func (suite *UserRepositoryTestSuite) TestGetLumpSumPayment() {
+func (suite *lumpSumPaymentRepositoryTestSuite) GetLumpSumPayment() {
 	repoTest := NewLumpSumPaymentRepository()
 	lumpSumPaymentDummy := repoTest.GetLumpSumPayment("30012341234121")
 	assert.NotNil(suite.T(), lumpSumPaymentDummy)
 }
 
-func (suite *UserRepositoryTestSuite) TestDeleteLumSumPayment() {
+func (suite *lumpSumPaymentRepositoryTestSuite) RemoveLumSumPayment() {
 	repoTest := NewLumpSumPaymentRepository()
-	dummyOdsEtlPayment := entity.LumpSumPayment{
+	dummyLumpSumPayment := entity.LumpSumPayment{
 		ID: 1,
 	}
-	repoTest.DeleteLumSumPayment(dummyOdsEtlPayment)
+	repoTest.DeleteLumSumPayment(dummyLumpSumPayment)
 }
 
 func TestLumpSumPaymentRepositoryTestSuite(t *testing.T) {
-	suite.Run(t, new(UserRepositoryTestSuite))
+	suite.Run(t, new(lumpSumPaymentRepositoryTestSuite))
 }

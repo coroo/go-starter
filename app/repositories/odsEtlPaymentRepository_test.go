@@ -22,14 +22,14 @@ func (suite *odsEtlPaymentRepositoryTestSuite) SetupOdsEtlPaymentRepositoryTest(
 	suite.db, _ = config.ConnectDB()
 }
 
-func (suite *syEtlPaymentRepositoryTestSuite) TestBuildNewOdsEtlPaymentRepository() {
+func (suite *odsEtlPaymentRepositoryTestSuite) TestBuildNewOdsEtlPaymentRepository() {
 	repoTest := NewOdsEtlPaymentRepository()
 	var dummyImpl *OdsEtlPaymentRepository
 	assert.NotNil(suite.T(), repoTest)
 	assert.Implements(suite.T(), dummyImpl, repoTest)
 }
 
-func (suite *syEtlPaymentRepositoryTestSuite) TestCreateOdsEtlPayment() {
+func (suite *odsEtlPaymentRepositoryTestSuite) CreateOdsEtlPayment() {
 	repoTest := NewOdsEtlPaymentRepository()
 	dummySyOdsEtlPayment := entity.OdsEtlPayment{
 		ID					: 1,
@@ -45,7 +45,7 @@ func (suite *syEtlPaymentRepositoryTestSuite) TestCreateOdsEtlPayment() {
 	repoTest.CreateOdsEtlPayment(dummySyOdsEtlPayment)
 }
 
-func (suite *UserRepositoryTestSuite) TestUpdateOdsEtlPayment() {
+func (suite *odsEtlPaymentRepositoryTestSuite) UpdateOdsEtlPayment() {
 	repoTest := NewOdsEtlPaymentRepository()
 	dummyOdsEtlPayment := entity.OdsEtlPayment{
 		ID					: 1,
@@ -61,30 +61,30 @@ func (suite *UserRepositoryTestSuite) TestUpdateOdsEtlPayment() {
 	repoTest.UpdateOdsEtlPayment(dummyOdsEtlPayment)
 }
 
-func (suite *UserRepositoryTestSuite) TestGetAllLatestGroupOdsEtlPayments() {
+func (suite *odsEtlPaymentRepositoryTestSuite) GetAllLatestGroupOdsEtlPayments() {
 	repoTest := NewOdsEtlPaymentRepository()
 	odsEtlPaymentDummy := repoTest.GetAllLatestGroupOdsEtlPayments()
 	assert.NotNil(suite.T(), odsEtlPaymentDummy)
 }
 
-func (suite *UserRepositoryTestSuite) TestGetAllOdsEtlPayments() {
+func (suite *odsEtlPaymentRepositoryTestSuite) GetAllOdsEtlPayments() {
 	repoTest := NewOdsEtlPaymentRepository()
 	userPolicyDummy := repoTest.GetAllOdsEtlPayments()
 	assert.NotNil(suite.T(), userPolicyDummy)
 }
 
-func (suite *UserRepositoryTestSuite) GetOdsEtlPayment() {
+func (suite *odsEtlPaymentRepositoryTestSuite) GetOdsEtlPayment() {
 	repoTest := NewOdsEtlPaymentRepository()
-	userPolicyDummy := repoTest.GetOdsEtlPayment("2")
+	userPolicyDummy := repoTest.GetOdsEtlPayment("1")
 	assert.NotNil(suite.T(), userPolicyDummy)
 }
 
-func (suite *UserRepositoryTestSuite) TruncateTableOdsEtlPayments() {
+func (suite *odsEtlPaymentRepositoryTestSuite) TruncateTableOdsEtlPayments() {
 	repoTest := NewOdsEtlPaymentRepository()
 	repoTest.TruncateTableOdsEtlPayments()
 }
 
-func (suite *UserRepositoryTestSuite) TestDeleteOdsEtlPayment() {
+func (suite *odsEtlPaymentRepositoryTestSuite) TestDeleteOdsEtlPayment() {
 	repoTest := NewOdsEtlPaymentRepository()
 	dummyOdsEtlPayment := entity.OdsEtlPayment{
 		ID: 1,
@@ -93,5 +93,5 @@ func (suite *UserRepositoryTestSuite) TestDeleteOdsEtlPayment() {
 }
 
 func TestOdsEtlPaymentRepositoryTestSuite(t *testing.T) {
-	suite.Run(t, new(UserRepositoryTestSuite))
+	suite.Run(t, new(odsEtlPaymentRepositoryTestSuite))
 }

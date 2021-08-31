@@ -5,15 +5,30 @@ import (
 
 	entity "github.com/coroo/go-starter/app/entity"
 	usecases "github.com/coroo/go-starter/app/usecases"
-	repositories "github.com/coroo/go-starter/app/repositories"
+	"github.com/coroo/go-starter/app/middlewares"
 
 	"github.com/gin-gonic/gin"
 )
 
-var (
-	syOdsEtlPaymentRepository repositories.SyOdsEtlPaymentRepository = repositories.NewSyOdsEtlPaymentRepository()
-	syOdsEtlPaymentService    usecases.SyOdsEtlPaymentService = usecases.NewSyOdsEtlPaymentService(syOdsEtlPaymentRepository)
-)
+type syOdsEtlPaymentController struct {
+	usecases usecases.SyOdsEtlPaymentService
+}
+
+func NewSyOdsEtlPaymentController(router *gin.Engine, apiPrefix string, syOdsEtlPaymentService usecases.SyOdsEtlPaymentService) {
+	handlerSyOdsEtlPayment := &syOdsEtlPaymentController{
+		usecases: syOdsEtlPaymentService,
+	}
+	
+	syOdsETLGroup := router.Group(apiPrefix + "syOdsEtl", middlewares.Auth)
+	{
+		syOdsETLGroup.GET("payment/index", handlerSyOdsEtlPayment.GetAllSyOdsEtlPayments)
+		syOdsETLGroup.POST("payment/create", handlerSyOdsEtlPayment.CreateSyOdsEtlPayment)
+		syOdsETLGroup.GET("payment/status/:status", handlerSyOdsEtlPayment.GetSyOdsEtlPaymentByStatus)
+		syOdsETLGroup.GET("payment/daily-by-status/:status", handlerSyOdsEtlPayment.GetSyOdsEtlPaymentDailyByStatus)
+		syOdsETLGroup.GET("payment/remove-before-map", handlerSyOdsEtlPayment.CancelOutstandingSyOdsEtlPayments)
+		syOdsETLGroup.GET("payment/detail/:policyNumber", handlerSyOdsEtlPayment.GetSyOdsEtlPaymentByPolicyNumber)
+	}
+}
 
 // GetAllSyOdsEtlPayments godoc
 // @Param Authorization header string true "Bearer"
@@ -26,9 +41,9 @@ var (
 // @Success 200 {array} entity.SyOdsEtlPayment
 // @Failure 401 {object} dto.Response
 // @Router /syOdsEtl/payment/index [get]
-func GetAllSyOdsEtlPayments(ctx *gin.Context){
+func (deliveries *syOdsEtlPaymentController) GetAllSyOdsEtlPayments(ctx *gin.Context){
 	// return syOdsEtlPaymentService.GetAllSyOdsEtlPayments()
-	syOdsEtlPayments :=  syOdsEtlPaymentService.GetAllSyOdsEtlPayments()
+	syOdsEtlPayments :=  deliveries.usecases.GetAllSyOdsEtlPayments()
 	ctx.JSON(http.StatusOK, gin.H{"data": syOdsEtlPayments})
 }
 
@@ -44,9 +59,9 @@ func GetAllSyOdsEtlPayments(ctx *gin.Context){
 // @Success 200 {array} entity.SyOdsEtlPayment
 // @Failure 401 {object} dto.Response
 // @Router /syOdsEtl/payment/detail/{policyNumber} [get]
-func GetSyOdsEtlPaymentByPolicyNumber(ctx *gin.Context){
+func (deliveries *syOdsEtlPaymentController) GetSyOdsEtlPaymentByPolicyNumber(ctx *gin.Context){
 	// return syOdsEtlPaymentService.GetSyOdsEtlPaymentByPolicyNumber(ctx)
-	syOdsEtlPayments :=  syOdsEtlPaymentService.GetSyOdsEtlPaymentByPolicyNumber(ctx.Param("policyNumber"))
+	syOdsEtlPayments :=  deliveries.usecases.GetSyOdsEtlPaymentByPolicyNumber(ctx.Param("policyNumber"))
 	ctx.JSON(http.StatusOK, gin.H{"data": syOdsEtlPayments})
 }
 
@@ -62,8 +77,8 @@ func GetSyOdsEtlPaymentByPolicyNumber(ctx *gin.Context){
 // @Success 200 {array} entity.SyOdsEtlPayment
 // @Failure 401 {object} dto.Response
 // @Router /syOdsEtl/payment/status/{status} [get]
-func GetSyOdsEtlPaymentByStatus(ctx *gin.Context){
-	syOdsEtlPayments :=  syOdsEtlPaymentService.GetSyOdsEtlPaymentByStatus(ctx.Param("status"))
+func (deliveries *syOdsEtlPaymentController) GetSyOdsEtlPaymentByStatus(ctx *gin.Context){
+	syOdsEtlPayments :=  deliveries.usecases.GetSyOdsEtlPaymentByStatus(ctx.Param("status"))
 	ctx.JSON(http.StatusOK, gin.H{"data": syOdsEtlPayments})
 	// return syOdsEtlPaymentService.GetSyOdsEtlPaymentByStatus(ctx)
 }
@@ -80,9 +95,9 @@ func GetSyOdsEtlPaymentByStatus(ctx *gin.Context){
 // @Success 200 {array} entity.SyOdsEtlPayment
 // @Failure 401 {object} dto.Response
 // @Router /syOdsEtl/payment/daily-by-status/{status} [get]
-func GetSyOdsEtlPaymentDailyByStatus(ctx *gin.Context){
+func (deliveries *syOdsEtlPaymentController) GetSyOdsEtlPaymentDailyByStatus(ctx *gin.Context){
 	// return syOdsEtlPaymentService.GetSyOdsEtlPaymentDailyByStatus(ctx)
-	syOdsEtlPayment :=  syOdsEtlPaymentService.GetSyOdsEtlPaymentDailyByStatus(ctx.Param("status"))
+	syOdsEtlPayment :=  deliveries.usecases.GetSyOdsEtlPaymentDailyByStatus(ctx.Param("status"))
 	ctx.JSON(http.StatusOK, gin.H{"data": syOdsEtlPayment})
 }
 
@@ -99,7 +114,7 @@ func GetSyOdsEtlPaymentDailyByStatus(ctx *gin.Context){
 // @Failure 400 {object} dto.Response
 // @Failure 401 {object} dto.Response
 // @Router /syOdsEtl/payment/create [post]
-func CreateSyOdsEtlPayment(ctx *gin.Context){
+func (deliveries *syOdsEtlPaymentController) CreateSyOdsEtlPayment(ctx *gin.Context){
 	var syOdsEtlPayment entity.SyOdsEtlPayment
 	err := ctx.ShouldBindJSON(&syOdsEtlPayment)
 	if err != nil {
@@ -109,7 +124,7 @@ func CreateSyOdsEtlPayment(ctx *gin.Context){
 	// if err != nil {
 	// 	return err
 	// }
-	syOdsEtlPaymentService.CreateSyOdsEtlPayment(syOdsEtlPayment)
+	deliveries.usecases.CreateSyOdsEtlPayment(syOdsEtlPayment)
 	ctx.JSON(http.StatusOK, syOdsEtlPayment)
 }
 
@@ -124,8 +139,8 @@ func CreateSyOdsEtlPayment(ctx *gin.Context){
 // @Success 200 {array} entity.SyOdsEtlPayment
 // @Failure 401 {object} dto.Response
 // @Router /syOdsEtl/payment/remove-before-map [get]
-func CancelOutstandingSyOdsEtlPayments(ctx *gin.Context){
-	cancelSyOdsEtlPayment :=  syOdsEtlPaymentService.CancelOutstandingSyOdsEtlPayments()
+func (deliveries *syOdsEtlPaymentController) CancelOutstandingSyOdsEtlPayments(ctx *gin.Context){
+	cancelSyOdsEtlPayment :=  deliveries.usecases.CancelOutstandingSyOdsEtlPayments()
 	ctx.JSON(http.StatusOK, gin.H{"data": cancelSyOdsEtlPayment})
 	// return syOdsEtlPaymentService.CancelOutstandingSyOdsEtlPayments()
 }

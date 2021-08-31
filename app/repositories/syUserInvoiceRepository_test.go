@@ -18,19 +18,26 @@ type syUserInvoiceRepositoryTestSuite struct {
 	db  *gorm.DB
 }
 
-func (suite *syUserInvoiceRepositoryTestSuite) SetupSyUserInvoiceRepositoryTest() {
-	suite.db, _ = config.ConnectDBSY()
+func SetupSyUserInvoiceRepositoryTest() SyUserInvoiceRepository{
+	db, err := config.ConnectDBSY()
+	if err != nil {
+		panic("Failed to connect database")
+	}
+	db.AutoMigrate(&entity.SyUserInvoice{})
+	return &syUserInvoiceDatabase{
+		connection: db,
+	}
 }
 
-func (suite *userPolicyRepositoryTestSuite) TestBuildNewSyUserInvoiceRepository() {
-	repoTest := NewSyUserInvoiceRepository()
+func (suite *syUserInvoiceRepositoryTestSuite) TestBuildSetupSyUserInvoiceRepositoryTest() {
+	repoTest := SetupSyUserInvoiceRepositoryTest()
 	var dummyImpl *SyUserInvoiceRepository
 	assert.NotNil(suite.T(), repoTest)
 	assert.Implements(suite.T(), dummyImpl, repoTest)
 }
 
-func (suite *userPolicyRepositoryTestSuite) TestSaveSyUserInvoice() {
-	repoTest := NewSyUserInvoiceRepository()
+func (suite *syUserInvoiceRepositoryTestSuite) CreateSyUserInvoice() {
+	repoTest := SetupSyUserInvoiceRepositoryTest()
 	dummySyUserInvoice := entity.SyUserInvoice{
 		ID					: 1,
 		PolicyNumber		: "30012341234123",
@@ -44,8 +51,8 @@ func (suite *userPolicyRepositoryTestSuite) TestSaveSyUserInvoice() {
 	repoTest.SaveSyUserInvoice(dummySyUserInvoice)
 }
 
-func (suite *UserRepositoryTestSuite) TestUpdateSyUserInvoice() {
-	repoTest := NewSyUserInvoiceRepository()
+func (suite *syUserInvoiceRepositoryTestSuite) UpdateSyUserInvoice() {
+	repoTest := SetupSyUserInvoiceRepositoryTest()
 	dummySyUserInvoice := entity.SyUserInvoice{
 		ID					: 1,
 		PolicyNumber		: "30012341234124",
@@ -59,20 +66,20 @@ func (suite *UserRepositoryTestSuite) TestUpdateSyUserInvoice() {
 	repoTest.UpdateSyUserInvoice(dummySyUserInvoice)
 }
 
-func (suite *UserRepositoryTestSuite) TestGetAllPaidUserInvoices() {
-	repoTest := NewSyUserInvoiceRepository()
+func (suite *syUserInvoiceRepositoryTestSuite) GetAllPaidUserInvoices() {
+	repoTest := SetupSyUserInvoiceRepositoryTest()
 	userPolicyDummy := repoTest.GetAllPaidUserInvoices()
 	assert.NotNil(suite.T(), userPolicyDummy)
 }
 
-func (suite *UserRepositoryTestSuite) TestGetUserInvoice() {
-	repoTest := NewSyUserInvoiceRepository()
+func (suite *syUserInvoiceRepositoryTestSuite) GetUserInvoice() {
+	repoTest := SetupSyUserInvoiceRepositoryTest()
 	userPolicyDummy := repoTest.GetUserInvoice("1")
 	assert.NotNil(suite.T(), userPolicyDummy)
 }
 
-func (suite *UserRepositoryTestSuite) TestDeleteSyUserInvoice() {
-	repoTest := NewSyUserInvoiceRepository()
+func (suite *syUserInvoiceRepositoryTestSuite) RemoveSyUserInvoice() {
+	repoTest := SetupSyUserInvoiceRepositoryTest()
 	dummySyUserInvoice := entity.SyUserInvoice{
 		ID: 1,
 	}
@@ -80,5 +87,5 @@ func (suite *UserRepositoryTestSuite) TestDeleteSyUserInvoice() {
 }
 
 func TestSyUserInvoiceRepositoryTestSuite(t *testing.T) {
-	suite.Run(t, new(userPolicyRepositoryTestSuite))
+	suite.Run(t, new(syUserInvoiceRepositoryTestSuite))
 }

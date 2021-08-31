@@ -42,7 +42,10 @@ func (suite *syUserInvoiceRouteTestSuite) TestsyUserInvoiceIndexRoute() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.GET("syUserInvoice/index", GetAllUserPolicies)
+	handlerSyUserInvoice := &syUserInvoiceController{
+		usecases: suite.serviceTest,
+	}
+	r.GET("syUserInvoice/index", handlerSyUserInvoice.GetAllSyUserInvoices)
 	req, _ := http.NewRequest(http.MethodGet, "/syUserInvoice/index", nil)
 
 	r.ServeHTTP(w, req)
@@ -56,7 +59,10 @@ func (suite *syUserInvoiceRouteTestSuite) TestSyMapEtlLatestPaymentRoute() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.GET("syUserInvoice/map-etl-payment", SyMapEtlLatestPayment)
+	handlerSyUserInvoice := &syUserInvoiceController{
+		usecases: suite.serviceTest,
+	}
+	r.GET("syUserInvoice/map-etl-payment", handlerSyUserInvoice.SyMapEtlLatestPayment)
 	req, _ := http.NewRequest(http.MethodGet, "/syUserInvoice/map-etl-payment", nil)
 
 	r.ServeHTTP(w, req)

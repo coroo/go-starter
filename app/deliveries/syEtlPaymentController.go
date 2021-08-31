@@ -6,15 +6,28 @@ import (
 
 	entity "github.com/coroo/go-starter/app/entity"
 	usecases "github.com/coroo/go-starter/app/usecases"
-	repositories "github.com/coroo/go-starter/app/repositories"
+	"github.com/coroo/go-starter/app/middlewares"
 
 	"github.com/gin-gonic/gin"
 )
 
-var (
-	syEtlPaymentRepository repositories.SyEtlPaymentRepository = repositories.NewSyEtlPaymentRepository()
-	syEtlPaymentService    usecases.SyEtlPaymentService = usecases.NewSyEtlPaymentService(syEtlPaymentRepository)
-)
+type syEtlPaymentController struct {
+	usecases usecases.SyEtlPaymentService
+}
+
+func NewSyEtlPaymentController(router *gin.Engine, apiPrefix string, syEtlPaymentService usecases.SyEtlPaymentService) {
+	handlerSyEtlPayment := &syEtlPaymentController{
+		usecases: syEtlPaymentService,
+	}
+	syETLGroup := router.Group(apiPrefix + "syEtl", middlewares.Auth)
+	{
+		syETLGroup.GET("payment/index", handlerSyEtlPayment.GetAllSyEtlPayments)
+		syETLGroup.GET("payment/map-etl-payment", handlerSyEtlPayment.SyOdsMapEtlLatestPayment)
+		syETLGroup.GET("payment/detail/:policyNumber", handlerSyEtlPayment.GetSyEtlPayment)
+		syETLGroup.POST("payment/create", handlerSyEtlPayment.CreateSyEtlPayment)
+		syETLGroup.GET("payment/remove-before-map", handlerSyEtlPayment.TruncateTableSyEtlPayments)
+	}
+}
 
 // type SyEtlPaymentController interface {
 // 	Save(ctx *gin.Context) error
@@ -49,8 +62,8 @@ var (
 // @Success 200 {array} entity.SyEtlPayment
 // @Failure 401 {object} dto.Response
 // @Router /syEtl/payment/index [get]
-func GetAllSyEtlPayments(ctx *gin.Context){
-	syEtlPayments :=  syEtlPaymentService.GetAllSyEtlPayments()
+func (deliveries *syEtlPaymentController) GetAllSyEtlPayments(ctx *gin.Context){
+	syEtlPayments :=  deliveries.usecases.GetAllSyEtlPayments()
 	ctx.JSON(http.StatusOK, gin.H{"data": syEtlPayments})
 }
 
@@ -65,8 +78,8 @@ func GetAllSyEtlPayments(ctx *gin.Context){
 // @Success 200 {array} entity.SyEtlPayment
 // @Failure 401 {object} dto.Response
 // @Router /syEtl/payment/map-etl-payment [get]
-func SyOdsMapEtlLatestPayment(ctx *gin.Context){
-	latestSyEtlPayments :=  syEtlPaymentService.SyOdsMapEtlLatestPayment()
+func (deliveries *syEtlPaymentController) SyOdsMapEtlLatestPayment(ctx *gin.Context){
+	latestSyEtlPayments :=  deliveries.usecases.SyOdsMapEtlLatestPayment()
 	ctx.JSON(http.StatusOK, gin.H{"data": latestSyEtlPayments})
 }
 
@@ -82,8 +95,8 @@ func SyOdsMapEtlLatestPayment(ctx *gin.Context){
 // @Success 200 {array} entity.SyEtlPayment
 // @Failure 401 {object} dto.Response
 // @Router /syEtl/payment/detail/{policyNumber} [get]
-func GetSyEtlPayment(ctx *gin.Context){
-	syEtlPayment :=  syEtlPaymentService.GetSyEtlPayment(ctx.Param("policyNumber"))
+func (deliveries *syEtlPaymentController) GetSyEtlPayment(ctx *gin.Context){
+	syEtlPayment :=  deliveries.usecases.GetSyEtlPayment(ctx.Param("policyNumber"))
 	ctx.JSON(http.StatusOK, gin.H{"data": syEtlPayment})
 }
 
@@ -100,7 +113,7 @@ func GetSyEtlPayment(ctx *gin.Context){
 // @Failure 400 {object} dto.Response
 // @Failure 401 {object} dto.Response
 // @Router /syEtl/payment/create [post]
-func CreateSyEtlPayment(ctx *gin.Context){
+func (deliveries *syEtlPaymentController) CreateSyEtlPayment(ctx *gin.Context){
 	var syEtlPayment entity.SyEtlPayment
 	err := ctx.ShouldBindJSON(&syEtlPayment)
 	if err != nil {
@@ -110,7 +123,7 @@ func CreateSyEtlPayment(ctx *gin.Context){
 	// if err != nil {
 	// 	return err
 	// }
-	syEtlPaymentService.CreateSyEtlPayment(syEtlPayment)
+	deliveries.usecases.CreateSyEtlPayment(syEtlPayment)
 	ctx.JSON(http.StatusOK, syEtlPayment)
 }
 
@@ -125,7 +138,7 @@ func CreateSyEtlPayment(ctx *gin.Context){
 // @Success 200 {array} entity.SyEtlPayment
 // @Failure 401 {object} dto.Response
 // @Router /syEtl/payment/remove-before-map [get]
-func TruncateTableSyEtlPayments(ctx *gin.Context){
-	truncateSyEtlPayment :=  syEtlPaymentService.TruncateTableSyEtlPayments()
+func (deliveries *syEtlPaymentController) TruncateTableSyEtlPayments(ctx *gin.Context){
+	truncateSyEtlPayment :=  deliveries.usecases.TruncateTableSyEtlPayments()
 	ctx.JSON(http.StatusOK, gin.H{"data": truncateSyEtlPayment})
 }
