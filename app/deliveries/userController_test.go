@@ -1,6 +1,7 @@
 package deliveries
 
 import (
+	"fmt"
 	"bytes"
 	"encoding/json"
 	"net/http"
@@ -42,6 +43,7 @@ type userRouteMock struct {
 }
 
 func (s *userRouteMock) SaveUser(user entity.User) (int, error) {
+	fmt.Println("SAVE USER TEST MOCK")
 	return 0, nil
 }
 
@@ -57,7 +59,7 @@ func (s *userRouteMock) GetAllUsers() []entity.User {
 	return nil
 }
 
-func (s *userRouteMock) GetUser(ctx *gin.Context) []entity.User {
+func (s *userRouteMock) GetUser(id string) []entity.User {
 	return nil
 }
 
@@ -75,18 +77,27 @@ func (suite *UserRouteTestSuite) SetupTest() {
 }
 
 func (suite *UserRouteTestSuite) TestSaveDelivery() {
+	// fmt.Println("SAVE USER TEST DELIV")
+	// suite.serviceTest.(*userRouteMock).On("SaveUser", dummyUser[0]).Return(nil)
+	// c, _ := gin.CreateTestContext(httptest.NewRecorder())
+	// c.Params = gin.Params{gin.Param{Key: "id", Value: "1"}}
+	// UserCreate(c)
+
+	// fmt.Println("SAVE USER TEST DELIV 2")
 	// Switch to test mode so you don't get such noisy output
 	gin.SetMode(gin.TestMode)
 
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.POST("user/create", UserCreate)
+	handlerUser := &userController{
+		usecases: suite.serviceTest,
+	}
+	r.POST("user/create", handlerUser.UserCreate)
 
 	jsonValue, _ := json.Marshal(dummyUser[1])
 	req, _ := http.NewRequest(http.MethodPost, "/user/create", bytes.NewBuffer(jsonValue))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
 	r.ServeHTTP(w, req)
 	assert.Equal(suite.T(), w.Code, 200)
 }
@@ -98,12 +109,16 @@ func (suite *UserRouteTestSuite) TestUpdateDelivery() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.POST("user/update", UserUpdate)
+	handlerUser := &userController{
+		usecases: suite.serviceTest,
+	}
+	r.POST("user/update", handlerUser.UserUpdate)
 
 	jsonValue, _ := json.Marshal(dummyUser[0])
 	req, _ := http.NewRequest(http.MethodPost, "/user/update", bytes.NewBuffer(jsonValue))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
+	fmt.Println("UPDATE USER TEST")
 	r.ServeHTTP(w, req)
 	assert.Equal(suite.T(), w.Code, 200)
 }
@@ -115,7 +130,10 @@ func (suite *UserRouteTestSuite) TestDeleteDelivery() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.POST("user/delete", UserDelete)
+	handlerUser := &userController{
+		usecases: suite.serviceTest,
+	}
+	r.POST("user/delete", handlerUser.UserDelete)
 
 	jsonValue, _ := json.Marshal(dummyUser[0])
 	req, _ := http.NewRequest(http.MethodPost, "/user/delete", bytes.NewBuffer(jsonValue))
@@ -132,7 +150,10 @@ func (suite *UserRouteTestSuite) TestUsersIndexRoute() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.GET("user/index", UsersIndex)
+	handlerUser := &userController{
+		usecases: suite.serviceTest,
+	}
+	r.GET("user/index", handlerUser.UsersIndex)
 	req, _ := http.NewRequest(http.MethodGet, "/user/index", nil)
 
 	r.ServeHTTP(w, req)
@@ -146,7 +167,10 @@ func (suite *UserRouteTestSuite) TestUsersDetailRoute() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
-	r.GET("user/detail/1", UsersDetail)
+	handlerUser := &userController{
+		usecases: suite.serviceTest,
+	}
+	r.GET("user/detail/:id", handlerUser.UsersDetail)
 	req, _ := http.NewRequest(http.MethodGet, "/user/detail/1", nil)
 
 	r.ServeHTTP(w, req)
@@ -160,16 +184,19 @@ func (suite *UserRouteTestSuite) TestAuthUsersRoute() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
+	handlerUser := &userController{
+		usecases: suite.serviceTest,
+	}
 	jsonValue, _ := json.Marshal(dummyUser[0])
 	// PREPARATION
-	r.POST("user/create", UserCreate)
+	r.POST("user/create", handlerUser.UserCreate)
 
 	reqPrep, _ := http.NewRequest(http.MethodPost, "/user/create", bytes.NewBuffer(jsonValue))
 	reqPrep.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	r.ServeHTTP(w, reqPrep)
 
 	// AFTER ANY PREPARATION
-	r.POST("user/login", AuthLogin)
+	r.POST("user/login", handlerUser.AuthLogin)
 
 	req, _ := http.NewRequest(http.MethodPost, "/user/login", bytes.NewBuffer(jsonValue))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")	
@@ -179,7 +206,7 @@ func (suite *UserRouteTestSuite) TestAuthUsersRoute() {
 	loginValue, _ := json.Marshal(req.Body)
 	
 	// REFRESH
-	r.POST("user/refresh", AuthRefreshToken)
+	r.POST("user/refresh", handlerUser.AuthRefreshToken)
 
 	reqRefresh, _ := http.NewRequest(http.MethodPost, "/user/refresh", bytes.NewBuffer(loginValue))
 	reqRefresh.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -188,7 +215,7 @@ func (suite *UserRouteTestSuite) TestAuthUsersRoute() {
 	assert.Equal(suite.T(), w.Code, 200)
 		
 	// DESTROY
-	r.POST("user/logout", AuthDestroyToken)
+	r.POST("user/logout", handlerUser.AuthDestroyToken)
 
 	reqLogout, _ := http.NewRequest(http.MethodPost, "/user/logout", bytes.NewBuffer(loginValue))
 	reqLogout.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -204,8 +231,11 @@ func (suite *UserRouteTestSuite) NegativeTestAuthUsersRoute() {
 	w := httptest.NewRecorder()
 
 	r := gin.Default()
+	handlerUser := &userController{
+		usecases: suite.serviceTest,
+	}
 	jsonValue, _ := json.Marshal(dummyUser[0])
-	r.POST("user/login", AuthLogin)
+	r.POST("user/login", handlerUser.AuthLogin)
 
 	req, _ := http.NewRequest(http.MethodPost, "/user/login", bytes.NewBuffer(jsonValue))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")

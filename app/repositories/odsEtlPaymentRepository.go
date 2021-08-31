@@ -14,8 +14,8 @@ import (
 
 type OdsEtlPaymentRepository interface {
 	CreateOdsEtlPayment(odsEtlPayment entity.OdsEtlPayment)
-	Update(odsEtlPayment entity.OdsEtlPayment)
-	Delete(odsEtlPayment entity.OdsEtlPayment)
+	UpdateOdsEtlPayment(odsEtlPayment entity.OdsEtlPayment)
+	DeleteOdsEtlPayment(odsEtlPayment entity.OdsEtlPayment)
 	GetAllOdsEtlPayments() []entity.OdsEtlPayment
 	GetAllLatestGroupOdsEtlPayments() []entity.OdsEtlPayment
 	GetOdsEtlPayment(id string) []entity.OdsEtlPayment
@@ -58,11 +58,11 @@ func (db *odsEtlPaymentDatabase) CreateOdsEtlPayment(odsEtlPayment entity.OdsEtl
 	}
 }
 
-func (db *odsEtlPaymentDatabase) Update(odsEtlPayment entity.OdsEtlPayment) {
+func (db *odsEtlPaymentDatabase) UpdateOdsEtlPayment(odsEtlPayment entity.OdsEtlPayment) {
 	db.connection.Save(&odsEtlPayment)
 }
 
-func (db *odsEtlPaymentDatabase) Delete(odsEtlPayment entity.OdsEtlPayment) {
+func (db *odsEtlPaymentDatabase) DeleteOdsEtlPayment(odsEtlPayment entity.OdsEtlPayment) {
 	db.connection.Delete(&odsEtlPayment)
 }
 

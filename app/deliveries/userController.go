@@ -7,19 +7,34 @@ import (
 
 	utils "github.com/coroo/go-starter/app/utils"
 	entity "github.com/coroo/go-starter/app/entity"
-	repositories "github.com/coroo/go-starter/app/repositories"
 	usecases "github.com/coroo/go-starter/app/usecases"
+	"github.com/coroo/go-starter/app/middlewares"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var (
-	userRepository repositories.UserRepository = repositories.NewUserRepository()
-	userService    usecases.UserService        = usecases.NewUser(userRepository)
-	// userController deliveries.UserController   = deliveries.NewUser(userService)
-)
+type userController struct {
+	usecases usecases.UserService
+}
+
+func NewUserController(router *gin.Engine, apiPrefix string, userService usecases.UserService) {
+	handlerUser := &userController{
+		usecases: userService,
+	}
+	usersGroup := router.Group(apiPrefix + "user")
+	{
+		usersGroup.POST("login", handlerUser.AuthLogin)
+		usersGroup.POST("refresh", handlerUser.AuthRefreshToken)
+		usersGroup.POST("logout", handlerUser.AuthDestroyToken)
+		usersGroup.GET("index", middlewares.Auth, handlerUser.UsersIndex)
+		usersGroup.GET("detail/:id", middlewares.Auth, handlerUser.UsersDetail)
+		usersGroup.POST("create", handlerUser.UserCreate)
+		usersGroup.PUT("update", handlerUser.UserUpdate)
+		usersGroup.DELETE("delete", handlerUser.UserDelete)
+	}
+}
 
 // GetUsersIndex godoc
 // @Param Authorization header string true "Bearer"
@@ -32,8 +47,8 @@ var (
 // @Success 200 {array} entity.User
 // @Failure 401 {object} dto.Response
 // @Router /user/index [get]
-func UsersIndex(c *gin.Context) {
-	users := userService.GetAllUsers()
+func (deliveries *userController) UsersIndex(c *gin.Context) {
+	users := deliveries.usecases.GetAllUsers()
 	c.JSON(http.StatusOK, gin.H{"data": users})
 }
 
@@ -49,8 +64,8 @@ func UsersIndex(c *gin.Context) {
 // @Success 200 {array} entity.User
 // @Failure 401 {object} dto.Response
 // @Router /user/detail/{id} [get]
-func UsersDetail(c *gin.Context) {
-	user := userService.GetUser(c)
+func (deliveries *userController) UsersDetail(c *gin.Context) {
+	user := deliveries.usecases.GetUser(c.Param("id"))
 	c.JSON(http.StatusOK, gin.H{"data": user})
 }
 
@@ -66,10 +81,10 @@ func UsersDetail(c *gin.Context) {
 // @Failure 400 {object} dto.Response
 // @Failure 401 {object} dto.Response
 // @Router /user/create [post]
-func UserCreate(c *gin.Context) {
+func (deliveries *userController) UserCreate(c *gin.Context) {
 	var userEntity entity.User
 	c.ShouldBindJSON(&userEntity)
-	userPK, err := userService.SaveUser(userEntity)
+	userPK, err := deliveries.usecases.SaveUser(userEntity)
 	if(err!=nil){
 		c.JSON(http.StatusConflict, err)
 	} else {
@@ -90,10 +105,10 @@ func UserCreate(c *gin.Context) {
 // @Failure 400 {object} dto.Response
 // @Failure 401 {object} dto.Response
 // @Router /user/update [put]
-func UserUpdate(c *gin.Context) {
+func (deliveries *userController) UserUpdate(c *gin.Context) {
 	var userEntity entity.User
 	c.ShouldBindJSON(&userEntity)
-	user := userService.UpdateUser(userEntity)
+	user := deliveries.usecases.UpdateUser(userEntity)
 	c.JSON(http.StatusOK, user)
 }
 
@@ -109,10 +124,10 @@ func UserUpdate(c *gin.Context) {
 // @Failure 400 {object} dto.Response
 // @Failure 401 {object} dto.Response
 // @Router /user/delete [delete]
-func UserDelete(c *gin.Context) {
+func (deliveries *userController) UserDelete(c *gin.Context) {
 	var userEntity entity.User
 	c.ShouldBindJSON(&userEntity)
-	user := userService.DeleteUser(userEntity)
+	user := deliveries.usecases.DeleteUser(userEntity)
 	c.JSON(http.StatusOK, user)
 }
 
@@ -128,10 +143,10 @@ func UserDelete(c *gin.Context) {
 // @Failure 400 {object} dto.Response
 // @Failure 401 {object} dto.Response
 // @Router /user/login [post]
-func AuthLogin(c *gin.Context) {
+func (deliveries *userController) AuthLogin(c *gin.Context) {
 	var userEntity entity.User
 	c.ShouldBindJSON(&userEntity)
-	stats, res := userService.AuthUser(userEntity)
+	stats, res := deliveries.usecases.AuthUser(userEntity)
 	if(stats==200){
 		authRes, err := utils.CreateToken(res)
 		// sign := jwt.New(jwt.GetSigningMethod("HS256"))
@@ -183,7 +198,7 @@ func AuthLogin(c *gin.Context) {
 // @Failure 400 {object} dto.Response
 // @Failure 401 {object} dto.Response
 // @Router /user/refresh [post]
-func AuthRefreshToken(c *gin.Context) {
+func (deliveries *userController) AuthRefreshToken(c *gin.Context) {
 	var tokenRequest entity.TokenReqBody
 	c.ShouldBindJSON(&tokenRequest)
 	token, _ := jwt.Parse(tokenRequest.RefreshToken, func(token *jwt.Token) (interface{}, error) {
@@ -229,7 +244,7 @@ func AuthRefreshToken(c *gin.Context) {
 // @Failure 400 {object} dto.Response
 // @Failure 401 {object} dto.Response
 // @Router /user/logout [post]
-func AuthDestroyToken(c *gin.Context) {
+func (deliveries *userController) AuthDestroyToken(c *gin.Context) {
 	var tokenRequest entity.Token
 	c.ShouldBindJSON(&tokenRequest)
 	token, _ := jwt.Parse(tokenRequest.RefreshToken, func(token *jwt.Token) (interface{}, error) {

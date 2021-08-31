@@ -22,7 +22,7 @@ func ConnectDB() (c *gorm.DB, err error) {
 	DB_DETAIL := DB_USERNAME + ":" + DB_PASSWORD + "@tcp(" + DB_HOST + ":" + DB_PORT + ")/" + DB_DATABASE + "?parseTime=true"
 	if DB_CONNECTION == "" {
 		DB_DETAIL = DB_TEST
-		conn, err := gorm.Open(sqlite.Open(DB_DETAIL), &gorm.Config{})
+		conn, err := gorm.Open(sqlite.Open("./../../test.db"), &gorm.Config{})
 		if err != nil || conn == nil {
 			fmt.Println("Error connecting to DB")
 			fmt.Println(err.Error())
@@ -49,8 +49,14 @@ func ConnectDBSY() (c *gorm.DB, err error) {
 	DB_TEST := os.Getenv("DB_TEST")
 	DB_DETAIL := DB_USERNAME + ":" + DB_PASSWORD + "@tcp(" + DB_HOST + ":" + DB_PORT + ")/" + DB_DATABASE + "?parseTime=true"
 	if DB_CONNECTION == "" {
+		pwd, err := os.Getwd()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		fmt.Println(pwd)
 		DB_DETAIL = DB_TEST
-		conn, err := gorm.Open(sqlite.Open(DB_DETAIL), &gorm.Config{})
+		conn, err := gorm.Open(sqlite.Open("./../../testSy.db"), &gorm.Config{})
 		if err != nil || conn == nil {
 			fmt.Println("Error connecting to DB")
 			fmt.Println(err.Error())
@@ -62,6 +68,7 @@ func ConnectDBSY() (c *gorm.DB, err error) {
 			fmt.Println("Error connecting to DB")
 			fmt.Println(err.Error())
 		}
+
 		return conn, err
 	}
 }

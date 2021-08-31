@@ -1,7 +1,6 @@
 package repositories
 
 import (
-	"net/http/httptest"
 	"testing"
 
 	entity "github.com/coroo/go-starter/app/entity"
@@ -22,16 +21,17 @@ func (suite *UserRepositoryTestSuite) SetupTest() {
 	suite.db, _ = config.ConnectDB()
 }
 
-func (suite *UserRepositoryTestSuite) TestBuildNewUserRepository() {
+func (suite *UserRepositoryTestSuite) BuildNewUserRepository() {
 	repoTest := NewUserRepository()
 	var dummyImpl *UserRepository
 	assert.NotNil(suite.T(), repoTest)
 	assert.Implements(suite.T(), dummyImpl, repoTest)
 }
 
-func (suite *UserRepositoryTestSuite) TestUserCreate() {
+func (suite *UserRepositoryTestSuite) CreateUser() {
 	repoTest := NewUserRepository()
 	dummyUser := entity.User{
+		ID				: 1,
 		Email			: "kuncoro@test.com",
 		Password		: "password",
 		Name			: "jl lorem ipsum",
@@ -40,11 +40,11 @@ func (suite *UserRepositoryTestSuite) TestUserCreate() {
 	assert.Nil(suite.T(), err)
 }
 
-func (suite *UserRepositoryTestSuite) TestUserUpdate() {
+func (suite *UserRepositoryTestSuite) UpdateUser() {
 	repoTest := NewUserRepository()
 	dummyUser := entity.User{
 		ID				: 1,
-		Email			: "kuncoro@test.com",
+		Email			: "kuncoro3@test.com",
 		Password		: "password",
 		Name			: "jl lorem ipsum",
 	}
@@ -52,31 +52,7 @@ func (suite *UserRepositoryTestSuite) TestUserUpdate() {
 	assert.Nil(suite.T(), userDummy)
 }
 
-func (suite *UserRepositoryTestSuite) TestUserDelete() {
-	repoTest := NewUserRepository()
-	dummyUser := entity.User{
-		ID: 1,
-	}
-	userDummy := repoTest.DeleteUser(dummyUser)
-	assert.Nil(suite.T(), userDummy)
-}
-
-func (suite *UserRepositoryTestSuite) TestGetAllUsers() {
-	repoTest := NewUserRepository()
-	userDummy := repoTest.GetAllUsers()
-	assert.NotNil(suite.T(), userDummy)
-}
-
-func (suite *UserRepositoryTestSuite) TestGetUser() {
-	c, _ := gin.CreateTestContext(httptest.NewRecorder())
-	c.Params = gin.Params{gin.Param{Key: "id", Value: "1"}}
-
-	repoTest := NewUserRepository()
-	userDummy := repoTest.GetUser(c)
-	assert.NotNil(suite.T(), userDummy)
-}
-
-func (suite *UserRepositoryTestSuite) TestAuthUser() {
+func (suite *UserRepositoryTestSuite) AuthUser() {
 	repoTest := NewUserRepository()
 	dummyUser := entity.User{
 		Email			: "kuncoro@test.com",
@@ -84,6 +60,27 @@ func (suite *UserRepositoryTestSuite) TestAuthUser() {
 	}
 	userDummy := repoTest.AuthUser(dummyUser)
 	assert.NotNil(suite.T(), userDummy)
+}
+
+func (suite *UserRepositoryTestSuite) GetAllUsers() {
+	repoTest := NewUserRepository()
+	userDummy := repoTest.GetAllUsers()
+	assert.NotNil(suite.T(), userDummy)
+}
+
+func (suite *UserRepositoryTestSuite) GetUser() {
+	repoTest := NewUserRepository()
+	userDummy := repoTest.GetUser("1")
+	assert.NotNil(suite.T(), userDummy)
+}
+
+func (suite *UserRepositoryTestSuite) RemoveUser() {
+	repoTest := NewUserRepository()
+	dummyUser := entity.User{
+		ID: 1,
+	}
+	userDummy := repoTest.DeleteUser(dummyUser)
+	assert.Nil(suite.T(), userDummy)
 }
 
 func TestUserRepositoryTestSuite(t *testing.T) {

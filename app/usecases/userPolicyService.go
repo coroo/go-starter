@@ -15,8 +15,6 @@ type UserPolicyService interface {
 }
 
 type userPolicyService struct {
-	// userPolicy []entity.UserPolicy
-	// models models.UserPolicyModel
 	repositories repositories.UserPolicyRepository
 }
 
@@ -26,15 +24,6 @@ func NewUserPolicyService(repository repositories.UserPolicyRepository) UserPoli
 	}
 }
 
-// func NewUserPolicy(userPolicyRepository repository.UserPolicyRepository) UserPolicyService {
-// 	// return &userPolicyService{
-// 	// 	models: models,
-// 	// }
-// 	return &userPolicyService{
-// 		repository: userPolicyRepository,
-// 	}
-// }
-
 func (usecases *userPolicyService) GetAllUserPolicies(is_overdue string) []entity.UserPolicy {
 	return usecases.repositories.GetAllUserPolicies(is_overdue)
 }
@@ -42,13 +31,3 @@ func (usecases *userPolicyService) GetAllUserPolicies(is_overdue string) []entit
 func (usecases *userPolicyService) GetUserPolicy(id string) []entity.UserPolicy {
 	return usecases.repositories.GetUserPolicy(id)
 }
-
-// func (service *userPolicyService) GetAllUserPolicies(ctx *gin.Context) ([]entity.UserPolicy, error) {
-// 	db, _ := ctx.Get("db")
-// 	conn := db.(sql.DB)
-// 	userPolicies, err := models.GetAllUserPolicies(&conn)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 	}
-// 	return userPolicies, err
-// }

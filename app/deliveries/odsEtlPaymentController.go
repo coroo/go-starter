@@ -5,16 +5,27 @@ import (
 
 	entity "github.com/coroo/go-starter/app/entity"
 	usecases "github.com/coroo/go-starter/app/usecases"
-	repositories "github.com/coroo/go-starter/app/repositories"
+	"github.com/coroo/go-starter/app/middlewares"
 
 	"github.com/gin-gonic/gin"
 )
 
-var (
-	odsEtlPaymentRepository repositories.OdsEtlPaymentRepository = repositories.NewOdsEtlPaymentRepository()
-	odsEtlPaymentService    usecases.OdsEtlPaymentService = usecases.NewOdsEtlPaymentService(odsEtlPaymentRepository)
-	// userController deliveries.UserController   = deliveries.NewUser(userService)
-)
+type odsEtlPaymentController struct {
+	usecases usecases.OdsEtlPaymentService
+}
+
+func NewOdsEtlPaymentController(router *gin.Engine, apiPrefix string, odsEtlPaymentService usecases.OdsEtlPaymentService) {
+	handlerUser := &odsEtlPaymentController{
+		usecases: odsEtlPaymentService,
+	}
+	odsETLGroup := router.Group(apiPrefix + "odsEtl", middlewares.Auth)
+	{
+		odsETLGroup.GET("payment/index", handlerUser.GetAllOdsEtlPayments)
+		odsETLGroup.GET("payment/detail/:id", handlerUser.GetOdsEtlPayment)
+		odsETLGroup.POST("payment/create", handlerUser.CreateOdsEtlPayment)
+		odsETLGroup.GET("payment/remove-before-map", handlerUser.TruncateTableOdsEtlPayments)
+	}
+}
 
 // GetAllOdsEtlPayments godoc
 // @Param Authorization header string true "Bearer"
@@ -27,8 +38,8 @@ var (
 // @Success 200 {array} entity.OdsEtlPayment
 // @Failure 401 {object} dto.Response
 // @Router /odsEtl/payment/index [get]
-func GetAllOdsEtlPayments(ctx *gin.Context){
-	odsEtlPayments :=  odsEtlPaymentService.GetAllOdsEtlPayments()
+func (deliveries *odsEtlPaymentController) GetAllOdsEtlPayments(ctx *gin.Context){
+	odsEtlPayments :=  deliveries.usecases.GetAllOdsEtlPayments()
 	ctx.JSON(http.StatusOK, gin.H{"data": odsEtlPayments})
 }
 
@@ -44,8 +55,8 @@ func GetAllOdsEtlPayments(ctx *gin.Context){
 // @Success 200 {array} entity.OdsEtlPayment
 // @Failure 401 {object} dto.Response
 // @Router /odsEtl/payment/detail/{policyNumber} [get]
-func GetOdsEtlPayment(ctx *gin.Context){
-	odsEtlPayment :=  odsEtlPaymentService.GetOdsEtlPayment(ctx.Param("id"))
+func (deliveries *odsEtlPaymentController) GetOdsEtlPayment(ctx *gin.Context){
+	odsEtlPayment :=  deliveries.usecases.GetOdsEtlPayment(ctx.Param("id"))
 	ctx.JSON(http.StatusOK, gin.H{"data": odsEtlPayment})
 }
 
@@ -62,7 +73,7 @@ func GetOdsEtlPayment(ctx *gin.Context){
 // @Failure 400 {object} dto.Response
 // @Failure 401 {object} dto.Response
 // @Router /odsEtl/payment/create [post]
-func CreateOdsEtlPayment(ctx *gin.Context){
+func (deliveries *odsEtlPaymentController) CreateOdsEtlPayment(ctx *gin.Context){
 	var odsEtlPayment entity.OdsEtlPayment
 	err := ctx.ShouldBindJSON(&odsEtlPayment)
 
@@ -71,7 +82,7 @@ func CreateOdsEtlPayment(ctx *gin.Context){
 		// ctx.JSON(http.StatusConflict, err)
 	}
 	
-	odsEtlPaymentService.CreateOdsEtlPayment(odsEtlPayment)
+	deliveries.usecases.CreateOdsEtlPayment(odsEtlPayment)
 	ctx.JSON(http.StatusOK, gin.H{"data": odsEtlPayment})
 }
 
@@ -86,7 +97,7 @@ func CreateOdsEtlPayment(ctx *gin.Context){
 // @Success 200 {array} entity.OdsEtlPayment
 // @Failure 401 {object} dto.Response
 // @Router /odsEtl/payment/remove-before-map [get]
-func TruncateTableOdsEtlPayments(ctx *gin.Context) {
-	truncateOdsEtlPayments :=  odsEtlPaymentService.TruncateTableOdsEtlPayments()
+func (deliveries *odsEtlPaymentController) TruncateTableOdsEtlPayments(ctx *gin.Context) {
+	truncateOdsEtlPayments :=  deliveries.usecases.TruncateTableOdsEtlPayments()
 	ctx.JSON(http.StatusOK, gin.H{"data": truncateOdsEtlPayments})
 }

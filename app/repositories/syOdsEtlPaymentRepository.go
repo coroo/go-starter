@@ -5,7 +5,6 @@ import (
 	entity "github.com/coroo/go-starter/app/entity"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	_ "gorm.io/driver/mysql"
 	_ "github.com/joho/godotenv/autoload"
@@ -13,13 +12,13 @@ import (
 
 type SyOdsEtlPaymentRepository interface {
 	CreateSyOdsEtlPayment(syOdsEtlPayment entity.SyOdsEtlPayment)
-	Update(syOdsEtlPayment entity.SyOdsEtlPayment)
-	Delete(syOdsEtlPayment entity.SyOdsEtlPayment)
+	UpdateSyOdsEtlPayment(syOdsEtlPayment entity.SyOdsEtlPayment)
+	DeleteSyOdsEtlPayment(syOdsEtlPayment entity.SyOdsEtlPayment)
 	GetAllSyOdsEtlPayments() []entity.SyOdsEtlPayment
 	GetAllLatestGroupSyOdsEtlPayments() []entity.SyOdsEtlPayment
 	GetSyOdsEtlPaymentByStatus(status string) []entity.SyOdsEtlPayment
 	GetSyOdsEtlPaymentDailyByStatus(status string) []entity.SyOdsEtlPayment
-	GetSyOdsEtlPaymentByPolicyNumber(ctx *gin.Context) []entity.SyOdsEtlPayment
+	GetSyOdsEtlPaymentByPolicyNumber(policyNumber string) []entity.SyOdsEtlPayment
 	CancelOutstandingSyOdsEtlPayments() []entity.SyOdsEtlPayment
 	CloseDB()
 }
@@ -60,11 +59,11 @@ func (db *syOdsEtlPaymentDatabase) CreateSyOdsEtlPayment(syOdsEtlPayment entity.
 	}
 }
 
-func (db *syOdsEtlPaymentDatabase) Update(syOdsEtlPayment entity.SyOdsEtlPayment) {
+func (db *syOdsEtlPaymentDatabase) UpdateSyOdsEtlPayment(syOdsEtlPayment entity.SyOdsEtlPayment) {
 	db.connection.Save(&syOdsEtlPayment)
 }
 
-func (db *syOdsEtlPaymentDatabase) Delete(syOdsEtlPayment entity.SyOdsEtlPayment) {
+func (db *syOdsEtlPaymentDatabase) DeleteSyOdsEtlPayment(syOdsEtlPayment entity.SyOdsEtlPayment) {
 	db.connection.Delete(&syOdsEtlPayment)
 }
 
@@ -80,9 +79,9 @@ func (db *syOdsEtlPaymentDatabase) GetAllSyOdsEtlPayments() []entity.SyOdsEtlPay
 	return syOdsEtlPayments
 }
 
-func (db *syOdsEtlPaymentDatabase) GetSyOdsEtlPaymentByPolicyNumber(ctx *gin.Context) []entity.SyOdsEtlPayment {
+func (db *syOdsEtlPaymentDatabase) GetSyOdsEtlPaymentByPolicyNumber(policyNumber string) []entity.SyOdsEtlPayment {
 	var syOdsEtlPayment []entity.SyOdsEtlPayment
-	db.connection.Set("gorm:auto_preload", true).Where("policy_number = ?", ctx.Param("policyNumber")).Order("id desc").Find(&syOdsEtlPayment)
+	db.connection.Set("gorm:auto_preload", true).Where("policy_number = ?", policyNumber).Order("id desc").Find(&syOdsEtlPayment)
 	return syOdsEtlPayment
 }
 

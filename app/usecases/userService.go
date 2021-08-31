@@ -5,7 +5,6 @@ import (
 	repositories "github.com/coroo/go-starter/app/repositories"
 	utils "github.com/coroo/go-starter/app/utils"
 
-	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
@@ -14,7 +13,7 @@ type UserService interface {
 	UpdateUser(entity.User) error
 	DeleteUser(entity.User) error
 	GetAllUsers() []entity.User
-	GetUser(ctx *gin.Context) []entity.User
+	GetUser(id string) []entity.User
 	AuthUser(entity.User) (int, entity.User)
 }
 
@@ -32,8 +31,8 @@ func (usecases *userService) GetAllUsers() []entity.User {
 	return usecases.repositories.GetAllUsers()
 }
 
-func (usecases *userService) GetUser(ctx *gin.Context) []entity.User {
-	return usecases.repositories.GetUser(ctx)
+func (usecases *userService) GetUser(id string) []entity.User {
+	return usecases.repositories.GetUser(id)
 }
 
 func (usecases *userService) SaveUser(user entity.User) (int, error) {

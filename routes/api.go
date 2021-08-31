@@ -4,8 +4,9 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/coroo/go-starter/app/middlewares"
 	"github.com/coroo/go-starter/app/deliveries"
+	"github.com/coroo/go-starter/app/usecases"
+	"github.com/coroo/go-starter/app/repositories"
 	"github.com/coroo/go-starter/app/console"
 
 	swaggerFiles "github.com/swaggo/files"
@@ -24,66 +25,58 @@ func Api() {
 		})
 	})
 
-	// for the mean time commented for ods refactoring
-	usersGroup := router.Group(API_PREFIX + "user")
-	{
-		usersGroup.POST("login", deliveries.AuthLogin)
-		usersGroup.POST("refresh", deliveries.AuthRefreshToken)
-		usersGroup.POST("logout", deliveries.AuthDestroyToken)
-		usersGroup.GET("index", middlewares.Auth, deliveries.UsersIndex)
-		usersGroup.GET("detail/:id", middlewares.Auth, deliveries.UsersDetail)
-		usersGroup.POST("create", deliveries.UserCreate)
-		usersGroup.PUT("update", deliveries.UserUpdate)
-		usersGroup.DELETE("delete", deliveries.UserDelete)
-	}
+	// USER
+	var (
+		userRepository repositories.UserRepository = repositories.NewUserRepository()
+		userService    usecases.UserService        = usecases.NewUser(userRepository)
+	)
+	deliveries.NewUserController(router, API_PREFIX, userService)
 
-	userPoliciesGroup := router.Group(API_PREFIX + "userPolicies", middlewares.Auth)
-	{
-		userPoliciesGroup.GET("index", deliveries.GetAllUserPolicies)
-		userPoliciesGroup.GET("detail/:id", deliveries.GetUserPolicy)
-	}
+	// USER POLICY
+	var (
+		userPolicyRepository repositories.UserPolicyRepository = repositories.NewUserPolicyRepository()
+		userPolicyService    usecases.UserPolicyService = usecases.NewUserPolicyService(userPolicyRepository)
+		// userController deliveries.UserController   = deliveries.NewUser(userService)
+	)
+	deliveries.NewUserPolicyController(router, API_PREFIX, userPolicyService)
 
-	lumpSumPaymentGroup := router.Group(API_PREFIX + "lumpSumPayment", middlewares.Auth)
-	{
-		lumpSumPaymentGroup.GET("index", deliveries.GetAllLumpSumPayments)
-		lumpSumPaymentGroup.GET("detail/:policyNumber", deliveries.GetLumpSumPayment)
-		lumpSumPaymentGroup.GET("map-etl-payment", deliveries.OdsMapEtlLatestPayment)
-	}
+	// SY USER INVOICE
+	var (
+		syUserInvoiceRepository 	repositories.SyUserInvoiceRepository = repositories.NewSyUserInvoiceRepository()
+		syUserInvoiceService		usecases.SyUserInvoiceService = usecases.NewSyUserInvoiceService(syUserInvoiceRepository)
+	)
+	deliveries.NewSyUserInvoiceController(router, API_PREFIX, syUserInvoiceService)
 
-	syUserInvoiceGroup := router.Group(API_PREFIX + "syUserInvoice", middlewares.Auth)
-	{
-		syUserInvoiceGroup.GET("index", deliveries.GetAllUserPolicies)
-		syUserInvoiceGroup.GET("map-etl-payment", deliveries.GetUserPolicy)
-	}
+	// SY ODS ETL PAYMENT
+	var (
+		syOdsEtlPaymentRepository repositories.SyOdsEtlPaymentRepository = repositories.NewSyOdsEtlPaymentRepository()
+		syOdsEtlPaymentService    usecases.SyOdsEtlPaymentService = usecases.NewSyOdsEtlPaymentService(syOdsEtlPaymentRepository)
+	)
+	deliveries.NewSyOdsEtlPaymentController(router, API_PREFIX, syOdsEtlPaymentService)
 
-	syETLGroup := router.Group(API_PREFIX + "syEtl", middlewares.Auth)
-	{
-		syETLGroup.GET("payment/index", deliveries.GetAllSyEtlPayments)
-		syETLGroup.GET("payment/map-etl-payment", deliveries.SyOdsMapEtlLatestPayment)
-		syETLGroup.GET("payment/detail/:policyNumber", deliveries.GetSyEtlPayment)
-		syETLGroup.POST("payment/create", deliveries.Save)
-		syETLGroup.GET("payment/remove-before-map", deliveries.TruncateTableSyEtlPayments)
-	}
+	// SY ETL PAYMENT
+	var (
+		syEtlPaymentRepository repositories.SyEtlPaymentRepository = repositories.NewSyEtlPaymentRepository()
+		syEtlPaymentService    usecases.SyEtlPaymentService = usecases.NewSyEtlPaymentService(syEtlPaymentRepository)
+	)
+	deliveries.NewSyEtlPaymentController(router, API_PREFIX, syEtlPaymentService)
 
-	odsETLGroup := router.Group(API_PREFIX + "odsEtl", middlewares.Auth)
-	{
-		odsETLGroup.GET("payment/index", deliveries.GetAllOdsEtlPayments)
-		odsETLGroup.GET("payment/detail/:id", deliveries.GetOdsEtlPayment)
-		odsETLGroup.POST("payment/create", deliveries.CreateOdsEtlPayment)
-		odsETLGroup.GET("payment/remove-before-map", deliveries.TruncateTableOdsEtlPayments)
-	}
+	// ODS ETL PAYMENT
+	var (
+		odsEtlPaymentRepository repositories.OdsEtlPaymentRepository = repositories.NewOdsEtlPaymentRepository()
+		odsEtlPaymentService    usecases.OdsEtlPaymentService = usecases.NewOdsEtlPaymentService(odsEtlPaymentRepository)
+		// userController deliveries.UserController   = deliveries.NewUser(userService)
+	)
+	deliveries.NewOdsEtlPaymentController(router, API_PREFIX, odsEtlPaymentService)
 
-	syOdsETLGroup := router.Group(API_PREFIX + "syOdsEtl", middlewares.Auth)
-	{
-		syOdsETLGroup.GET("payment/index", deliveries.GetAllSyOdsEtlPayments)
-		syOdsETLGroup.POST("payment/create", deliveries.CreateSyOdsEtlPayment)
-		syOdsETLGroup.GET("payment/status/:status", deliveries.GetSyOdsEtlPaymentByStatus)
-		syOdsETLGroup.GET("payment/daily-by-status/:status", deliveries.GetSyOdsEtlPaymentDailyByStatus)
-		syOdsETLGroup.GET("payment/remove-before-map", deliveries.CancelOutstandingSyOdsEtlPayments)
-		syOdsETLGroup.GET("payment/detail/:policyNumber", deliveries.GetSyOdsEtlPaymentByPolicyNumber)
-	}
+	// LUMP SUM PAYMENT
+	var (
+		lumpSumPaymentRepository 	repositories.LumpSumPaymentRepository = repositories.NewLumpSumPaymentRepository()
+		lumpSumPaymentService		usecases.LumpSumPaymentService = usecases.NewLumpSumPaymentService(lumpSumPaymentRepository)
+	)
+	deliveries.NewLumpSumPaymentController(router, API_PREFIX, lumpSumPaymentService)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	console.Schedule()
-	router.Run(":"+os.Getenv("APP_PORT"))
+	router.Run(":"+os.Getenv("MAIN_PORT"))
 }

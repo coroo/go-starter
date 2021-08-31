@@ -4,19 +4,18 @@ import (
 	"github.com/coroo/go-starter/config"
 	entity "github.com/coroo/go-starter/app/entity"
 
-	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	_ "gorm.io/driver/mysql"
 	_ "github.com/joho/godotenv/autoload"
 )
 
 type SyUserInvoiceRepository interface {
-	Save(syUserInvoice entity.SyUserInvoice)
-	Update(syUserInvoice entity.SyUserInvoice)
-	Delete(syUserInvoice entity.SyUserInvoice)
+	SaveSyUserInvoice(syUserInvoice entity.SyUserInvoice)
+	UpdateSyUserInvoice(syUserInvoice entity.SyUserInvoice)
+	DeleteSyUserInvoice(syUserInvoice entity.SyUserInvoice)
 	GetAllPaidUserInvoices() []entity.SyUserInvoice
-	GetUserInvoice(ctx *gin.Context) []entity.SyUserInvoice
-	// CloseDB()
+	GetUserInvoice(id string) []entity.SyUserInvoice
+	CloseDB()
 }
 
 type syUserInvoiceDatabase struct {
@@ -46,15 +45,15 @@ func (db *syUserInvoiceDatabase) CloseDB() {
 	}
 }
 
-func (db *syUserInvoiceDatabase) Save(syUserInvoice entity.SyUserInvoice) {
+func (db *syUserInvoiceDatabase) SaveSyUserInvoice(syUserInvoice entity.SyUserInvoice) {
 	db.connection.Create(&syUserInvoice)
 }
 
-func (db *syUserInvoiceDatabase) Update(syUserInvoice entity.SyUserInvoice) {
+func (db *syUserInvoiceDatabase) UpdateSyUserInvoice(syUserInvoice entity.SyUserInvoice) {
 	db.connection.Save(&syUserInvoice)
 }
 
-func (db *syUserInvoiceDatabase) Delete(syUserInvoice entity.SyUserInvoice) {
+func (db *syUserInvoiceDatabase) DeleteSyUserInvoice(syUserInvoice entity.SyUserInvoice) {
 	db.connection.Delete(&syUserInvoice)
 }
 
@@ -64,8 +63,8 @@ func (db *syUserInvoiceDatabase) GetAllPaidUserInvoices() []entity.SyUserInvoice
 	return syUserInvoices
 }
 
-func (db *syUserInvoiceDatabase) GetUserInvoice(ctx *gin.Context) []entity.SyUserInvoice {
+func (db *syUserInvoiceDatabase) GetUserInvoice(id string) []entity.SyUserInvoice {
 	var syUserInvoice []entity.SyUserInvoice
-	db.connection.Set("gorm:auto_preload", true).First(&syUserInvoice, ctx.Param("id"))
+	db.connection.Set("gorm:auto_preload", true).First(&syUserInvoice, id)
 	return syUserInvoice
 }
