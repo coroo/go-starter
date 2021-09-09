@@ -2,6 +2,7 @@ package deliveries
 
 import (
 	"time"
+	"testing"
 	"bytes"
 	"encoding/json"
 
@@ -57,7 +58,7 @@ type syEtlPaymentRouteTestSuite struct {
 	serviceTest usecases.SyEtlPaymentService
 }
 
-func (suite *syEtlPaymentRouteTestSuite) SetupsyOdsEtlPaymentTest() {
+func (suite *syEtlPaymentRouteTestSuite) SetupTest() {
 	suite.serviceTest = new(syEtlPaymentRouteMock)
 }
 
@@ -122,10 +123,10 @@ func (suite *syEtlPaymentRouteTestSuite) TestCreateSyEtlPaymentRoute() {
 	handlerSyEtlPayment := &syEtlPaymentController{
 		usecases: suite.serviceTest,
 	}
-	r.POST("syOdsEtl/payment/create", handlerSyEtlPayment.CreateSyEtlPayment)
+	r.POST("syEtl/payment/create", handlerSyEtlPayment.CreateSyEtlPayment)
 
 	jsonValue, _ := json.Marshal(dummySyEtlPayment[0])
-	req, _ := http.NewRequest(http.MethodPost, "syOdsEtl/payment/create", bytes.NewBuffer(jsonValue))
+	req, _ := http.NewRequest(http.MethodPost, "/syEtl/payment/create", bytes.NewBuffer(jsonValue))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	r.ServeHTTP(w, req)
@@ -147,4 +148,8 @@ func (suite *syEtlPaymentRouteTestSuite) TestTruncateTableSyEtlPaymentsRoute() {
 
 	r.ServeHTTP(w, req)
 	assert.Equal(suite.T(), w.Code, 200)
+}
+
+func TestSyEtlPaymentRouteTestSuite(t *testing.T) {
+	suite.Run(t, new(syEtlPaymentRouteTestSuite))
 }

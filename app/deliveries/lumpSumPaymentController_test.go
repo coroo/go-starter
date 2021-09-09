@@ -3,6 +3,7 @@ package deliveries
 import (
 	"net/http"
 	"net/http/httptest"
+	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -34,7 +35,7 @@ type lumpSumPaymentRouteTestSuite struct {
 	serviceTest usecases.LumpSumPaymentService
 }
 
-func (suite *lumpSumPaymentRouteTestSuite) SetupOdsEtlPaymentTest() {
+func (suite *lumpSumPaymentRouteTestSuite) SetupTest() {
 	suite.serviceTest = new(lumpSumPaymentRouteMock)
 }
 
@@ -87,4 +88,8 @@ func (suite *lumpSumPaymentRouteTestSuite) TestGetLumpSumPaymentRoute() {
 
 	r.ServeHTTP(w, req)
 	assert.Equal(suite.T(), w.Code, 200)
+}
+
+func TestLumpSumPaymentRouteTestSuite(t *testing.T) {
+	suite.Run(t, new(lumpSumPaymentRouteTestSuite))
 }

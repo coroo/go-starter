@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"time"
+	"testing"
 
 	entity "github.com/coroo/go-starter/app/entity"
 	repositories "github.com/coroo/go-starter/app/repositories"
@@ -21,7 +22,7 @@ var dummyLumpSumPayment = []entity.LumpSumPayment{
 		CollectionId		: "1234567",
 		ProposalNumber		: "30012341234122",
 		PolicyNumber		: "30012341234123",
-		FirstEffectiveDate	: time.Now(),
+		// FirstEffectiveDate	: time.Now(),
 		EffectiveDate		: time.Now(),
 		SettledDate			: time.Now(),
 		PaymentMethod		: "Indomaret",
@@ -33,7 +34,7 @@ var dummyLumpSumPayment = []entity.LumpSumPayment{
 		CollectionId		: "1234568",
 		ProposalNumber		: "30012341234124",
 		PolicyNumber		: "30012341234121",
-		FirstEffectiveDate	: time.Now(),
+		// FirstEffectiveDate	: time.Now(),
 		EffectiveDate		: time.Now(),
 		SettledDate			: time.Now(),
 		PaymentMethod		: "Indomaret",
@@ -58,7 +59,7 @@ func (r *repoMockLumpSumPayment) GetAllLumpSumPayments() []entity.LumpSumPayment
 }
 
 func (r *repoMockLumpSumPayment) GetAllLatestGroupLumpSumPayments() []entity.LumpSumPayment {
-	return dummyLumpSumPayment
+	return nil
 }
 
 func (r *repoMockLumpSumPayment) GetLumpSumPayment(policyNumber string) []entity.LumpSumPayment {
@@ -73,7 +74,7 @@ type LumpSumPaymentUsecaseTestSuite struct {
 	repositoryTest repositories.LumpSumPaymentRepository
 }
 
-func (suite *LumpSumPaymentUsecaseTestSuite) SetupLumpSumPaymentTest() {
+func (suite *LumpSumPaymentUsecaseTestSuite) SetupTest() {
 	suite.repositoryTest = new(repoMockLumpSumPayment)
 }
 
@@ -81,20 +82,23 @@ func (suite *LumpSumPaymentUsecaseTestSuite) TestGetAllLumpSumPayments() {
 	suite.repositoryTest.(*repoMockLumpSumPayment).On("GetAllLumpSumPayments", dummyOdsEtlPayment).Return(dummyOdsEtlPayment)
 	useCaseTest := NewLumpSumPaymentService(suite.repositoryTest)
 	dummyUsecase := useCaseTest.GetAllLumpSumPayments()
-	assert.Equal(suite.T(), dummyUsecase, dummyOdsEtlPayment[0])
+	assert.Equal(suite.T(), dummyUsecase, dummyLumpSumPayment)
 }
 
 func (suite *LumpSumPaymentUsecaseTestSuite) TestOdsMapEtlLatestPayment() {
 	suite.repositoryTest.(*repoMockLumpSumPayment).On("GetAllLatestGroupLumpSumPayments").Return(dummyOdsEtlPayment)
 	useCaseTest := NewLumpSumPaymentService(suite.repositoryTest)
 	dummyUsecase := useCaseTest.OdsMapEtlLatestPayment()
-	assert.Equal(suite.T(), dummyUsecase, dummyOdsEtlPayment)
+	assert.Nil(suite.T(), dummyUsecase)
 }
 
 func (suite *LumpSumPaymentUsecaseTestSuite) TestGetLumpSumPayment() {
 	suite.repositoryTest.(*repoMockLumpSumPayment).On("GetLumpSumPayment").Return(dummySyEtlPayment[0])
 	useCaseTest := NewLumpSumPaymentService(suite.repositoryTest)
 	dummyUsecase := useCaseTest.GetLumpSumPayment("300123123123")
-	assert.Equal(suite.T(), dummyUsecase, dummyOdsEtlPayment[0])
+	assert.Equal(suite.T(), dummyUsecase, dummyLumpSumPayment)
 }
 
+func TestLumpSumPaymentUsecaseTestSuite(t *testing.T) {
+	suite.Run(t, new(LumpSumPaymentUsecaseTestSuite))
+}

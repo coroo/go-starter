@@ -53,7 +53,9 @@ func (db *syEtlPaymentDatabase) CloseDB() {
 func (db *syEtlPaymentDatabase) CreateSyEtlPayment(syEtlPayment entity.SyEtlPayment) {
 	data := &syEtlPayment
 	data.UpdatedAt = time.Now()
-	if err := db.connection.Where("policy_number = ?", data.PolicyNumber).First(&data).Error; err != nil {
+	if os.Getenv("DB_TEST") == ""{
+		db.connection.Create(data)
+	}else if err := db.connection.Where("policy_number = ?", data.PolicyNumber).First(&data).Error; err != nil {
 		db.connection.Create(data)
 	}
 }
@@ -86,8 +88,8 @@ func (db *syEtlPaymentDatabase) GetSyEtlPayment(policyNumber string) []entity.Sy
 
 func (db *syEtlPaymentDatabase) TruncateTableSyEtlPayments() {
 	if os.Getenv("DB_TEST") != "" {
-		db.connection.Exec("DELETE FROM etl_sy_payments;")
+		db.connection.Exec("DELETE FROM `etl_sy_payments`;")
 	} else {
-		db.connection.Exec("TRUNCATE etl_sy_payments;")
+		db.connection.Exec("TRUNCATE `etl_sy_payments`;")
 	}
 }

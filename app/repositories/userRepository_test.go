@@ -21,14 +21,14 @@ func (suite *UserRepositoryTestSuite) SetupTest() {
 	suite.db, _ = config.ConnectDB()
 }
 
-func (suite *UserRepositoryTestSuite) BuildNewUserRepository() {
+func (suite *UserRepositoryTestSuite) TestA_BuildNewUserRepository() {
 	repoTest := NewUserRepository()
 	var dummyImpl *UserRepository
 	assert.NotNil(suite.T(), repoTest)
 	assert.Implements(suite.T(), dummyImpl, repoTest)
 }
 
-func (suite *UserRepositoryTestSuite) CreateUser() {
+func (suite *UserRepositoryTestSuite) TestB_CreateUser() {
 	repoTest := NewUserRepository()
 	dummyUser := entity.User{
 		ID				: 1,
@@ -40,7 +40,7 @@ func (suite *UserRepositoryTestSuite) CreateUser() {
 	assert.Nil(suite.T(), err)
 }
 
-func (suite *UserRepositoryTestSuite) UpdateUser() {
+func (suite *UserRepositoryTestSuite) TestC_UpdateUser() {
 	repoTest := NewUserRepository()
 	dummyUser := entity.User{
 		ID				: 1,
@@ -52,29 +52,29 @@ func (suite *UserRepositoryTestSuite) UpdateUser() {
 	assert.Nil(suite.T(), userDummy)
 }
 
-func (suite *UserRepositoryTestSuite) AuthUser() {
+func (suite *UserRepositoryTestSuite) TestD_AuthUser() {
 	repoTest := NewUserRepository()
-	dummyUser := entity.User{
-		Email			: "kuncoro@test.com",
+	dummyUser2 := entity.User{
+		Email			: "kuncoro3@test.com",
 		Password		: "password",
 	}
-	userDummy := repoTest.AuthUser(dummyUser)
+	userDummy := repoTest.AuthUser(dummyUser2)
 	assert.NotNil(suite.T(), userDummy)
 }
 
-func (suite *UserRepositoryTestSuite) GetAllUsers() {
+func (suite *UserRepositoryTestSuite) TestE_GetAllUsers() {
 	repoTest := NewUserRepository()
 	userDummy := repoTest.GetAllUsers()
 	assert.NotNil(suite.T(), userDummy)
 }
 
-func (suite *UserRepositoryTestSuite) GetUser() {
+func (suite *UserRepositoryTestSuite) TestF_GetUser() {
 	repoTest := NewUserRepository()
 	userDummy := repoTest.GetUser("1")
 	assert.NotNil(suite.T(), userDummy)
 }
 
-func (suite *UserRepositoryTestSuite) RemoveUser() {
+func (suite *UserRepositoryTestSuite) TestG_RemoveUser() {
 	repoTest := NewUserRepository()
 	dummyUser := entity.User{
 		ID: 1,

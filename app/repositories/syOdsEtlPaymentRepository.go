@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"os"
+	
 	"github.com/coroo/go-starter/config"
 	entity "github.com/coroo/go-starter/app/entity"
 	"time"
@@ -53,7 +55,9 @@ func (db *syOdsEtlPaymentDatabase) CloseDB() {
 func (db *syOdsEtlPaymentDatabase) CreateSyOdsEtlPayment(syOdsEtlPayment entity.SyOdsEtlPayment) {
 	data := &syOdsEtlPayment
 	data.UpdatedAt = time.Now()
-	if err := db.connection.Where("policy_number = ?", data.PolicyNumber).First(&data).Error; err != nil {
+	if os.Getenv("DB_TEST") == ""{
+		db.connection.Create(data)
+	}else if err := db.connection.Where("policy_number = ?", data.PolicyNumber).First(&data).Error; err != nil {
 		// error handling...
 		db.connection.Create(data)
 	}

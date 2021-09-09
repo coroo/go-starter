@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"time"
+	"testing"
 
 	entity "github.com/coroo/go-starter/app/entity"
 	repositories "github.com/coroo/go-starter/app/repositories"
@@ -70,7 +71,7 @@ type SyEtlPaymentUsecaseTestSuite struct {
 	repositoryTest repositories.SyEtlPaymentRepository
 }
 
-func (suite *SyEtlPaymentUsecaseTestSuite) SetupSyEtlPaymentTest() {
+func (suite *SyEtlPaymentUsecaseTestSuite) SetupTest() {
 	suite.repositoryTest = new(repoMockSyEtlPayment)
 }
 
@@ -78,7 +79,7 @@ func (suite *SyEtlPaymentUsecaseTestSuite) TestCreateSyEtlPayment() {
 	suite.repositoryTest.(*repoMockSyEtlPayment).On("CreateSyEtlPayment", dummySyEtlPayment[0]).Return(dummySyOdsEtlPayment[0])
 	useCaseTest := NewSyEtlPaymentService(suite.repositoryTest)
 	dummyUsecase := useCaseTest.CreateSyEtlPayment(dummySyEtlPayment[0])
-	assert.Equal(suite.T(), dummyUsecase, dummySyEtlPayment[0])
+	assert.Equal(suite.T(), dummyUsecase, nil)
 }
 
 // tanya soal httprequest create
@@ -108,4 +109,8 @@ func (suite *SyEtlPaymentUsecaseTestSuite) TestTruncateTableSyEtlPayments() {
 	useCaseTest := NewSyEtlPaymentService(suite.repositoryTest)
 	dummyUsecase := useCaseTest.TruncateTableSyEtlPayments()
 	assert.Equal(suite.T(), dummyUsecase, nil)
+}
+
+func TestSyEtlPaymentUsecaseTestSuite(t *testing.T) {
+	suite.Run(t, new(SyEtlPaymentUsecaseTestSuite))
 }

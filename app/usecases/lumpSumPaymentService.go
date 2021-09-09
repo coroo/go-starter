@@ -50,7 +50,7 @@ func (service *lumpSumPaymentService) OdsMapEtlLatestPayment() []entity.LumpSumP
 		jsonData.ProposalNumber = s.ProposalNumber
 		jsonData.PaymentMethod = s.PaymentMethod
 		jsonData.TotalAmount = s.TotalAmount
-		jsonData.FirstPaymentDate = s.FirstEffectiveDate
+		// jsonData.FirstPaymentDate = s.FirstEffectiveDate
 		jsonData.PaymentDate = s.EffectiveDate
 
 		jsonValue, _ := json.Marshal(jsonData)

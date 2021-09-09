@@ -18,18 +18,18 @@ type odsEtlPaymentRepositoryTestSuite struct {
 	db  *gorm.DB
 }
 
-func (suite *odsEtlPaymentRepositoryTestSuite) SetupOdsEtlPaymentRepositoryTest() {
+func (suite *odsEtlPaymentRepositoryTestSuite) SetupTest() {
 	suite.db, _ = config.ConnectDB()
 }
 
-func (suite *odsEtlPaymentRepositoryTestSuite) TestBuildNewOdsEtlPaymentRepository() {
+func (suite *odsEtlPaymentRepositoryTestSuite) TestA_BuildNewOdsEtlPaymentRepository() {
 	repoTest := NewOdsEtlPaymentRepository()
 	var dummyImpl *OdsEtlPaymentRepository
 	assert.NotNil(suite.T(), repoTest)
 	assert.Implements(suite.T(), dummyImpl, repoTest)
 }
 
-func (suite *odsEtlPaymentRepositoryTestSuite) CreateOdsEtlPayment() {
+func (suite *odsEtlPaymentRepositoryTestSuite) TestB_CreateOdsEtlPayment() {
 	repoTest := NewOdsEtlPaymentRepository()
 	dummySyOdsEtlPayment := entity.OdsEtlPayment{
 		ID					: 1,
@@ -45,7 +45,7 @@ func (suite *odsEtlPaymentRepositoryTestSuite) CreateOdsEtlPayment() {
 	repoTest.CreateOdsEtlPayment(dummySyOdsEtlPayment)
 }
 
-func (suite *odsEtlPaymentRepositoryTestSuite) UpdateOdsEtlPayment() {
+func (suite *odsEtlPaymentRepositoryTestSuite) TestC_UpdateOdsEtlPayment() {
 	repoTest := NewOdsEtlPaymentRepository()
 	dummyOdsEtlPayment := entity.OdsEtlPayment{
 		ID					: 1,
@@ -61,30 +61,31 @@ func (suite *odsEtlPaymentRepositoryTestSuite) UpdateOdsEtlPayment() {
 	repoTest.UpdateOdsEtlPayment(dummyOdsEtlPayment)
 }
 
-func (suite *odsEtlPaymentRepositoryTestSuite) GetAllLatestGroupOdsEtlPayments() {
+func (suite *odsEtlPaymentRepositoryTestSuite) TestD_GetAllLatestGroupOdsEtlPayments() {
 	repoTest := NewOdsEtlPaymentRepository()
 	odsEtlPaymentDummy := repoTest.GetAllLatestGroupOdsEtlPayments()
 	assert.NotNil(suite.T(), odsEtlPaymentDummy)
 }
 
-func (suite *odsEtlPaymentRepositoryTestSuite) GetAllOdsEtlPayments() {
+func (suite *odsEtlPaymentRepositoryTestSuite) TestE_GetAllOdsEtlPayments() {
 	repoTest := NewOdsEtlPaymentRepository()
 	userPolicyDummy := repoTest.GetAllOdsEtlPayments()
 	assert.NotNil(suite.T(), userPolicyDummy)
 }
 
-func (suite *odsEtlPaymentRepositoryTestSuite) GetOdsEtlPayment() {
+func (suite *odsEtlPaymentRepositoryTestSuite) TestF_GetOdsEtlPayment() {
 	repoTest := NewOdsEtlPaymentRepository()
 	userPolicyDummy := repoTest.GetOdsEtlPayment("1")
 	assert.NotNil(suite.T(), userPolicyDummy)
 }
 
-func (suite *odsEtlPaymentRepositoryTestSuite) TruncateTableOdsEtlPayments() {
-	repoTest := NewOdsEtlPaymentRepository()
-	repoTest.TruncateTableOdsEtlPayments()
-}
+// sementara di comment karena ada perbedaan truncate pada sqlite dan mysql
+// func (suite *odsEtlPaymentRepositoryTestSuite) TestG_TruncateTableOdsEtlPayments() {
+// 	repoTest := NewOdsEtlPaymentRepository()
+// 	repoTest.TruncateTableOdsEtlPayments()
+// }
 
-func (suite *odsEtlPaymentRepositoryTestSuite) TestDeleteOdsEtlPayment() {
+func (suite *odsEtlPaymentRepositoryTestSuite) TestH_DeleteOdsEtlPayment() {
 	repoTest := NewOdsEtlPaymentRepository()
 	dummyOdsEtlPayment := entity.OdsEtlPayment{
 		ID: 1,

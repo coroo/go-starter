@@ -3,6 +3,7 @@ package deliveries
 import (
 	"net/http"
 	"net/http/httptest"
+	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -31,7 +32,7 @@ type UserPolicyRouteTestSuite struct {
 	serviceTest usecases.UserPolicyService
 }
 
-func (suite *UserPolicyRouteTestSuite) SetupUserPolicyTest() {
+func (suite *UserPolicyRouteTestSuite) SetupTest() {
 	suite.serviceTest = new(userPolicyRouteMock)
 }
 
@@ -46,10 +47,10 @@ func (suite *UserPolicyRouteTestSuite) TestUserPolicyIndexRoute() {
 		usecases: suite.serviceTest,
 	}
 	r.GET("userPolicies/index", handlerUserPolicy.GetAllUserPolicies)
-	req, _ := http.NewRequest(http.MethodGet, "/userPolicies/index", nil)
+	req, _ := http.NewRequest(http.MethodGet, "/userPolicies/index?is_overdue=1", nil)
 
 	r.ServeHTTP(w, req)
-	assert.Equal(suite.T(), w.Code, 200)
+	assert.Equal(suite.T(), 200, w.Code)
 }
 
 func (suite *UserPolicyRouteTestSuite) TestUserPolicyDetailRoute() {
@@ -62,9 +63,13 @@ func (suite *UserPolicyRouteTestSuite) TestUserPolicyDetailRoute() {
 	handlerUserPolicy := &userPolicyController{
 		usecases: suite.serviceTest,
 	}
-	r.GET("userPolicies/detail/1", handlerUserPolicy.GetUserPolicy)
+	r.GET("userPolicies/detail/:id", handlerUserPolicy.GetUserPolicy)
 	req, _ := http.NewRequest(http.MethodGet, "/userPolicies/detail/1", nil)
 
 	r.ServeHTTP(w, req)
-	assert.Equal(suite.T(), w.Code, 200)
+	assert.Equal(suite.T(), 200,w.Code)
+}
+
+func TestUserPolicyRouteTestSuite(t *testing.T) {
+	suite.Run(t, new(UserPolicyRouteTestSuite))
 }
