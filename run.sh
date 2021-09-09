@@ -107,14 +107,14 @@ do
                 echo "============================================"
                 echo "swag not found in app directory ..."
                 echo "trying to find swag in GOPATH root folder ..."
-                $HOME/go/bin/swag init
+                $HOME/go/bin/swag init --parseDependency --parseInternal
             } || { # catch 2 and else
                 echo "============================================"
                 echo "Please provide your golang location:"
                 echo "(e.g. /Users/kuncoro.barot/go)"
                 read MY_NAME
                 echo "Please wait ..."
-                $MY_NAME/bin/swag init   
+                $MY_NAME/bin/swag init --parseDependency --parseInternal
             }
         }
         break
