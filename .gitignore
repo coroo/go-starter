@@ -4,3 +4,8 @@ docs
 cp.out
 test.db
 testSy.db
+
+sonar.sh
+.sonar_lock
+sonar-go-to-slang-darwin-amd64
+report-task.txt
