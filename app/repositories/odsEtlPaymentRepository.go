@@ -52,7 +52,9 @@ func (db *odsEtlPaymentDatabase) CloseDB() {
 func (db *odsEtlPaymentDatabase) CreateOdsEtlPayment(odsEtlPayment entity.OdsEtlPayment) {
 	data := &odsEtlPayment
 	data.UpdatedAt = time.Now()
-	if err := db.connection.Where("policy_number = ?", data.PolicyNumber).First(&data).Error; err != nil {
+	if os.Getenv("DB_TEST") == ""{
+		db.connection.Create(data)
+	}else if err := db.connection.Where("policy_number = ?", data.PolicyNumber).First(&data).Error; err != nil {
 		// error handling...
 		db.connection.Create(data)
 	}
@@ -86,8 +88,8 @@ func (db *odsEtlPaymentDatabase) GetOdsEtlPayment(id string) []entity.OdsEtlPaym
 
 func (db *odsEtlPaymentDatabase) TruncateTableOdsEtlPayments() {
 	if os.Getenv("DB_TEST") != "" {
-		db.connection.Exec("DELETE FROM etl_ods_payments;")
+		db.connection.Exec("DELETE FROM `etl_ods_payments`;")
 	} else {
-		db.connection.Exec("TRUNCATE etl_ods_payments;")
+		db.connection.Exec("TRUNCATE `etl_ods_payments`;")
 	}
 }

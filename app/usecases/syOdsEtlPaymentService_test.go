@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"time"
+	"testing"
 
 	entity "github.com/coroo/go-starter/app/entity"
 	repositories "github.com/coroo/go-starter/app/repositories"
@@ -91,7 +92,7 @@ type SyOdsEtlPaymentUsecaseTestSuite struct {
 	repositoryTest repositories.SyOdsEtlPaymentRepository
 }
 
-func (suite *SyOdsEtlPaymentUsecaseTestSuite) SetupSyOdsEtlPaymentTest() {
+func (suite *SyOdsEtlPaymentUsecaseTestSuite) SetupTest() {
 	suite.repositoryTest = new(repoMockSyOdsEtlPayment)
 }
 
@@ -99,7 +100,7 @@ func (suite *SyOdsEtlPaymentUsecaseTestSuite) TestCreateSyOdsEtlPayment() {
 	suite.repositoryTest.(*repoMockSyOdsEtlPayment).On("CreateSyOdsEtlPayment", dummySyOdsEtlPayment).Return(dummySyOdsEtlPayment)
 	useCaseTest := NewSyOdsEtlPaymentService(suite.repositoryTest)
 	dummyUsecase := useCaseTest.CreateSyOdsEtlPayment(dummySyOdsEtlPayment[0])
-	assert.Equal(suite.T(), dummyUsecase, dummySyOdsEtlPayment[0])
+	assert.Equal(suite.T(), dummyUsecase, nil)
 }
 
 func (suite *SyOdsEtlPaymentUsecaseTestSuite) TestGetAllSyOdsEtlPayments() {
@@ -135,4 +136,8 @@ func (suite *SyOdsEtlPaymentUsecaseTestSuite) TestCancelOutstandingSyOdsEtlPayme
 	useCaseTest := NewSyOdsEtlPaymentService(suite.repositoryTest)
 	dummyUsecase := useCaseTest.CancelOutstandingSyOdsEtlPayments()
 	assert.Equal(suite.T(), dummyUsecase, dummySyOdsEtlPayment)
+}
+
+func TestSyOdsEtlPaymentUsecaseTestSuite(t *testing.T) {
+	suite.Run(t, new(SyOdsEtlPaymentUsecaseTestSuite))
 }

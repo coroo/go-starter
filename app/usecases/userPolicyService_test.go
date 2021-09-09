@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"time"
+	"testing"
 
 	entity "github.com/coroo/go-starter/app/entity"
 	repositories "github.com/coroo/go-starter/app/repositories"
@@ -121,7 +122,7 @@ type UserPolicyUsecaseTestSuite struct {
 	repositoryTest repositories.UserPolicyRepository
 }
 
-func (suite *UserPolicyUsecaseTestSuite) SetupUserPolicyTest() {
+func (suite *UserPolicyUsecaseTestSuite) SetupTest() {
 	suite.repositoryTest = new(repoMockUserPolicy)
 }
 
@@ -129,12 +130,16 @@ func (suite *UserPolicyUsecaseTestSuite) TestGetAllUserPolicies() {
 	suite.repositoryTest.(*repoMockUserPolicy).On("GetAllUserPolicies", dummyUserPolicy).Return(dummyUserPolicy)
 	useCaseTest := NewUserPolicyService(suite.repositoryTest)
 	dummyUser := useCaseTest.GetAllUserPolicies("")
-	assert.Equal(suite.T(), dummyUser, dummyUser)
+	assert.Equal(suite.T(), dummyUser, dummyUserPolicy)
 }
 
 func (suite *UserPolicyUsecaseTestSuite) TestGetUserPolicy() {
 	suite.repositoryTest.(*repoMockUserPolicy).On("GetUserPolicy", dummyUserPolicy[0]).Return(dummyUserPolicy[0])
 	useCaseTest := NewUserPolicyService(suite.repositoryTest)
 	dummyUser := useCaseTest.GetUserPolicy("1")
-	assert.Equal(suite.T(), dummyUser, dummyUser)
+	assert.Equal(suite.T(), dummyUser, dummyUserPolicy)
+}
+
+func TestUserPolicyUsecaseTestSuite(t *testing.T) {
+	suite.Run(t, new(UserPolicyUsecaseTestSuite))
 }

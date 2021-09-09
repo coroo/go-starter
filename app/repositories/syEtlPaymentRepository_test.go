@@ -18,18 +18,19 @@ type syEtlPaymentRepositoryTestSuite struct {
 	db  *gorm.DB
 }
 
-func (suite *syEtlPaymentRepositoryTestSuite) SetupSyEtlPaymentRepositoryTest() {
+func (suite *syEtlPaymentRepositoryTestSuite) SetupTest() {
 	suite.db, _ = config.ConnectDB()
 }
 
-func (suite *syEtlPaymentRepositoryTestSuite) TestBuildNewSyEtlPaymentRepository() {
+func (suite *syEtlPaymentRepositoryTestSuite) TestA_BuildNewSyEtlPaymentRepository() {
 	repoTest := NewSyEtlPaymentRepository()
 	var dummyImpl *SyEtlPaymentRepository
 	assert.NotNil(suite.T(), repoTest)
 	assert.Implements(suite.T(), dummyImpl, repoTest)
 }
 
-func (suite *syEtlPaymentRepositoryTestSuite) CreateSyEtlPayment() {
+// sementara di comment karena kena error select saat if
+func (suite *syEtlPaymentRepositoryTestSuite) TestB_CreateSyEtlPayment() {
 	repoTest := NewSyEtlPaymentRepository()
 	dummyEtlPayment := entity.SyEtlPayment{
 		ID					: 1,
@@ -44,7 +45,8 @@ func (suite *syEtlPaymentRepositoryTestSuite) CreateSyEtlPayment() {
 	repoTest.CreateSyEtlPayment(dummyEtlPayment)
 }
 
-func (suite *syEtlPaymentRepositoryTestSuite) UpdateSyEtlPayment() {
+// sementara di comment karena kena error berhubungan dengan select tetapi tetap ke update
+func (suite *syEtlPaymentRepositoryTestSuite) TestC_UpdateSyEtlPayment() {
 	repoTest := NewSyEtlPaymentRepository()
 	dummyEtlPayment := entity.SyEtlPayment{
 		ID					: 1,
@@ -59,30 +61,31 @@ func (suite *syEtlPaymentRepositoryTestSuite) UpdateSyEtlPayment() {
 	repoTest.UpdateSyEtlPayment(dummyEtlPayment)
 }
 
-func (suite *syEtlPaymentRepositoryTestSuite) GetAllLatestGroupSyEtlPayments() {
+func (suite *syEtlPaymentRepositoryTestSuite) TestD_GetAllLatestGroupSyEtlPayments() {
 	repoTest := NewSyEtlPaymentRepository()
 	userPolicyDummy := repoTest.GetAllLatestGroupSyEtlPayments()
 	assert.NotNil(suite.T(), userPolicyDummy)
 }
 
-func (suite *syEtlPaymentRepositoryTestSuite) GetAllSyEtlPayments() {
+func (suite *syEtlPaymentRepositoryTestSuite) TestE_GetAllSyEtlPayments() {
 	repoTest := NewSyEtlPaymentRepository()
 	userPolicyDummy := repoTest.GetAllSyEtlPayments()
 	assert.NotNil(suite.T(), userPolicyDummy)
 }
 
-func (suite *syEtlPaymentRepositoryTestSuite) GetSyEtlPayment() {
+func (suite *syEtlPaymentRepositoryTestSuite) TestF_GetSyEtlPayment() {
 	repoTest := NewSyEtlPaymentRepository()
-	userPolicyDummy := repoTest.GetSyEtlPayment("30012341234122")
+	userPolicyDummy := repoTest.GetSyEtlPayment("30012341234121")
 	assert.NotNil(suite.T(), userPolicyDummy)
 }
 
-func (suite *syEtlPaymentRepositoryTestSuite) TruncateTableSyEtlPayments() {
-	repoTest := NewSyEtlPaymentRepository()
-	repoTest.TruncateTableSyEtlPayments()
-}
+// sementara di comment karena perbedaan query mysql n sqlite
+// func (suite *syEtlPaymentRepositoryTestSuite) TestTruncateTableSyEtlPayments() {
+// 	repoTest := NewSyEtlPaymentRepository()
+// 	repoTest.TruncateTableSyEtlPayments()
+// }
 
-func (suite *syEtlPaymentRepositoryTestSuite) RemoveSyEtlPayment() {
+func (suite *syEtlPaymentRepositoryTestSuite) TestG_RemoveSyEtlPayment() {
 	repoTest := NewSyEtlPaymentRepository()
 	dummyEtlPayment := entity.SyEtlPayment{
 		ID: 1,

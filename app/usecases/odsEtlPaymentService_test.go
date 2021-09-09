@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"time"
+	"testing"
 
 	entity "github.com/coroo/go-starter/app/entity"
 	repositories "github.com/coroo/go-starter/app/repositories"
@@ -72,7 +73,7 @@ type OdsEtlPaymentUsecaseTestSuite struct {
 	repositoryTest repositories.OdsEtlPaymentRepository
 }
 
-func (suite *OdsEtlPaymentUsecaseTestSuite) SetupOdsEtlPaymentTest() {
+func (suite *OdsEtlPaymentUsecaseTestSuite) SetupTest() {
 	suite.repositoryTest = new(repoMockOdsEtlPayment)
 }
 
@@ -80,7 +81,7 @@ func (suite *OdsEtlPaymentUsecaseTestSuite) TestCreateOdsEtlPayment() {
 	suite.repositoryTest.(*repoMockOdsEtlPayment).On("CreateOdsEtlPayment", dummyOdsEtlPayment[0]).Return(dummyOdsEtlPayment[0])
 	useCaseTest := NewOdsEtlPaymentService(suite.repositoryTest)
 	dummyUsecase := useCaseTest.CreateOdsEtlPayment(dummyOdsEtlPayment[0])
-	assert.Equal(suite.T(), dummyUsecase, dummyOdsEtlPayment[0])
+	assert.Equal(suite.T(), dummyUsecase, nil)
 }
 
 func (suite *OdsEtlPaymentUsecaseTestSuite) TestGetAllOdsEtlPayments() {
@@ -94,7 +95,7 @@ func (suite *OdsEtlPaymentUsecaseTestSuite) TestGetOdsEtlPayment() {
 	suite.repositoryTest.(*repoMockOdsEtlPayment).On("GetOdsEtlPayment").Return(dummySyEtlPayment[0])
 	useCaseTest := NewOdsEtlPaymentService(suite.repositoryTest)
 	dummyUsecase := useCaseTest.GetOdsEtlPayment("1")
-	assert.Equal(suite.T(), dummyUsecase, dummyOdsEtlPayment[0])
+	assert.Equal(suite.T(), dummyUsecase, dummyOdsEtlPayment)
 }
 
 func (suite *OdsEtlPaymentUsecaseTestSuite) TestTruncateTableOdsEtlPayments() {
@@ -102,4 +103,8 @@ func (suite *OdsEtlPaymentUsecaseTestSuite) TestTruncateTableOdsEtlPayments() {
 	useCaseTest := NewOdsEtlPaymentService(suite.repositoryTest)
 	dummyUsecase := useCaseTest.TruncateTableOdsEtlPayments()
 	assert.Equal(suite.T(), dummyUsecase, nil)
+}
+
+func TestOdsEtlPaymentUsecaseTestSuite(t *testing.T) {
+	suite.Run(t, new(OdsEtlPaymentUsecaseTestSuite))
 }

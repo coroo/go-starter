@@ -3,6 +3,7 @@ package deliveries
 import (
 	"net/http"
 	"net/http/httptest"
+	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -31,7 +32,7 @@ type syUserInvoiceRouteTestSuite struct {
 	serviceTest usecases.SyUserInvoiceService
 }
 
-func (suite *syUserInvoiceRouteTestSuite) SetupSyUserInvoiceTest() {
+func (suite *syUserInvoiceRouteTestSuite) SetupTest() {
 	suite.serviceTest = new(syUserInvoiceRouteMock)
 }
 
@@ -67,4 +68,8 @@ func (suite *syUserInvoiceRouteTestSuite) TestSyMapEtlLatestPaymentRoute() {
 
 	r.ServeHTTP(w, req)
 	assert.Equal(suite.T(), w.Code, 200)
+}
+
+func TestSyUserInvoiceRouteTestSuite(t *testing.T) {
+	suite.Run(t, new(syUserInvoiceRouteTestSuite))
 }

@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"time"
+	"testing"
 
 	entity "github.com/coroo/go-starter/app/entity"
 	repositories "github.com/coroo/go-starter/app/repositories"
@@ -63,20 +64,24 @@ type SyUserInvoiceUsecaseTestSuite struct {
 	repositoryTest repositories.SyUserInvoiceRepository
 }
 
-func (suite *SyUserInvoiceUsecaseTestSuite) SetupSyUserInvoiceTest() {
+func (suite *SyUserInvoiceUsecaseTestSuite) SetupTest() {
 	suite.repositoryTest = new(repoMockSyUserInvoice)
 }
 
-func (suite *SyUserInvoiceUsecaseTestSuite) TestNewSyUserInvoiceService() {
-	suite.repositoryTest.(*repoMockSyUserInvoice).On("GetAllPaidUserInvoices").Return(dummySyUserInvoice)
+func (suite *SyUserInvoiceUsecaseTestSuite) TestGetAllSyUserInvoices() {
+	suite.repositoryTest.(*repoMockSyUserInvoice).On("GetAllSyUserInvoices").Return(dummySyUserInvoice)
 	useCaseTest := NewSyUserInvoiceService(suite.repositoryTest)
 	dummyUserInvoices := useCaseTest.GetAllSyUserInvoices()
-	assert.Equal(suite.T(), dummyUserInvoices, dummyUser)
+	assert.Equal(suite.T(), dummyUserInvoices, dummySyUserInvoice)
 }
 
 func (suite *SyUserInvoiceUsecaseTestSuite) SyMapEtlLatestPayment() {
 	suite.repositoryTest.(*repoMockSyUserInvoice).On("SyMapEtlLatestPayment").Return(dummySyUserInvoice)
 	useCaseTest := NewSyUserInvoiceService(suite.repositoryTest)
 	dummyUserInvoices := useCaseTest.SyMapEtlLatestPayment()
-	assert.Equal(suite.T(), dummyUserInvoices, dummyUser)
+	assert.Equal(suite.T(), dummyUserInvoices, dummySyUserInvoice)
+}
+
+func TestSyUserInvoiceUsecaseTestSuite(t *testing.T) {
+	suite.Run(t, new(SyUserInvoiceUsecaseTestSuite))
 }

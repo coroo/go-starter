@@ -4,6 +4,7 @@ import (
 	"time"
 	"bytes"
 	"encoding/json"
+	"testing"
 
 	"net/http"
 	"net/http/httptest"
@@ -55,7 +56,7 @@ type odsEtlPaymentRouteTestSuite struct {
 	serviceTest usecases.OdsEtlPaymentService
 }
 
-func (suite *odsEtlPaymentRouteTestSuite) SetupOdsEtlPaymentTest() {
+func (suite *odsEtlPaymentRouteTestSuite) SetupTest() {
 	suite.serviceTest = new(odsEtlPaymentRouteMock)
 }
 
@@ -106,7 +107,7 @@ func (suite *odsEtlPaymentRouteTestSuite) TestCreateOdsEtlPaymentRoute() {
 	r.POST("odsEtl/payment/create", handlerUser.CreateOdsEtlPayment)
 
 	jsonValue, _ := json.Marshal(dummyOdsEtlPayment[0])
-	req, _ := http.NewRequest(http.MethodPost, "odsEtl/payment/create", bytes.NewBuffer(jsonValue))
+	req, _ := http.NewRequest(http.MethodPost, "/odsEtl/payment/create", bytes.NewBuffer(jsonValue))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	r.ServeHTTP(w, req)
@@ -128,4 +129,8 @@ func (suite *odsEtlPaymentRouteTestSuite) TestTruncateTableOdsEtlPaymentsRoute()
 
 	r.ServeHTTP(w, req)
 	assert.Equal(suite.T(), w.Code, 200)
+}
+
+func TestOdsEtlPaymentRouteTestSuite(t *testing.T) {
+	suite.Run(t, new(odsEtlPaymentRouteTestSuite))
 }

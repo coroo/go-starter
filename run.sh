@@ -80,13 +80,13 @@ do
             case $IDE in
                 1)
                     echo "Default Unit Test"
-                    go test ./...
+                    go test ./... -p=1
                     bye_statement
                     exit
                     ;;
                 2)
                     echo "Coverage Unit Test"
-                    go test -coverprofile cp.out -v ./... && go tool cover -html=cp.out
+                    go test -p=1 -coverprofile cp.out -v ./... && go tool cover -html=cp.out
                     bye_statement
                     exit
                     ;;

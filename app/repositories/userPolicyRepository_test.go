@@ -19,18 +19,18 @@ type userPolicyRepositoryTestSuite struct {
 	db  *gorm.DB
 }
 
-func (suite *userPolicyRepositoryTestSuite) SetupuserPolicyRepositoryTest() {
+func (suite *userPolicyRepositoryTestSuite) SetupTest() {
 	suite.db, _ = config.ConnectDB()
 }
 
-func (suite *userPolicyRepositoryTestSuite) TestBuildNewUserRepository() {
+func (suite *userPolicyRepositoryTestSuite) TestA_BuildNewUserRepository() {
 	repoTest := NewUserPolicyRepository()
 	var dummyImpl *UserPolicyRepository
 	assert.NotNil(suite.T(), repoTest)
 	assert.Implements(suite.T(), dummyImpl, repoTest)
 }
 
-func (suite *userPolicyRepositoryTestSuite) CreateUserPolicy() {
+func (suite *userPolicyRepositoryTestSuite) TestB_CreateUserPolicy() {
 	repoTest := NewUserPolicyRepository()
 	dummyUserPolicy := entity.UserPolicy{
 		ID				: 1,
@@ -74,7 +74,7 @@ func (suite *userPolicyRepositoryTestSuite) CreateUserPolicy() {
 	repoTest.SaveUserPolicy(dummyUserPolicy)
 }
 
-func (suite *userPolicyRepositoryTestSuite) UpdateUserPolicy() {
+func (suite *userPolicyRepositoryTestSuite) TestC_UpdateUserPolicy() {
 	repoTest := NewUserPolicyRepository()
 	dummyUserPolicy := entity.UserPolicy{
 		ID				: 1,
@@ -118,13 +118,13 @@ func (suite *userPolicyRepositoryTestSuite) UpdateUserPolicy() {
 	repoTest.UpdateUserPolicy(dummyUserPolicy)
 }
 
-func (suite *userPolicyRepositoryTestSuite) GetAllUserPolicies() {
+func (suite *userPolicyRepositoryTestSuite) TestD_GetAllUserPolicies() {
 	repoTest := NewUserPolicyRepository()
 	userPolicyDummy := repoTest.GetAllUserPolicies("")
 	assert.NotNil(suite.T(), userPolicyDummy)
 }
 
-func (suite *userPolicyRepositoryTestSuite) GetUserPolicy() {
+func (suite *userPolicyRepositoryTestSuite) TestE_GetUserPolicy() {
 	c, _ := gin.CreateTestContext(httptest.NewRecorder())
 	c.Params = gin.Params{gin.Param{Key: "id", Value: "1"}}
 
@@ -133,7 +133,7 @@ func (suite *userPolicyRepositoryTestSuite) GetUserPolicy() {
 	assert.NotNil(suite.T(), userPolicyDummy)
 }
 
-func (suite *userPolicyRepositoryTestSuite) RemoveUserPolicy() {
+func (suite *userPolicyRepositoryTestSuite) TestF_RemoveUserPolicy() {
 	repoTest := NewUserPolicyRepository()
 	userPolicyDummy := entity.UserPolicy{
 		ID: 1,

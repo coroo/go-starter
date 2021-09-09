@@ -4,6 +4,7 @@ import (
 	"time"
 	"bytes"
 	"encoding/json"
+	"testing"
 
 	"net/http"
 	"net/http/httptest"
@@ -66,7 +67,7 @@ type syOdsEtlPaymentRouteTestSuite struct {
 	serviceTest usecases.SyOdsEtlPaymentService
 }
 
-func (suite *syOdsEtlPaymentRouteTestSuite) SetupsyOdsEtlPaymentTest() {
+func (suite *syOdsEtlPaymentRouteTestSuite) SetupTest() {
 	suite.serviceTest = new(syOdsEtlPaymentRouteMock)
 }
 
@@ -151,7 +152,7 @@ func (suite *syOdsEtlPaymentRouteTestSuite) TestCreateSyOdsEtlPaymentRoute() {
 	r.POST("syOdsEtl/payment/create", handlerSyOdsEtlPayment.CreateSyOdsEtlPayment)
 
 	jsonValue, _ := json.Marshal(dummyPayment[0])
-	req, _ := http.NewRequest(http.MethodPost, "syOdsEtl/payment/create", bytes.NewBuffer(jsonValue))
+	req, _ := http.NewRequest(http.MethodPost, "/syOdsEtl/payment/create", bytes.NewBuffer(jsonValue))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	r.ServeHTTP(w, req)
@@ -173,4 +174,8 @@ func (suite *syOdsEtlPaymentRouteTestSuite) TestCancelOutstandingSyOdsEtlPayment
 
 	r.ServeHTTP(w, req)
 	assert.Equal(suite.T(), w.Code, 200)
+}
+
+func TestSyOdsEtlPaymentRouteTestSuite(t *testing.T) {
+	suite.Run(t, new(syOdsEtlPaymentRouteTestSuite))
 }

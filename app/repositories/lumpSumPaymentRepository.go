@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"os"
 	"github.com/coroo/go-starter/config"
 	entity "github.com/coroo/go-starter/app/entity"
 
@@ -49,7 +50,9 @@ func (db *database) CloseDB() {
 }
 
 func (db *database) CreateLumSumPayment(lumpSumPayment entity.LumpSumPayment) {
-	if err := db.connection.Where("policy_number = ?", &lumpSumPayment.PolicyNumber).First(&lumpSumPayment).Error; err != nil {
+	if os.Getenv("DB_TEST") == ""{
+		db.connection.Create(&lumpSumPayment)
+	}else if err := db.connection.Where("policy_number = ?", &lumpSumPayment.PolicyNumber).First(&lumpSumPayment).Error; err != nil {
 		// error handling...
 		db.connection.Create(&lumpSumPayment)
 	}
@@ -69,7 +72,7 @@ func (db *database) GetAllLatestGroupLumpSumPayments() []entity.LumpSumPayment {
 		Select("policy_number, min(effective_date) as first_effective_date").
 		Table("lump_sum_payments").
 		Group("policy_number")
-	db.connection.Set("gorm:auto_preload", true).Select("lump_sum_payments.*, t1.first_effective_date").Joins("LEFT JOIN ? AS t1 ON t1.policy_number = lump_sum_payments.policy_number", subQuery).Where("(lump_sum_payments.policy_number, effective_date) IN ?", db.connection.Table("lump_sum_payments").Select("policy_number, max(effective_date) as effective_date").Group("policy_number")).Find(&lumpSumPaymentsGroup)
+	db.connection.Set("gorm:auto_preload", true).Select("`lump_sum_payments`.`*`, t1.first_effective_date").Joins("LEFT JOIN ? AS t1 ON t1.policy_number = lump_sum_payments.policy_number", subQuery).Where("(lump_sum_payments.policy_number, effective_date) IN ?", db.connection.Table("lump_sum_payments").Select("policy_number, max(effective_date) as effective_date").Group("policy_number")).Find(&lumpSumPaymentsGroup)
 	return lumpSumPaymentsGroup
 }
 
@@ -81,6 +84,6 @@ func (db *database) GetAllLumpSumPayments() []entity.LumpSumPayment {
 
 func (db *database) GetLumpSumPayment(policyNumber string) []entity.LumpSumPayment {
 	var lumpSumPayment []entity.LumpSumPayment
-	db.connection.Set("gorm:auto_preload", true).Where("(policy_number, effective_date) IN ?", db.connection.Table("lump_sum_payments").Select("policy_number, max(effective_date) as effective_date").Where("policy_number = ?", policyNumber).Group("policy_number")).First(&lumpSumPayment)
+	db.connection.Set("gorm:auto_preload", true).Where("(`policy_number`, `effective_date`) IN ?", db.connection.Table("lump_sum_payments").Select("`policy_number`, max(`effective_date`) as `effective_date`").Where("`policy_number` = ?", policyNumber).Group("policy_number")).First(&lumpSumPayment)
 	return lumpSumPayment
 }
