@@ -75,7 +75,7 @@ func IsInBlacklist(token string) bool {
     redisConn := redis.Connect()
     redisToken, _ := redisConn.GetValue(token)
     
-    if redisToken == nil {
+    if redisToken == nil || redisToken == ""{
         return false
     }
     
