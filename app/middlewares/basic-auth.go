@@ -24,10 +24,13 @@ func Auth(c *gin.Context) {
 	// fmt.Println(tokenString)
 	tokenArray := strings.Split(tokenString, " ")
 
+	// if authentication using uuid
 	if tokenArray[0] == "uuid" {
+		// get user by uuid
 		userRepo := repositories.NewUserRepository()
-		user := userRepo.GetUserByUuid(tokenArray[1])
-		if user.ID != 0 {
+		getUser := userRepo.GetUserByUuid(tokenArray[1])
+		// check if user founded with the uuid
+		if getUser.ID != 0 {
 			fmt.Println("uuid verified")
 		}else{
 			result := gin.H{
