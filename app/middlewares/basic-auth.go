@@ -21,7 +21,6 @@ func BasicAuth() gin.HandlerFunc {
 
 func Auth(c *gin.Context) {
 	tokenString := c.Request.Header.Get("Authorization")
-	// fmt.Println(tokenString)
 	tokenArray := strings.Split(tokenString, " ")
 
 	// if authentication using uuid
