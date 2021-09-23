@@ -17,6 +17,7 @@ type UserRepository interface {
 	DeleteUser(user entity.User) error
 	GetAllUsers() []entity.User
 	GetUser(id string) []entity.User
+	GetUserByUuid(uuid string) entity.User
 	AuthUser(user entity.User) entity.User
 }
 
@@ -64,6 +65,12 @@ func (db *userDatabase) GetAllUsers() []entity.User {
 func (db *userDatabase) GetUser(id string) []entity.User {
 	var user []entity.User
 	db.connection.Set("gorm:auto_preload", true).Where("id = ?", id).First(&user)
+	return user
+}
+
+func (db *userDatabase) GetUserByUuid(uuid string) entity.User {
+	var user entity.User
+	db.connection.Set("gorm:auto_preload", true).Where("uuid = ?", uuid).First(&user)
 	return user
 }
 
