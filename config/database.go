@@ -10,6 +10,11 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 )
 
+var Conn *gorm.DB
+var ConnSy *gorm.DB
+var Err error
+var ErrSy error
+
 func ConnectDB() (c *gorm.DB, err error) {
 	DB_CONNECTION := os.Getenv("DB_CONNECTION_ODS")
 	DB_HOST := os.Getenv("DB_HOST_ODS")
@@ -29,12 +34,14 @@ func ConnectDB() (c *gorm.DB, err error) {
 		}
 		return conn, err
 	} else {
-		conn, err := gorm.Open(mysql.Open(DB_DETAIL), &gorm.Config{})
-		if err != nil || conn == nil {
-			fmt.Println("Error connecting to DB")
-			fmt.Println(err.Error())
+		if Conn == nil{
+			Conn, Err = gorm.Open(mysql.Open(DB_DETAIL), &gorm.Config{})
+			if Err != nil || Conn == nil {
+				fmt.Println("Error connecting to DB")
+				fmt.Println(err.Error())
+			}
 		}
-		return conn, err
+		return Conn, Err
 	}
 }
 
@@ -63,12 +70,13 @@ func ConnectDBSY() (c *gorm.DB, err error) {
 		}
 		return conn, err
 	} else {
-		conn, err := gorm.Open(mysql.Open(DB_DETAIL), &gorm.Config{})
-		if err != nil || conn == nil {
-			fmt.Println("Error connecting to DB")
-			fmt.Println(err.Error())
+		if ConnSy == nil {
+			ConnSy, ErrSy := gorm.Open(mysql.Open(DB_DETAIL), &gorm.Config{})
+			if ErrSy != nil || ConnSy == nil {
+				fmt.Println("Error connecting to DB")
+				fmt.Println(err.Error())
+			}
 		}
-
-		return conn, err
+		return ConnSy, ErrSy
 	}
 }
