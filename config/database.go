@@ -71,7 +71,7 @@ func ConnectDBSY() (c *gorm.DB, err error) {
 		return conn, err
 	} else {
 		if ConnSy == nil {
-			ConnSy, ErrSy := gorm.Open(mysql.Open(DB_DETAIL), &gorm.Config{})
+			ConnSy, ErrSy = gorm.Open(mysql.Open(DB_DETAIL), &gorm.Config{})
 			if ErrSy != nil || ConnSy == nil {
 				fmt.Println("Error connecting to DB")
 				fmt.Println(err.Error())
