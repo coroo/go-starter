@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"os"
 	"net/http"
+	"strings"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	utils "github.com/coroo/go-starter/app/utils"
+	"github.com/coroo/go-starter/app/repositories"
 )
 
 func BasicAuth() gin.HandlerFunc {
@@ -19,29 +21,47 @@ func BasicAuth() gin.HandlerFunc {
 
 func Auth(c *gin.Context) {
 	tokenString := c.Request.Header.Get("Authorization")
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		if jwt.GetSigningMethod("HS256") != token.Method {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
-		}
+	// fmt.Println(tokenString)
+	tokenArray := strings.Split(tokenString, " ")
 
-		return []byte("secret"), nil
-	})
+	if tokenArray[0] == "uuid" {
+		userRepo := repositories.NewUserRepository()
+		user := userRepo.GetUserByUuid(tokenArray[1])
+		if user.ID != 0 {
+			fmt.Println("uuid verified")
+		}else{
+			result := gin.H{
+				"message": "not authorized",
+				"error":   "user not found",
+			}
+			c.JSON(http.StatusUnauthorized, result)
+			c.Abort()
+		}
+	}else{
+		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+			if jwt.GetSigningMethod("HS256") != token.Method {
+				return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+			}
+	
+			return []byte("secret"), nil
+		})
 
-	if token != nil && err == nil && !utils.IsInBlacklist(tokenString) {
-		fmt.Println("token verified")
-	} else if utils.IsInBlacklist(tokenString) {
-		result := gin.H{
-			"message": "not authorized",
-			"error":   "already logout",
+		if token != nil && err == nil && !utils.IsInBlacklist(tokenString) {
+			fmt.Println("token verified")
+		} else if utils.IsInBlacklist(tokenString) {
+			result := gin.H{
+				"message": "not authorized",
+				"error":   "already logout",
+			}
+			c.JSON(http.StatusUnauthorized, result)
+			c.Abort()
+		} else {
+			result := gin.H{
+				"message": "not authorized",
+				"error":   err.Error(),
+			}
+			c.JSON(http.StatusUnauthorized, result)
+			c.Abort()
 		}
-		c.JSON(http.StatusUnauthorized, result)
-		c.Abort()
-	} else {
-		result := gin.H{
-			"message": "not authorized",
-			"error":   err.Error(),
-		}
-		c.JSON(http.StatusUnauthorized, result)
-		c.Abort()
 	}
 }
