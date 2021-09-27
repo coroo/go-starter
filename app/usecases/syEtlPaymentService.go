@@ -43,13 +43,12 @@ func (service *syEtlPaymentService) GetAllSyEtlPayments() []entity.SyEtlPayment 
 
 func (service *syEtlPaymentService) SyOdsMapEtlLatestPayment() []entity.SyEtlPayment {
 	syEtlPayment := service.repositories.GetAllSyEtlPayments()
-
 	for _, s := range syEtlPayment {
 		if s.OdsEtlPayment.CollectionId != "" {
 			// Populate Data to SY ETL Payment
 			jsonData := new(entity.SyOdsEtlPayment)
 			jsonData.CollectionId = s.OdsEtlPayment.CollectionId
-			jsonData.PolicyNumber = s.PolicyNumber
+			jsonData.PolicyNumber = s.OdsPolicyNumber
 			jsonData.ProposalNumber = s.ProposalNumber
 			jsonData.PaymentMethodName = s.PaymentMethodName
 			jsonData.SyTotalAmount = s.TotalPremium
@@ -82,7 +81,6 @@ func (service *syEtlPaymentService) SyOdsMapEtlLatestPayment() []entity.SyEtlPay
 			}
 
 			jsonValue, _ := json.Marshal(jsonData)
-
 			res, err := utils.CreateHttpRequest("POST", os.Getenv("MAIN_SCHEMES")+"://"+os.Getenv("MAIN_URL")+"/"+os.Getenv("API_PREFIX")+"syOdsEtl/payment/create", jsonValue)
 			defer res.Body.Close()
 			if err != nil {

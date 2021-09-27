@@ -3,7 +3,7 @@ package utils
 import (
 	redis "github.com/coroo/go-starter/config/redis"
 	jwt "github.com/dgrijalva/jwt-go"
-	"encoding/base64"
+	// "encoding/base64"
 	"os"
 	
 	entity "github.com/coroo/go-starter/app/entity"
@@ -12,8 +12,10 @@ import (
 )
 
 func CreateAuth() string {
-	auth := os.Getenv("BASIC_AUTH_USERNAME") + ":" + os.Getenv("BASIC_AUTH_PASSWORD")
-	return "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
+	// auth := os.Getenv("BASIC_AUTH_USERNAME") + ":" + os.Getenv("BASIC_AUTH_PASSWORD")
+	// return "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
+
+	return "uuid "+os.Getenv("AUTH_UUID");
 }
 
 const (

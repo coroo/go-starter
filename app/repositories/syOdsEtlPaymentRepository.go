@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	_ "gorm.io/driver/mysql"
 	_ "github.com/joho/godotenv/autoload"
 )
@@ -73,36 +74,37 @@ func (db *syOdsEtlPaymentDatabase) DeleteSyOdsEtlPayment(syOdsEtlPayment entity.
 
 func (db *syOdsEtlPaymentDatabase) GetAllLatestGroupSyOdsEtlPayments() []entity.SyOdsEtlPayment {
 	var syOdsEtlPaymentsGroup []entity.SyOdsEtlPayment
-	db.connection.Set("gorm:auto_preload", true).Find(&syOdsEtlPaymentsGroup)
+	db.connection.Preload(clause.Associations).Find(&syOdsEtlPaymentsGroup)
 	return syOdsEtlPaymentsGroup
 }
 
 func (db *syOdsEtlPaymentDatabase) GetAllSyOdsEtlPayments() []entity.SyOdsEtlPayment {
 	var syOdsEtlPayments []entity.SyOdsEtlPayment
-	db.connection.Set("gorm:auto_preload", true).Find(&syOdsEtlPayments)
+	db.connection.Preload(clause.Associations).Find(&syOdsEtlPayments)
 	return syOdsEtlPayments
 }
 
 func (db *syOdsEtlPaymentDatabase) GetSyOdsEtlPaymentByPolicyNumber(policyNumber string) []entity.SyOdsEtlPayment {
 	var syOdsEtlPayment []entity.SyOdsEtlPayment
-	db.connection.Set("gorm:auto_preload", true).Where("policy_number = ?", policyNumber).Order("id desc").Find(&syOdsEtlPayment)
+	db.connection.Preload(clause.Associations).Where("policy_number = ?", policyNumber).Order("id desc").Find(&syOdsEtlPayment)
 	return syOdsEtlPayment
 }
 
 func (db *syOdsEtlPaymentDatabase) GetSyOdsEtlPaymentByStatus(status string) []entity.SyOdsEtlPayment {
 	var syOdsEtlPayment []entity.SyOdsEtlPayment
-	db.connection.Set("gorm:auto_preload", true).Where("status = ?", status).Find(&syOdsEtlPayment)
+	db.connection.Preload(clause.Associations).Where("status = ?", status).Find(&syOdsEtlPayment)
 	return syOdsEtlPayment
 }
 
 func (db *syOdsEtlPaymentDatabase) GetSyOdsEtlPaymentDailyByStatus(status string) []entity.SyOdsEtlPayment {
 	var syOdsEtlPayment []entity.SyOdsEtlPayment
-	db.connection.Set("gorm:auto_preload", true).Where("status = ? AND DATE(updated_at) = ?", status, time.Now().Format("2006-02-01")).Find(&syOdsEtlPayment)
+	db.connection.Preload(clause.Associations).Where("status = ? AND DATE(updated_at) = ?", status, time.Now().Format("2006-02-01")).Find(&syOdsEtlPayment)
 	return syOdsEtlPayment
 }
 
 func (db *syOdsEtlPaymentDatabase) CancelOutstandingSyOdsEtlPayments() []entity.SyOdsEtlPayment {
 	var syOdsEtlPayment []entity.SyOdsEtlPayment
-	db.connection.Model(&syOdsEtlPayment).Where("status = ?", "queue").UpdateColumn("status", "cancel")
+	// nanti dicoba diubah pake Model(&syIdsEtlPayment) lagi, skarang blm ketemu knapa error pointer nil
+	db.connection.Table("etl_sy_ods_payments").Where("status = ?", "queue").Update("status", "cancel")
 	return syOdsEtlPayment
 }

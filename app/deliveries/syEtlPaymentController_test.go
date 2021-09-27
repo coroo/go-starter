@@ -23,7 +23,7 @@ var dummySyEtlPayment = []*entity.SyEtlPayment{
 	&entity.SyEtlPayment{
 		ID					: 1,
 		ProposalNumber		: "600012345678",
-		PolicyNumber		: "3001234567",
+		OdsPolicyNumber		: "3001234567",
 		PaidDate			: time.Now(),
 		PaymentMethodName	: "Indomaret",
 		PolicyStatus		: "success",

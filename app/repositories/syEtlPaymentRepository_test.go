@@ -35,7 +35,7 @@ func (suite *syEtlPaymentRepositoryTestSuite) TestB_CreateSyEtlPayment() {
 	dummyEtlPayment := entity.SyEtlPayment{
 		ID					: 1,
 		ProposalNumber		: "30012341234123",
-		PolicyNumber		: "30012341234122",
+		OdsPolicyNumber		: "30012341234122",
 		PaidDate			: time.Now(),
 		PaymentMethodName	: "Indomaret",
 		PolicyStatus		: "closed",
@@ -51,7 +51,7 @@ func (suite *syEtlPaymentRepositoryTestSuite) TestC_UpdateSyEtlPayment() {
 	dummyEtlPayment := entity.SyEtlPayment{
 		ID					: 1,
 		ProposalNumber		: "30012341234124",
-		PolicyNumber		: "30012341234121",
+		OdsPolicyNumber		: "30012341234121",
 		PaidDate			: time.Now(),
 		PaymentMethodName	: "Indomaret",
 		PolicyStatus		: "closed",

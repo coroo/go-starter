@@ -5,6 +5,7 @@ import (
 	entity "github.com/coroo/go-starter/app/entity"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	_ "gorm.io/driver/mysql"
 	_ "github.com/joho/godotenv/autoload"
 )
@@ -59,12 +60,12 @@ func (db *syUserInvoiceDatabase) DeleteSyUserInvoice(syUserInvoice entity.SyUser
 
 func (db *syUserInvoiceDatabase) GetAllPaidUserInvoices() []entity.SyUserInvoice {
 	var syUserInvoices []entity.SyUserInvoice
-	db.connection.Set("gorm:auto_preload", true).Select("*, payment_methods.name as payment_method_name").Where("(user_invoices.policy_group_number, paid_at) IN ?", db.connection.Table("user_invoices").Select("user_invoices.policy_group_number, max(paid_at) as paid_at").Group("user_invoices.policy_group_number")).Joins("left join user_policies on user_policies.policy_group_number = user_invoices.policy_group_number").Joins("left join payment_methods on payment_methods.id = user_invoices.payment_method_id").Where("policy_number IS NOT NULL").Find(&syUserInvoices)
+	db.connection.Preload(clause.Associations).Select("*, payment_methods.name as payment_method_name").Where("(user_invoices.policy_group_number, paid_at) IN (?)", db.connection.Table("user_invoices").Select("user_invoices.policy_group_number, max(paid_at) as paid_at").Group("user_invoices.policy_group_number")).Joins("left join user_policies on user_policies.policy_group_number = user_invoices.policy_group_number").Joins("left join payment_methods on payment_methods.id = user_invoices.payment_method_id").Where("policy_number IS NOT NULL").Find(&syUserInvoices)
 	return syUserInvoices
 }
 
 func (db *syUserInvoiceDatabase) GetUserInvoice(id string) []entity.SyUserInvoice {
 	var syUserInvoice []entity.SyUserInvoice
-	db.connection.Set("gorm:auto_preload", true).First(&syUserInvoice, id)
+	db.connection.Preload(clause.Associations).First(&syUserInvoice, id)
 	return syUserInvoice
 }

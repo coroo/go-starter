@@ -7,6 +7,7 @@ import (
 
 	// "github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	_ "gorm.io/driver/mysql"
 	_ "github.com/joho/godotenv/autoload"
 )
@@ -61,7 +62,7 @@ func (db *userPolicyDatabase) DeleteUserPolicy(userPolicy entity.UserPolicy) {
 
 func (db *userPolicyDatabase) GetAllUserPolicies(is_overdue string) []entity.UserPolicy {
 	var userPolicies []entity.UserPolicy
-	query := db.connection.Set("gorm:auto_preload", true)
+	query := db.connection.Preload(clause.Associations)
 
 	// if param overdue exist, do query 
 	if is_overdue == "1" || strings.ToLower(is_overdue) == "true"{
@@ -75,6 +76,6 @@ func (db *userPolicyDatabase) GetAllUserPolicies(is_overdue string) []entity.Use
 
 func (db *userPolicyDatabase) GetUserPolicy(id string) []entity.UserPolicy {
 	var userPolicy []entity.UserPolicy
-	db.connection.Set("gorm:auto_preload", true).First(&userPolicy, id)
+	db.connection.Preload(clause.Associations).First(&userPolicy, id)
 	return userPolicy
 }

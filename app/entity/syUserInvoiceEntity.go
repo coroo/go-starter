@@ -13,7 +13,7 @@ type SyUserInvoice struct {
 	TotalPremium      float64      `json:"total_premium"`
 	Status            string       `json:"status"`
 	PaidAt            time.Time    `json:"paid_at"`
-	SyUserPolicy      SyUserPolicy `gorm:"foreignkey:PolicyNumber;AssociationForeignKey:PolicyNumber"`
+	SyUserPolicy      SyUserPolicy `gorm:"foreignKey:PolicyNumber;references:PolicyNumber"`
 	// ProposalNumber string    `json:"proposal_number"`
 	// PolicyNumber   string    `json:"policy_number";sql:"index"`
 	// PaymentMethod  string    `json:"payment_method"`
