@@ -1,0 +1,60 @@
+version: '3.4'
+
+services:
+  gostarter:
+    image: gostarter
+    build: .
+    ports:
+      - 8085:8085
+    depends_on:
+      - mysql
+    environment:
+      - DB_HOST=mysql
+  mysql:
+    # image: mysql:latest
+    # ports:
+    #   - 3306:3306
+    # volumes:
+    #   - ./mysql:/var/lib/mysql
+    # env_file:
+    #   - .env
+    # environment: 
+    #   - MYSQL_ROOT_HOST=127.0.0.1
+    #   - MYSQL_ROOT_USER=root
+    #   - MYSQL_PASSWORD=
+    #   - MYSQL_ROOT_DATABASE=superyou_ods
+    #   - MYSQL_ROOT_PASSWORD=
+    #   - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: '${DB_DATABASE_ODS}'
+      # So you don't have to use root, but you can if you like
+      MYSQL_ROOT_USER: '${DB_USERNAME_ODS}'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: '${DB_PASSWORD_ODS}'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD_ODS}'
+      # Allow Empty Password
+      MYSQL_ALLOW_EMPTY_PASSWORD: ${DB_ALLOW_EMPTY_PASSWORD_ODS}
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - '${DB_PORT_ODS}:${DB_PORT_ODS}'
+    expose:
+      # Opens port 3306 on the container
+      - '${DB_PORT_ODS}'
+      # Where our data will be persisted
+    volumes:
+      - db_data:/var/lib/mysql
+  redis:                                                                          
+    image: redis
+    ports:
+      - "6379:6379" 
+    expose:
+      # Opens port 3306 on the container
+      - '6379'
+      # Where our data will be persisted
+      
+# Names our volume
+volumes:
+  db_data:
