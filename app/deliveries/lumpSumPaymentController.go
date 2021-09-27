@@ -49,6 +49,7 @@ func (deliveries *lumpSumPaymentController) GetAllLumpSumPayments(ctx *gin.Conte
 // @Security basicAuth
 // @Summary Map all existing ods userInvoice to odsEtlPayment
 // @Description Map all the existing ods userInvoice to odsEtlPayment
+// @Param Authorization header string true "Bearer"
 // @Tags odsLumpSumPayments
 // @Accept  json
 // @Produce  json

@@ -7,6 +7,7 @@ import (
 	"github.com/coroo/go-starter/config"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	_ "gorm.io/driver/mysql"
 	_ "github.com/joho/godotenv/autoload"
 )
@@ -58,24 +59,24 @@ func (db *userDatabase) DeleteUser(user entity.User) error {
 
 func (db *userDatabase) GetAllUsers() []entity.User {
 	var users []entity.User
-	db.connection.Set("gorm:auto_preload", true).Find(&users)
+	db.connection.Preload(clause.Associations).Find(&users)
 	return users
 }
 
 func (db *userDatabase) GetUser(id string) []entity.User {
 	var user []entity.User
-	db.connection.Set("gorm:auto_preload", true).Where("id = ?", id).First(&user)
+	db.connection.Preload(clause.Associations).Where("id = ?", id).First(&user)
 	return user
 }
 
 func (db *userDatabase) GetUserByUuid(uuid string) entity.User {
 	var user entity.User
-	db.connection.Set("gorm:auto_preload", true).Where("uuid = ?", uuid).First(&user)
+	db.connection.Preload(clause.Associations).Where("uuid = ?", uuid).First(&user)
 	return user
 }
 
 func (db *userDatabase) AuthUser(user entity.User) entity.User {
 	data := &user
-	db.connection.Set("gorm:auto_preload", true).Where("email = ?", data.Email).First(&user)
+	db.connection.Preload(clause.Associations).Where("email = ?", data.Email).First(&user)
 	return user
 }

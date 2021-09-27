@@ -40,7 +40,7 @@ func (service *syUserInvoiceService) SyMapEtlLatestPayment() []entity.SyUserInvo
 	for _, s := range lumpSumPayment {
 		// Populate Data to SY ETL Payment
 		jsonData := new(entity.SyEtlPayment)
-		jsonData.PolicyNumber = s.PolicyNumber
+		jsonData.OdsPolicyNumber = s.PolicyNumber
 		jsonData.ProposalNumber = s.ProposalNumber
 		jsonData.PaymentMethodName = s.PaymentMethodName
 		jsonData.TotalPremium = s.TotalPremium
@@ -51,7 +51,7 @@ func (service *syUserInvoiceService) SyMapEtlLatestPayment() []entity.SyUserInvo
 
 		_, err := utils.CreateHttpRequest("POST", os.Getenv("MAIN_SCHEMES")+"://"+os.Getenv("MAIN_URL")+"/"+os.Getenv("API_PREFIX")+"syEtl/payment/create", jsonValue)
 		if err != nil {
-			// utils.ErrorLogger(err)
+			utils.ErrorLogger(err)
 		}
 	}
 	return lumpSumPayment

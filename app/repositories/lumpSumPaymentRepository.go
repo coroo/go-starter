@@ -7,6 +7,7 @@ import (
 
 	// "github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	_ "gorm.io/driver/mysql"
 	_ "github.com/joho/godotenv/autoload"
 )
@@ -72,18 +73,18 @@ func (db *database) GetAllLatestGroupLumpSumPayments() []entity.LumpSumPayment {
 		Select("policy_number, min(effective_date) as first_effective_date").
 		Table("lump_sum_payments").
 		Group("policy_number")
-	db.connection.Set("gorm:auto_preload", true).Select("`lump_sum_payments`.`*`, t1.first_effective_date").Joins("LEFT JOIN ? AS t1 ON t1.policy_number = lump_sum_payments.policy_number", subQuery).Where("(lump_sum_payments.policy_number, effective_date) IN ?", db.connection.Table("lump_sum_payments").Select("policy_number, max(effective_date) as effective_date").Group("policy_number")).Find(&lumpSumPaymentsGroup)
+	db.connection.Preload(clause.Associations).Select("lump_sum_payments.*, t1.first_effective_date").Joins("LEFT JOIN (?) AS t1 ON t1.policy_number = lump_sum_payments.policy_number", subQuery).Where("(lump_sum_payments.policy_number, effective_date) IN (?)", db.connection.Table("lump_sum_payments").Select("policy_number, max(effective_date) as effective_date").Group("policy_number")).Find(&lumpSumPaymentsGroup)
 	return lumpSumPaymentsGroup
 }
 
 func (db *database) GetAllLumpSumPayments() []entity.LumpSumPayment {
 	var lumpSumPayments []entity.LumpSumPayment
-	db.connection.Set("gorm:auto_preload", true).Find(&lumpSumPayments)
+	db.connection.Preload(clause.Associations).Find(&lumpSumPayments)
 	return lumpSumPayments
 }
 
 func (db *database) GetLumpSumPayment(policyNumber string) []entity.LumpSumPayment {
 	var lumpSumPayment []entity.LumpSumPayment
-	db.connection.Set("gorm:auto_preload", true).Where("(`policy_number`, `effective_date`) IN ?", db.connection.Table("lump_sum_payments").Select("`policy_number`, max(`effective_date`) as `effective_date`").Where("`policy_number` = ?", policyNumber).Group("policy_number")).First(&lumpSumPayment)
+	db.connection.Preload(clause.Associations).Where("(`policy_number`, `effective_date`) IN ?", db.connection.Table("lump_sum_payments").Select("`policy_number`, max(`effective_date`) as `effective_date`").Where("`policy_number` = ?", policyNumber).Group("policy_number")).First(&lumpSumPayment)
 	return lumpSumPayment
 }

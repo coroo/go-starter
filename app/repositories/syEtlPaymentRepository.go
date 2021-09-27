@@ -5,9 +5,10 @@ import (
 	"github.com/coroo/go-starter/config"
 	entity "github.com/coroo/go-starter/app/entity"
 	"time"
-
+	
 	// "github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	_ "gorm.io/driver/mysql"
 	_ "github.com/joho/godotenv/autoload"
 )
@@ -55,7 +56,7 @@ func (db *syEtlPaymentDatabase) CreateSyEtlPayment(syEtlPayment entity.SyEtlPaym
 	data.UpdatedAt = time.Now()
 	if os.Getenv("DB_TEST") == ""{
 		db.connection.Create(data)
-	}else if err := db.connection.Where("policy_number = ?", data.PolicyNumber).First(&data).Error; err != nil {
+	}else if err := db.connection.Where("policy_number = ?", data.OdsPolicyNumber).First(&data).Error; err != nil {
 		db.connection.Create(data)
 	}
 }
@@ -70,19 +71,19 @@ func (db *syEtlPaymentDatabase) DeleteSyEtlPayment(syEtlPayment entity.SyEtlPaym
 
 func (db *syEtlPaymentDatabase) GetAllLatestGroupSyEtlPayments() []entity.SyEtlPayment {
 	var syEtlPaymentsGroup []entity.SyEtlPayment
-	db.connection.Set("gorm:auto_preload", true).Find(&syEtlPaymentsGroup)
+	db.connection.Preload(clause.Associations).Find(&syEtlPaymentsGroup)
 	return syEtlPaymentsGroup
 }
 
 func (db *syEtlPaymentDatabase) GetAllSyEtlPayments() []entity.SyEtlPayment {
 	var syEtlPayments []entity.SyEtlPayment
-	db.connection.Set("gorm:auto_preload", true).Select("*").Joins("left join etl_ods_payments on etl_ods_payments.policy_number = etl_sy_payments.policy_number").Find(&syEtlPayments)
+	db.connection.Preload(clause.Associations).Select("*").Joins("left join etl_ods_payments on etl_ods_payments.policy_number = etl_sy_payments.policy_number").Find(&syEtlPayments)
 	return syEtlPayments
 }
 
 func (db *syEtlPaymentDatabase) GetSyEtlPayment(policyNumber string) []entity.SyEtlPayment {
 	var syEtlPayment []entity.SyEtlPayment
-	db.connection.Set("gorm:auto_preload", true).Where("policy_number = ?", policyNumber).First(&syEtlPayment)
+	db.connection.Preload(clause.Associations).Where("policy_number = ?", policyNumber).First(&syEtlPayment)
 	return syEtlPayment
 }
 

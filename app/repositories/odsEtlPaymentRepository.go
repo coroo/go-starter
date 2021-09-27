@@ -8,6 +8,7 @@ import (
 
 	// "github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	_ "gorm.io/driver/mysql"
 	_ "github.com/joho/godotenv/autoload"
 )
@@ -70,19 +71,19 @@ func (db *odsEtlPaymentDatabase) DeleteOdsEtlPayment(odsEtlPayment entity.OdsEtl
 
 func (db *odsEtlPaymentDatabase) GetAllLatestGroupOdsEtlPayments() []entity.OdsEtlPayment {
 	var odsEtlPaymentsGroup []entity.OdsEtlPayment
-	db.connection.Set("gorm:auto_preload", true).Find(&odsEtlPaymentsGroup)
+	db.connection.Preload(clause.Associations).Find(&odsEtlPaymentsGroup)
 	return odsEtlPaymentsGroup
 }
 
 func (db *odsEtlPaymentDatabase) GetAllOdsEtlPayments() []entity.OdsEtlPayment {
 	var odsEtlPayments []entity.OdsEtlPayment
-	db.connection.Set("gorm:auto_preload", true).Find(&odsEtlPayments)
+	db.connection.Preload(clause.Associations).Find(&odsEtlPayments)
 	return odsEtlPayments
 }
 
 func (db *odsEtlPaymentDatabase) GetOdsEtlPayment(id string) []entity.OdsEtlPayment {
 	var odsEtlPayment []entity.OdsEtlPayment
-	db.connection.Set("gorm:auto_preload", true).First(&odsEtlPayment, id)
+	db.connection.Preload(clause.Associations).First(&odsEtlPayment, id)
 	return odsEtlPayment
 }
 
