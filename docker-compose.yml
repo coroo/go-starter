@@ -37,6 +37,8 @@ services:
       MYSQL_ROOT_PASSWORD: '${DB_PASSWORD_ODS}'
       # Allow Empty Password
       MYSQL_ALLOW_EMPTY_PASSWORD: ${DB_ALLOW_EMPTY_PASSWORD_ODS}
+      # Port
+      MYSQL_TCP_PORT: '${DB_PORT_ODS}'
     ports:
       # <Port exposed> : < MySQL Port running inside container>
       - '${DB_PORT_ODS}:${DB_PORT_ODS}'
