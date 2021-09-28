@@ -42,7 +42,7 @@ func ConnectDB() (c *gorm.DB, err error) {
 			database.Conn, database.Err = gorm.Open(mysql.Open(DB_DETAIL), &gorm.Config{})
 			if database.Err != nil || database.Conn == nil {
 				fmt.Println("Error connecting to DB")
-				fmt.Println(err.Error())
+				fmt.Println(database.Err.Error())
 			}
 		}
 		return database.Conn, database.Err
@@ -78,7 +78,7 @@ func ConnectDBSY() (c *gorm.DB, err error) {
 			database.ConnSy, database.ErrSy = gorm.Open(mysql.Open(DB_DETAIL), &gorm.Config{})
 			if database.ErrSy != nil || database.ConnSy == nil {
 				fmt.Println("Error connecting to DB")
-				fmt.Println(err.Error())
+				fmt.Println(database.Err.Error())
 			}
 		}
 		return database.ConnSy, database.ErrSy
