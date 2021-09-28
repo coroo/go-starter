@@ -51,10 +51,10 @@ func (deliveries *odsEtlPaymentController) GetAllOdsEtlPayments(ctx *gin.Context
 // @Tags odsEtlPayments
 // @Accept  json
 // @Produce  json
-// @Param  policyNumber path int true "Lump Sum Policy Number"
+// @Param  id path int true "OdsEtlPayment ID"
 // @Success 200 {array} entity.OdsEtlPayment
 // @Failure 401 {object} dto.Response
-// @Router /odsEtl/payment/detail/{policyNumber} [get]
+// @Router /odsEtl/payment/detail/{id} [get]
 func (deliveries *odsEtlPaymentController) GetOdsEtlPayment(ctx *gin.Context){
 	odsEtlPayment :=  deliveries.usecases.GetOdsEtlPayment(ctx.Param("id"))
 	ctx.JSON(http.StatusOK, gin.H{"data": odsEtlPayment})
@@ -76,7 +76,6 @@ func (deliveries *odsEtlPaymentController) GetOdsEtlPayment(ctx *gin.Context){
 func (deliveries *odsEtlPaymentController) CreateOdsEtlPayment(ctx *gin.Context){
 	var odsEtlPayment entity.OdsEtlPayment
 	err := ctx.ShouldBindJSON(&odsEtlPayment)
-
 	if err != nil {
 		ctx.JSON(http.StatusConflict, err)
 		// ctx.JSON(http.StatusConflict, err)

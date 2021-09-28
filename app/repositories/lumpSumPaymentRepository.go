@@ -85,6 +85,6 @@ func (db *database) GetAllLumpSumPayments() []entity.LumpSumPayment {
 
 func (db *database) GetLumpSumPayment(policyNumber string) []entity.LumpSumPayment {
 	var lumpSumPayment []entity.LumpSumPayment
-	db.connection.Preload(clause.Associations).Where("(`policy_number`, `effective_date`) IN ?", db.connection.Table("lump_sum_payments").Select("`policy_number`, max(`effective_date`) as `effective_date`").Where("`policy_number` = ?", policyNumber).Group("policy_number")).First(&lumpSumPayment)
+	db.connection.Preload(clause.Associations).Where("(`policy_number`, `effective_date`) IN (?)", db.connection.Table("lump_sum_payments").Select("`policy_number`, max(`effective_date`) as `effective_date`").Where("`policy_number` = ?", policyNumber).Group("policy_number")).First(&lumpSumPayment)
 	return lumpSumPayment
 }

@@ -70,6 +70,7 @@ func (deliveries *lumpSumPaymentController) OdsMapEtlLatestPayment(ctx *gin.Cont
 // @Accept  json
 // @Produce  json
 // @Param  policyNumber path int true "Lump Sum Policy Number"
+// @Param Authorization header string true "Bearer"
 // @Success 200 {array} entity.LumpSumPayment
 // @Failure 401 {object} dto.Response
 // @Router /lumpSumPayment/detail/{policyNumber} [get]
