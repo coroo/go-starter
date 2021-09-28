@@ -81,12 +81,16 @@ do
                 1)
                     echo "Default Unit Test"
                     go test ./... -p=1
+                    rm -rf test.db
+                    rm -rf testsy.db
                     bye_statement
                     exit
                     ;;
                 2)
                     echo "Coverage Unit Test"
                     go test -p=1 -coverprofile cp.out -v ./... && go tool cover -html=cp.out
+                    rm -rf test.db
+                    rm -rf testsy.db
                     bye_statement
                     exit
                     ;;
