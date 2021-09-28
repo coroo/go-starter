@@ -70,6 +70,10 @@ func (r *repoMockUser) AuthUser(user entity.User) entity.User {
 	return dummyUser[0]
 }
 
+func (r *repoMockUser) GetUserByUuid(uuid string) entity.User {
+	return dummyUser[0]
+}
+
 func (r *repoMockUser) CloseDB() {
 }
 

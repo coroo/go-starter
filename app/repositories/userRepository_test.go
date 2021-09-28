@@ -74,7 +74,15 @@ func (suite *UserRepositoryTestSuite) TestF_GetUser() {
 	assert.NotNil(suite.T(), userDummy)
 }
 
-func (suite *UserRepositoryTestSuite) TestG_RemoveUser() {
+func (suite *UserRepositoryTestSuite) TestG_GetUserByUuid() {
+	repoTest := NewUserRepository()
+	userDummy := repoTest.GetUser("1")
+	uuid := userDummy[0].Uuid
+	userDummy2 := repoTest.GetUserByUuid(uuid)
+	assert.NotNil(suite.T(), userDummy2)
+}
+
+func (suite *UserRepositoryTestSuite) TestH_RemoveUser() {
 	repoTest := NewUserRepository()
 	dummyUser := entity.User{
 		ID: 1,
@@ -82,6 +90,7 @@ func (suite *UserRepositoryTestSuite) TestG_RemoveUser() {
 	userDummy := repoTest.DeleteUser(dummyUser)
 	assert.Nil(suite.T(), userDummy)
 }
+
 
 func TestUserRepositoryTestSuite(t *testing.T) {
 	suite.Run(t, new(UserRepositoryTestSuite))
