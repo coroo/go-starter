@@ -20,12 +20,12 @@ type Database struct {
 var database = Database{}
 
 func ConnectDB() (c *gorm.DB, err error) {
-	DB_CONNECTION := os.Getenv("DB_CONNECTION_ODS")
-	DB_HOST := os.Getenv("DB_HOST_ODS")
-	DB_PORT := os.Getenv("DB_PORT_ODS")
-	DB_DATABASE := os.Getenv("DB_DATABASE_ODS")
-	DB_USERNAME := os.Getenv("DB_USERNAME_ODS")
-	DB_PASSWORD := os.Getenv("DB_PASSWORD_ODS")
+	DB_CONNECTION := os.Getenv("DB_CONNECTION_PAYMENT")
+	DB_HOST := os.Getenv("DB_HOST_PAYMENT")
+	DB_PORT := os.Getenv("DB_PORT_PAYMENT")
+	DB_DATABASE := os.Getenv("DB_DATABASE_PAYMENT")
+	DB_USERNAME := os.Getenv("DB_USERNAME_PAYMENT")
+	DB_PASSWORD := os.Getenv("DB_PASSWORD_PAYMENT")
 
 	DB_TEST := os.Getenv("DB_TEST")
 	DB_DETAIL := DB_USERNAME + ":" + DB_PASSWORD + "@tcp(" + DB_HOST + ":" + DB_PORT + ")/" + DB_DATABASE + "?parseTime=true"
