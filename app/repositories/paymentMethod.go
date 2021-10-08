@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"time"
+	"gorm.io/gorm/clause"
 	"github.com/coroo/go-starter/config"
 	entity "github.com/coroo/go-starter/app/entity"
 
@@ -11,7 +13,11 @@ import (
 )
 
 type PaymentMethodRepository interface {
-	SavePaymentMethod()
+	SavePaymentMethod(paymentMethod entity.PaymentMethod) (int, error)
+	UpdatePaymentMethod(paymentMethod entity.PaymentMethod) error
+	DeletePaymentMethod(paymentMethod entity.PaymentMethod) error
+	GetAllPaymentMethods() []entity.PaymentMethod
+	GetPaymentMethod(id string) []entity.PaymentMethod
 }
 
 type paymentMethodDatabase struct {
@@ -30,6 +36,37 @@ func NewPaymentMethodRepository() PaymentMethodRepository {
 	}
 }
 
-func (db *paymentMethodDatabase) SavePaymentMethod() {
+func (db *paymentMethodDatabase) SavePaymentMethod(paymentMethod entity.PaymentMethod) (int, error) {
+	data := &paymentMethod
+	data.CreatedAt = time.Now()
+	data.UpdatedAt = time.Now()
+	err := db.connection.Create(data)
+	if(err.Error != nil){
+		return 0, err.Error
+	}
+	return data.ID, nil
+}
 
+func (db *paymentMethodDatabase) UpdatePaymentMethod(paymentMethod entity.PaymentMethod) error {
+	data := &paymentMethod
+	data.UpdatedAt = time.Now()
+	db.connection.Save(data)
+	return nil
+}
+
+func (db *paymentMethodDatabase) DeletePaymentMethod(paymentMethod entity.PaymentMethod) error {
+	db.connection.Delete(&paymentMethod)
+	return nil
+}
+
+func (db *paymentMethodDatabase) GetAllPaymentMethods() []entity.PaymentMethod {
+	var paymentMethods []entity.PaymentMethod
+	db.connection.Preload(clause.Associations).Find(&paymentMethods)
+	return paymentMethods
+}
+
+func (db *paymentMethodDatabase) GetPaymentMethod(id string) []entity.PaymentMethod {
+	var paymentMethod []entity.PaymentMethod
+	db.connection.Preload(clause.Associations).Where("id = ?", id).First(&paymentMethod)
+	return paymentMethod
 }
