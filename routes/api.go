@@ -24,57 +24,21 @@ func Api() {
 			"message": os.Getenv("MAIN_DESCRIPTION"),
 		})
 	})
-
-	// USER
+	// PAYMENT METHOD
 	var (
-		userRepository repositories.UserRepository = repositories.NewUserRepository()
-		userService    usecases.UserService        = usecases.NewUser(userRepository)
-	)
-	deliveries.NewUserController(router, API_PREFIX, userService)
-
-	// USER POLICY
-	var (
-		userPolicyRepository repositories.UserPolicyRepository = repositories.NewUserPolicyRepository()
-		userPolicyService    usecases.UserPolicyService = usecases.NewUserPolicyService(userPolicyRepository)
+		paymentMethodRepository repositories.PaymentMethodRepository = repositories.NewPaymentMethodRepository()
+		paymentMethodService    usecases.PaymentMethodService = usecases.NewPaymentMethodService(paymentMethodRepository)
 		// userController deliveries.UserController   = deliveries.NewUser(userService)
 	)
-	deliveries.NewUserPolicyController(router, API_PREFIX, userPolicyService)
+	deliveries.NewPaymentMethodController(router, API_PREFIX, paymentMethodService)
 
-	// SY USER INVOICE
+	// PAYMENT METHOD RATE
 	var (
-		syUserInvoiceRepository 	repositories.SyUserInvoiceRepository = repositories.NewSyUserInvoiceRepository()
-		syUserInvoiceService		usecases.SyUserInvoiceService = usecases.NewSyUserInvoiceService(syUserInvoiceRepository)
-	)
-	deliveries.NewSyUserInvoiceController(router, API_PREFIX, syUserInvoiceService)
-
-	// SY ODS ETL PAYMENT
-	var (
-		syOdsEtlPaymentRepository repositories.SyOdsEtlPaymentRepository = repositories.NewSyOdsEtlPaymentRepository()
-		syOdsEtlPaymentService    usecases.SyOdsEtlPaymentService = usecases.NewSyOdsEtlPaymentService(syOdsEtlPaymentRepository)
-	)
-	deliveries.NewSyOdsEtlPaymentController(router, API_PREFIX, syOdsEtlPaymentService)
-
-	// SY ETL PAYMENT
-	var (
-		syEtlPaymentRepository repositories.SyEtlPaymentRepository = repositories.NewSyEtlPaymentRepository()
-		syEtlPaymentService    usecases.SyEtlPaymentService = usecases.NewSyEtlPaymentService(syEtlPaymentRepository)
-	)
-	deliveries.NewSyEtlPaymentController(router, API_PREFIX, syEtlPaymentService)
-
-	// ODS ETL PAYMENT
-	var (
-		odsEtlPaymentRepository repositories.OdsEtlPaymentRepository = repositories.NewOdsEtlPaymentRepository()
-		odsEtlPaymentService    usecases.OdsEtlPaymentService = usecases.NewOdsEtlPaymentService(odsEtlPaymentRepository)
+		paymentMethodRateRepository repositories.PaymentMethodRateRepository = repositories.NewPaymentMethodRateRepository()
+		paymentMethodRateService    usecases.PaymentMethodRateService = usecases.NewPaymentMethodRateService(paymentMethodRateRepository)
 		// userController deliveries.UserController   = deliveries.NewUser(userService)
 	)
-	deliveries.NewOdsEtlPaymentController(router, API_PREFIX, odsEtlPaymentService)
-
-	// LUMP SUM PAYMENT
-	var (
-		lumpSumPaymentRepository 	repositories.LumpSumPaymentRepository = repositories.NewLumpSumPaymentRepository()
-		lumpSumPaymentService		usecases.LumpSumPaymentService = usecases.NewLumpSumPaymentService(lumpSumPaymentRepository)
-	)
-	deliveries.NewLumpSumPaymentController(router, API_PREFIX, lumpSumPaymentService)
+	deliveries.NewPaymentMethodRateController(router, API_PREFIX, paymentMethodRateService)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	console.Schedule()
