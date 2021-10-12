@@ -3,11 +3,9 @@ package usecases
 import (
 	"fmt"
 	"strconv"
-	"gopkg.in/Knetic/govaluate.v2"
 	entity "github.com/coroo/go-starter/app/entity"
+	utils "github.com/coroo/go-starter/app/utils"
 	repositories "github.com/coroo/go-starter/app/repositories"
-	// "gopkg.in/Knetic/govaluate.v2"
-
 	// "github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -64,15 +62,7 @@ func (usecases *paymentMethodService) GetAllPaymentMethods(total_premium string)
 					// total premium
 					data.TotalPremium = tempPremium
 					// calculate total fee
-					// add formula
-					expression, _ := govaluate.NewEvaluableExpression(valueRate.FormulaFee);
-					// create parameter to add to formula
-					parameters := make(map[string]interface{}, 8)
-					parameters["premi"] = tempPremium;
-					// compile
-					result, _ := expression.Evaluate(parameters);
-					// add result into data
-					data.Fee = int(result.(float64))
+					data.Fee = utils.EvaluateStringToFormula(valueRate.FormulaFee, tempPremium)
 					// total payment
 					data.TotalPayment = data.TotalPremium + data.Fee
 				}
