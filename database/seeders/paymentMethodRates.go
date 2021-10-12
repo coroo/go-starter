@@ -208,7 +208,7 @@ var paymentMethodRate = []entity.PaymentMethodRate{
 		MinTransaction  		: 1,
 		MaxTransaction  		: 10000000,
 		// TransactionFee  		: 0.00,
-		FormulaFee				: "1",
+		FormulaFee				: "0.00",
 		Premi  					: 0.00,
 	},
 	entity.PaymentMethodRate{
