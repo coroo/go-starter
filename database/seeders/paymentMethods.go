@@ -72,7 +72,7 @@ var paymentMethod = []entity.PaymentMethod{
 		// UpdatedAt        		: time.Now(),
 	},
 	entity.PaymentMethod{
-		Code 					: "danamon-onlone-banking",
+		Code 					: "danamon-online-banking",
 		// InitPaymentCode  		: "PDDC1",
 		// RenewalPaymentCode 		: "PDDC1",
 		FastpayCode 		 	: "",

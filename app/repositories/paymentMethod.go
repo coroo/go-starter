@@ -18,6 +18,7 @@ type PaymentMethodRepository interface {
 	DeletePaymentMethod(paymentMethod entity.PaymentMethod) error
 	GetAllPaymentMethods() []entity.PaymentMethod
 	GetPaymentMethod(id string) []entity.PaymentMethod
+	GetPaymentMethodByCode(code string) []entity.PaymentMethod
 }
 
 type paymentMethodDatabase struct {
@@ -68,5 +69,10 @@ func (db *paymentMethodDatabase) GetAllPaymentMethods() []entity.PaymentMethod {
 func (db *paymentMethodDatabase) GetPaymentMethod(id string) []entity.PaymentMethod {
 	var paymentMethod []entity.PaymentMethod
 	db.connection.Preload(clause.Associations).Where("id = ?", id).First(&paymentMethod)
+	return paymentMethod
+}
+func (db *paymentMethodDatabase) GetPaymentMethodByCode(code string) []entity.PaymentMethod {
+	var paymentMethod []entity.PaymentMethod
+	db.connection.Preload(clause.Associations).Where("code = ?", code).First(&paymentMethod)
 	return paymentMethod
 }
