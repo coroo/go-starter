@@ -34,7 +34,6 @@ func NewPaymentMethodController(router *gin.Engine, apiPrefix string, paymentMet
 		paymentMethodsGroup.GET("index", handlerPaymentMethod.PaymentMethodsIndex)
 		paymentMethodsGroup.GET("detail/:id", handlerPaymentMethod.PaymentMethodsDetail)
 		paymentMethodsGroup.GET("fastpay/generate-va-signature", handlerPaymentMethod.GenerateVaSignature)
-		paymentMethodsGroup.GET("fastpay/connection-test", handlerPaymentMethod.ConnectionTest)
 		paymentMethodsGroup.GET("detail-by-code/:code", handlerPaymentMethod.PaymentMethodsDetailByCode)
 		paymentMethodsGroup.POST("create", handlerPaymentMethod.PaymentMethodCreate)
 		paymentMethodsGroup.PUT("update", handlerPaymentMethod.PaymentMethodUpdate)
