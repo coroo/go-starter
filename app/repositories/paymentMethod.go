@@ -16,7 +16,7 @@ type PaymentMethodRepository interface {
 	SavePaymentMethod(paymentMethod entity.PaymentMethod) (int, error)
 	UpdatePaymentMethod(paymentMethod entity.PaymentMethod) error
 	DeletePaymentMethod(paymentMethod entity.PaymentMethod) error
-	GetAllPaymentMethods() []entity.PaymentMethod
+	GetAllPaymentMethods(status string) []entity.PaymentMethod
 	GetPaymentMethod(id string) []entity.PaymentMethod
 	GetPaymentMethodByCode(code string) []entity.PaymentMethod
 }
@@ -60,9 +60,13 @@ func (db *paymentMethodDatabase) DeletePaymentMethod(paymentMethod entity.Paymen
 	return nil
 }
 
-func (db *paymentMethodDatabase) GetAllPaymentMethods() []entity.PaymentMethod {
+func (db *paymentMethodDatabase) GetAllPaymentMethods(status string) []entity.PaymentMethod {
 	var paymentMethods []entity.PaymentMethod
-	db.connection.Preload(clause.Associations).Find(&paymentMethods)
+	query := db.connection.Preload(clause.Associations)
+	if status == "active" || status == "inactive"{
+		query = query.Where("status = ?", status)
+	}
+	query = query.Find(&paymentMethods)
 	return paymentMethods
 }
 

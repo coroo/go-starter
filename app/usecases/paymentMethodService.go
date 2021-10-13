@@ -14,7 +14,7 @@ type PaymentMethodService interface {
 	SavePaymentMethod(entity.PaymentMethod) (int, error)
 	UpdatePaymentMethod(entity.PaymentMethod) error
 	DeletePaymentMethod(entity.PaymentMethod) error
-	GetAllPaymentMethods(total_premium string) []entity.PaymentMethodWithPremium
+	GetAllPaymentMethods(total_premium string, status string) []entity.PaymentMethodWithPremium
 	GetPaymentMethod(id string) []entity.PaymentMethod
 	GetPaymentMethodByCode(code string) []entity.PaymentMethod
 }
@@ -29,9 +29,9 @@ func NewPaymentMethodService(repository repositories.PaymentMethodRepository) Pa
 	}
 }
 
-func (usecases *paymentMethodService) GetAllPaymentMethods(total_premium string) []entity.PaymentMethodWithPremium {
+func (usecases *paymentMethodService) GetAllPaymentMethods(total_premium string, status string) []entity.PaymentMethodWithPremium {
 	// get all payment method + rates
-	allPaymentMethod := usecases.repositories.GetAllPaymentMethods()
+	allPaymentMethod := usecases.repositories.GetAllPaymentMethods(status)
 	AllPaymentMethodWithTotalPremium := []entity.PaymentMethodWithPremium{}
 	// change total premium query from string (A) into integer (i)
 	tempPremium, err := strconv.Atoi(total_premium)

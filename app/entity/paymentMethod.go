@@ -25,6 +25,7 @@ type PaymentMethod struct {
 	Status 		 			string    			`gorm:"type:enum('active','inactive') NOT NULL DEFAULT 'inactive';default:'inactive'" json:"status"`
 	Spec 		 			string    			`gorm:"type:LONGTEXT" json:"spec"`
 	PaymentMethodRate 		[]PaymentMethodRate   `gorm:"foreignKey:PaymentMethodCode;references:Code"`
+	PaymentMethodLink 		[]PaymentMethodLink   `gorm:"foreignKey:PaymentMethodCode;references:Code"`
 	CreatedAt        		time.Time      		`gorm:"type:TIMESTAMP DEFAULT CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt        		time.Time      		`gorm:"type:TIMESTAMP DEFAULT CURRENT_TIMESTAMP" json:"updated_at"`
 }

@@ -47,12 +47,13 @@ func NewPaymentMethodController(router *gin.Engine, apiPrefix string, paymentMet
 // @Tags PaymentMethods
 // @Accept  json
 // @Produce  json
-// @Param  total_premium query string true "Total Premium"
+// @Param  total_premium query string false "Total Premium"
+// @Param  status query string false "status"
 // @Success 200 {array} entity.PaymentMethod
 // @Failure 401 {object} dto.Response
 // @Router /paymentMethod/index [get]
 func (deliveries *paymentMethodController) PaymentMethodsIndex(ctx *gin.Context) {
-	paymentMethods := deliveries.usecases.GetAllPaymentMethods(ctx.Query("total_premium"))
+	paymentMethods := deliveries.usecases.GetAllPaymentMethods(ctx.Query("total_premium"), ctx.Query("status"))
 	ctx.JSON(http.StatusOK, gin.H{"data": paymentMethods})
 }
 
