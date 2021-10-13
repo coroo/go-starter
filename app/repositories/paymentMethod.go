@@ -19,6 +19,7 @@ type PaymentMethodRepository interface {
 	GetAllPaymentMethods(status string) []entity.PaymentMethod
 	GetPaymentMethod(id string) []entity.PaymentMethod
 	GetPaymentMethodByCode(code string) []entity.PaymentMethod
+	GetActivePaymentMethodByCode(code string) entity.PaymentMethod
 }
 
 type paymentMethodDatabase struct {
@@ -75,8 +76,15 @@ func (db *paymentMethodDatabase) GetPaymentMethod(id string) []entity.PaymentMet
 	db.connection.Preload(clause.Associations).Where("id = ?", id).First(&paymentMethod)
 	return paymentMethod
 }
+
 func (db *paymentMethodDatabase) GetPaymentMethodByCode(code string) []entity.PaymentMethod {
 	var paymentMethod []entity.PaymentMethod
 	db.connection.Preload(clause.Associations).Where("code = ?", code).First(&paymentMethod)
+	return paymentMethod
+}
+
+func (db *paymentMethodDatabase) GetActivePaymentMethodByCode(code string) entity.PaymentMethod {
+	var paymentMethod entity.PaymentMethod
+	db.connection.Preload(clause.Associations).Where("code = ?", code).Where("status = ?", "active").First(&paymentMethod)
 	return paymentMethod
 }

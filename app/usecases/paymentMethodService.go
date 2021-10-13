@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	entity "github.com/coroo/go-starter/app/entity"
 	utils "github.com/coroo/go-starter/app/utils"
@@ -17,6 +18,8 @@ type PaymentMethodService interface {
 	GetAllPaymentMethods(total_premium string, status string) []entity.PaymentMethodWithPremium
 	GetPaymentMethod(id string) []entity.PaymentMethod
 	GetPaymentMethodByCode(code string) []entity.PaymentMethod
+	GenerateVaSignature(code string, proposal_group_number string) string
+	ConnectionTest()
 }
 
 type paymentMethodService struct {
@@ -91,4 +94,20 @@ func (usecases *paymentMethodService) UpdatePaymentMethod(paymentMethod entity.P
 
 func (usecases *paymentMethodService) DeletePaymentMethod(paymentMethod entity.PaymentMethod) error {
 	return usecases.repositories.DeletePaymentMethod(paymentMethod)
+}
+
+func (usecases *paymentMethodService) GenerateVaSignature(code string, proposal_group_number string) string {
+	getPaymentMethodDetail := usecases.repositories.GetActivePaymentMethodByCode(code)
+	fmt.Println(proposal_group_number)
+	fmt.Println(code)
+	fmt.Println(getPaymentMethodDetail.ID)
+	fmt.Println(os.Getenv("FASPAY_VA_MERCHANT_CODE"))
+	proposalGroupNumber := proposal_group_number+"00"
+	generateVa := getPaymentMethodDetail.BankCode + os.Getenv("FASPAY_VA_MERCHANT_CODE") + fmt.Sprintf("%09d", utils.StringToInt(proposalGroupNumber))
+
+	return generateVa
+}
+
+func (usecases *paymentMethodService) ConnectionTest()  {
+	// result, err := utils.CreateHttpRequest("POST", os.Getenv("MAIN_SCHEMES")+"://"+os.Getenv("MAIN_URL")+"/"+os.Getenv("API_PREFIX")+"syEtl/payment/create", jsonValue)
 }
