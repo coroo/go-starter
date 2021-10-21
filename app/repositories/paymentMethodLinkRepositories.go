@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"os"
 	"time"
 	"gorm.io/gorm/clause"
 	"github.com/coroo/go-starter/config"
@@ -18,7 +19,7 @@ type PaymentMethodLinkRepository interface {
 	DeletePaymentMethodLink(paymentMethodLink entity.PaymentMethodLink) error
 	GetAllPaymentMethodLinks() []entity.PaymentMethodLink
 	GetPaymentMethodLink(id string) []entity.PaymentMethodLink
-	GetPaymentMethodLinkByCode(code string) []entity.PaymentMethodLink
+	GetPaymentMethodLinkByCode(code string) entity.PaymentMethodLink
 }
 
 type paymentMethodLinkDatabase struct {
@@ -31,7 +32,11 @@ func NewPaymentMethodLinkRepository() PaymentMethodLinkRepository {
 		panic("Failed to connect database")
 	}
 	// db.AutoMigrate(&entity.PaymentMethodLink{}, &entity.Person{})
-	db.AutoMigrate(&entity.PaymentMethodLink{})
+	if (os.Getenv("DB_HOST_PAYMENT") != ""){
+		db.AutoMigrate(&entity.PaymentMethodLink{})
+	}else{
+		db.AutoMigrate(&entity.PaymentMethodLinkTesting{})
+	}
 	return &paymentMethodLinkDatabase{
 		connection: db,
 	}
@@ -71,8 +76,8 @@ func (db *paymentMethodLinkDatabase) GetPaymentMethodLink(id string) []entity.Pa
 	db.connection.Preload(clause.Associations).Where("id = ?", id).First(&paymentMethodLink)
 	return paymentMethodLink
 }
-func (db *paymentMethodLinkDatabase) GetPaymentMethodLinkByCode(code string) []entity.PaymentMethodLink {
-	var paymentMethodLink []entity.PaymentMethodLink
+func (db *paymentMethodLinkDatabase) GetPaymentMethodLinkByCode(code string) entity.PaymentMethodLink {
+	var paymentMethodLink entity.PaymentMethodLink
 	db.connection.Preload(clause.Associations).Where("code = ?", code).First(&paymentMethodLink)
 	return paymentMethodLink
 }

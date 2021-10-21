@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"os"
 	"time"
 	"gorm.io/gorm/clause"
 	"github.com/coroo/go-starter/config"
@@ -18,7 +19,7 @@ type PaymentMethodRepository interface {
 	DeletePaymentMethod(paymentMethod entity.PaymentMethod) error
 	GetAllPaymentMethods(status string) []entity.PaymentMethod
 	GetPaymentMethod(id string) []entity.PaymentMethod
-	GetPaymentMethodByCode(code string) []entity.PaymentMethod
+	GetPaymentMethodByCode(code string) entity.PaymentMethod
 	GetActivePaymentMethodByCode(code string) entity.PaymentMethod
 }
 
@@ -32,7 +33,11 @@ func NewPaymentMethodRepository() PaymentMethodRepository {
 		panic("Failed to connect database")
 	}
 	// db.AutoMigrate(&entity.PaymentMethod{}, &entity.Person{})
-	db.AutoMigrate(&entity.PaymentMethod{})
+	if (os.Getenv("DB_HOST_PAYMENT") != ""){
+		db.AutoMigrate(&entity.PaymentMethod{})
+	} else {
+		db.AutoMigrate(&entity.PaymentMethodTesting{})
+	}
 	return &paymentMethodDatabase{
 		connection: db,
 	}
@@ -77,8 +82,8 @@ func (db *paymentMethodDatabase) GetPaymentMethod(id string) []entity.PaymentMet
 	return paymentMethod
 }
 
-func (db *paymentMethodDatabase) GetPaymentMethodByCode(code string) []entity.PaymentMethod {
-	var paymentMethod []entity.PaymentMethod
+func (db *paymentMethodDatabase) GetPaymentMethodByCode(code string) entity.PaymentMethod {
+	var paymentMethod entity.PaymentMethod
 	db.connection.Preload(clause.Associations).Where("code = ?", code).First(&paymentMethod)
 	return paymentMethod
 }

@@ -4,6 +4,11 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"crypto/sha1"
+	"crypto/md5"
+	"encoding/hex"
+	"encoding/json"
+	"net/http"
 	entity "github.com/coroo/go-starter/app/entity"
 	utils "github.com/coroo/go-starter/app/utils"
 	repositories "github.com/coroo/go-starter/app/repositories"
@@ -17,13 +22,34 @@ type PaymentMethodService interface {
 	DeletePaymentMethod(entity.PaymentMethod) error
 	GetAllPaymentMethods(total_premium string, status string) []entity.PaymentMethodWithPremium
 	GetPaymentMethod(id string) []entity.PaymentMethod
-	GetPaymentMethodByCode(code string) []entity.PaymentMethod
+	GetPaymentMethodByCode(code string) entity.PaymentMethod
 	GenerateVaSignature(code string, proposal_group_number string) string
-	ConnectionTest()
+	ConnectionTest() *http.Response
 }
 
 type paymentMethodService struct {
 	repositories repositories.PaymentMethodRepository
+}
+
+type fastpay struct {
+	userId string
+	userPass string
+	merchantId string
+	merchantName string
+	signature string
+}
+
+func (fastpayConstruct *fastpay) construct() {
+	fastpayConstruct.userId = os.Getenv("FASPAY_DEBIT_USER_ID")
+	fastpayConstruct.userPass = os.Getenv("FASPAY_DEBIT_PASSWORD")
+	fastpayConstruct.merchantName = os.Getenv("FASPAY_DEBIT_MERCHANT_NAME")
+	fastpayConstruct.merchantId = os.Getenv("FASPAY_DEBIT_MERCHANT_ID")
+	md5Hash := md5.Sum([]byte(fastpayConstruct.userId + fastpayConstruct.userPass))
+   	md5String := hex.EncodeToString(md5Hash[:])
+    sha := sha1.New()
+    sha.Write([]byte(md5String))
+	encryptedSha1 := sha.Sum(nil)
+	fastpayConstruct.signature = fmt.Sprintf("%x", encryptedSha1)
 }
 
 func NewPaymentMethodService(repository repositories.PaymentMethodRepository) PaymentMethodService {
@@ -80,7 +106,7 @@ func (usecases *paymentMethodService) GetPaymentMethod(id string) []entity.Payme
 	return usecases.repositories.GetPaymentMethod(id)
 }
 
-func (usecases *paymentMethodService) GetPaymentMethodByCode(code string) []entity.PaymentMethod {
+func (usecases *paymentMethodService) GetPaymentMethodByCode(code string) entity.PaymentMethod {
 	return usecases.repositories.GetPaymentMethodByCode(code)
 }
 
@@ -108,6 +134,28 @@ func (usecases *paymentMethodService) GenerateVaSignature(code string, proposal_
 	return generateVa
 }
 
-func (usecases *paymentMethodService) ConnectionTest()  {
-	// result, err := utils.CreateHttpRequest("POST", os.Getenv("MAIN_SCHEMES")+"://"+os.Getenv("MAIN_URL")+"/"+os.Getenv("API_PREFIX")+"syEtl/payment/create", jsonValue)
+func (usecases *paymentMethodService) ConnectionTest() *http.Response{
+	// construct fastpay data
+	fastpayData := new(fastpay)
+	fastpayData.construct()
+
+	// request fastpay data
+	fmt.Println(fastpayData.userId)
+	fmt.Println(fastpayData.userPass)
+	fmt.Println(fastpayData.merchantId)
+	fmt.Println(fastpayData.merchantName)
+	fmt.Println(fastpayData.signature)
+	jsonMap := map[string]string {
+		"request"     		: "Daftar Payment Channel",
+		"merchant_id"     	: os.Getenv("FASPAY_DEBIT_MERCHANT_ID"),
+		"merchant"    		: os.Getenv("FASPAY_DEBIT_MERCHANT_NAME"),
+		"signature"    		: os.Getenv("FASPAY_DEBIT_MERCHANT_ID"),
+	}
+	jsonValue, _ := json.Marshal(jsonMap)
+	result, err := utils.CreateHttpRequest("POST", os.Getenv("FASPAY_DEBIT_CHANNEL_URL"), jsonValue)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
+	return result
 }

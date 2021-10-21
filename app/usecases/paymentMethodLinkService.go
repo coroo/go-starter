@@ -13,7 +13,7 @@ type PaymentMethodLinkService interface {
 	DeletePaymentMethodLink(entity.PaymentMethodLink) error
 	GetAllPaymentMethodLinks() []entity.PaymentMethodLink
 	GetPaymentMethodLink(id string) []entity.PaymentMethodLink
-	GetPaymentMethodLinkByCode(code string) []entity.PaymentMethodLink
+	GetPaymentMethodLinkByCode(code string) entity.PaymentMethodLink
 }
 
 type paymentMethodLinkService struct {
@@ -34,7 +34,7 @@ func (usecases *paymentMethodLinkService) GetPaymentMethodLink(id string) []enti
 	return usecases.repositories.GetPaymentMethodLink(id)
 }
 
-func (usecases *paymentMethodLinkService) GetPaymentMethodLinkByCode(code string) []entity.PaymentMethodLink {
+func (usecases *paymentMethodLinkService) GetPaymentMethodLinkByCode(code string) entity.PaymentMethodLink {
 	return usecases.repositories.GetPaymentMethodLinkByCode(code)
 }
 

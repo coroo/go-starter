@@ -34,6 +34,7 @@ func NewPaymentMethodController(router *gin.Engine, apiPrefix string, paymentMet
 		paymentMethodsGroup.GET("index", handlerPaymentMethod.PaymentMethodsIndex)
 		paymentMethodsGroup.GET("detail/:id", handlerPaymentMethod.PaymentMethodsDetail)
 		paymentMethodsGroup.GET("fastpay/generate-va-signature", handlerPaymentMethod.GenerateVaSignature)
+		paymentMethodsGroup.GET("fastpay/connection-test", handlerPaymentMethod.ConnectionTest)
 		paymentMethodsGroup.GET("detail-by-code/:code", handlerPaymentMethod.PaymentMethodsDetailByCode)
 		paymentMethodsGroup.POST("create", handlerPaymentMethod.PaymentMethodCreate)
 		paymentMethodsGroup.PUT("update", handlerPaymentMethod.PaymentMethodUpdate)
@@ -87,10 +88,10 @@ func (deliveries *paymentMethodController) PaymentMethodsDetail(c *gin.Context) 
 // @Tags PaymentMethods
 // @Accept  json
 // @Produce  json
-// @Param  id path int true "Master Question ID"
+// @Param  code path string true "Code"
 // @Success 200 {array} entity.PaymentMethod
 // @Failure 401 {object} dto.Response
-// @Router /paymentMethod/detail/{id} [get]
+// @Router /paymentMethod/detail-by-code/{code} [get]
 func (deliveries *paymentMethodController) PaymentMethodsDetailByCode(c *gin.Context) {
 	paymentMethod := deliveries.usecases.GetPaymentMethodByCode(c.Param("code"))
 	c.JSON(http.StatusOK, gin.H{"data": paymentMethod})
@@ -174,4 +175,20 @@ func (deliveries *paymentMethodController) PaymentMethodDelete(c *gin.Context) {
 func (deliveries *paymentMethodController) GenerateVaSignature(ctx *gin.Context) {
 	virtualAccount := deliveries.usecases.GenerateVaSignature(ctx.Query("payment_channel"), ctx.Query("proposal_group_number"))
 	ctx.JSON(http.StatusOK, virtualAccount)
+}
+
+// generateVaSignature godoc
+// @Security basicAuth
+// @Summary Connection Test
+// @Description debit connection test
+// @Tags PaymentMethods
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} dto.Response
+// @Failure 400 {object} dto.Response
+// @Failure 401 {object} dto.Response
+// @Router /paymentMethod/fastpay/connection-test [get]
+func (deliveries *paymentMethodController) ConnectionTest(ctx *gin.Context) {
+	connectionTest := deliveries.usecases.ConnectionTest()
+	ctx.JSON(http.StatusOK, connectionTest)
 }
