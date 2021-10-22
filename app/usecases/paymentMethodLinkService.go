@@ -1,6 +1,8 @@
 package usecases
 
 import (
+	"fmt"
+	"time"
 	entity "github.com/coroo/go-starter/app/entity"
 	repositories "github.com/coroo/go-starter/app/repositories"
 	// "github.com/gin-gonic/gin"
@@ -14,6 +16,8 @@ type PaymentMethodLinkService interface {
 	GetAllPaymentMethodLinks() []entity.PaymentMethodLink
 	GetPaymentMethodLink(id string) []entity.PaymentMethodLink
 	GetPaymentMethodLinkByCode(code string) entity.PaymentMethodLink
+	GetPaymentMethodLinkByCodeAndProcessType(code string, processType string) entity.PaymentMethodLink
+	ProcessPaymentForSettlement(proposalNumber string, paymentMethodLink entity.PaymentMethodLink)
 }
 
 type paymentMethodLinkService struct {
@@ -48,4 +52,24 @@ func (usecases *paymentMethodLinkService) UpdatePaymentMethodLink(paymentMethodL
 
 func (usecases *paymentMethodLinkService) DeletePaymentMethodLink(paymentMethodLink entity.PaymentMethodLink) error {
 	return usecases.repositories.DeletePaymentMethodLink(paymentMethodLink)
+}
+func (usecases *paymentMethodLinkService) GetPaymentMethodLinkByCodeAndProcessType(code string, processType string) entity.PaymentMethodLink {
+	paymentMethodLink := usecases.repositories.GetPaymentMethodLinkByCodeAndProcessType(code, processType)
+	return paymentMethodLink
+}
+
+func (usecases *paymentMethodLinkService) ProcessPaymentForSettlement(proposalNumber string, paymentMethodLink entity.PaymentMethodLink) {
+	fmt.Println("process 2")
+	time.Sleep(3 * time.Second)
+	if (paymentMethodLink.ProcessType == "linking"){
+		// gopay linking
+		fmt.Println("gopay linking")
+	}else{
+		// gopay payment
+		if (paymentMethodLink.PaymentMethodCode == "gopay"){
+			fmt.Println("gopay payment")
+		}else if (paymentMethodLink.PaymentMethodCode == "indomaret"){
+			fmt.Println("indomaret payment")
+		}
+	}
 }

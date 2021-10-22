@@ -20,6 +20,7 @@ type PaymentMethodLinkRepository interface {
 	GetAllPaymentMethodLinks() []entity.PaymentMethodLink
 	GetPaymentMethodLink(id string) []entity.PaymentMethodLink
 	GetPaymentMethodLinkByCode(code string) entity.PaymentMethodLink
+	GetPaymentMethodLinkByCodeAndProcessType(code string, processType string) entity.PaymentMethodLink
 }
 
 type paymentMethodLinkDatabase struct {
@@ -79,5 +80,10 @@ func (db *paymentMethodLinkDatabase) GetPaymentMethodLink(id string) []entity.Pa
 func (db *paymentMethodLinkDatabase) GetPaymentMethodLinkByCode(code string) entity.PaymentMethodLink {
 	var paymentMethodLink entity.PaymentMethodLink
 	db.connection.Preload(clause.Associations).Where("code = ?", code).First(&paymentMethodLink)
+	return paymentMethodLink
+}
+func (db *paymentMethodLinkDatabase) GetPaymentMethodLinkByCodeAndProcessType(code string, processType string) entity.PaymentMethodLink {
+	var paymentMethodLink entity.PaymentMethodLink
+	db.connection.Preload(clause.Associations).Where("payment_method_code = ?", code).Where("process_type = ?", processType).First(&paymentMethodLink)
 	return paymentMethodLink
 }

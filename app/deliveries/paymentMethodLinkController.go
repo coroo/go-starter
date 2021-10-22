@@ -1,6 +1,7 @@
 package deliveries
 
 import (
+	"fmt"
 	"net/http"
 
 	// "github.com/coroo/go-starter/models"
@@ -34,6 +35,7 @@ func NewPaymentMethodLinkController(router *gin.Engine, apiPrefix string, paymen
 		paymentMethodLinksGroup.GET("index", handlerPaymentMethodLink.PaymentMethodLinksIndex)
 		paymentMethodLinksGroup.GET("detail/:id", handlerPaymentMethodLink.PaymentMethodLinksDetail)
 		paymentMethodLinksGroup.GET("detail-by-code/:code", handlerPaymentMethodLink.PaymentMethodLinksDetailByCode)
+		paymentMethodLinksGroup.GET("get-payment-redirect-link", handlerPaymentMethodLink.GetPaymentRedirectLink)
 		paymentMethodLinksGroup.POST("create", handlerPaymentMethodLink.PaymentMethodLinkCreate)
 		paymentMethodLinksGroup.PUT("update", handlerPaymentMethodLink.PaymentMethodLinkUpdate)
 		paymentMethodLinksGroup.DELETE("delete", handlerPaymentMethodLink.PaymentMethodLinkDelete)
@@ -147,4 +149,27 @@ func (deliveries *paymentMethodLinkController) PaymentMethodLinkDelete(c *gin.Co
 	c.ShouldBindJSON(&paymentMethodLinkEntity)
 	paymentMethodLink := deliveries.usecases.DeletePaymentMethodLink(paymentMethodLinkEntity)
 	c.JSON(http.StatusOK, paymentMethodLink)
+}
+
+// GetPaymentRedirectLink godoc
+// @Security basicAuth
+// @Summary Get Payment link for redirection
+// @Description Get Payment link for redirection to the next page of flow
+// @Tags PaymentMethodLinks
+// @Accept  json
+// @Produce  json
+// @Param policy_group_number query string true "Policy Group Number"
+// @Param payment_method_code query string true "Payment Method Code"
+// @Param process_type query string true "Policy Group Number"
+// @Success 200 {object} dto.Response
+// @Failure 400 {object} dto.Response
+// @Failure 401 {object} dto.Response
+// @Router /paymentMethodLink/get-payment-redirect-link [get]
+func (deliveries *paymentMethodLinkController) GetPaymentRedirectLink(ctx *gin.Context) {
+	var paymentMethodLink entity.PaymentMethodLink
+	paymentMethodLink = deliveries.usecases.GetPaymentMethodLinkByCodeAndProcessType(ctx.Query("payment_method_code"), ctx.Query("process_type"))
+	fmt.Println("process 1")
+	go deliveries.usecases.ProcessPaymentForSettlement(ctx.Query("proposal_number"), paymentMethodLink)
+	fmt.Println("process 3")
+	ctx.JSON(http.StatusOK, paymentMethodLink)
 }
