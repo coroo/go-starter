@@ -79,6 +79,10 @@ func (r *repoMockPaymentMethodLink) GetPaymentMethodLinkByCode(code string) enti
 func (r *repoMockPaymentMethodLink) CloseDB() {
 }
 
+func (r *repoMockPaymentMethodLink) GetPaymentMethodLinkByCodeAndProcessType(code string, processType string) entity.PaymentMethodLink {
+	return dummyPaymentMethodLink[0]
+}
+
 type PaymentMethodLinkUsecaseTestSuite struct {
 	suite.Suite
 	repositoryTest repositories.PaymentMethodLinkRepository

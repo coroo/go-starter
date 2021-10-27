@@ -61,10 +61,21 @@ func (s *paymentMethodLinkRouteMock) GetAllPaymentMethodLinks() []entity.Payment
 func (s *paymentMethodLinkRouteMock) GetPaymentMethodLink(id string) []entity.PaymentMethodLink {
 	return nil
 }
+
 func (s *paymentMethodLinkRouteMock) GetPaymentMethodLinkByCode(code string) entity.PaymentMethodLink {
 	result := entity.PaymentMethodLink{}
 	result = *dummyPaymentMethodLink[0]
 	return result
+}
+
+func (s *paymentMethodLinkRouteMock) GetPaymentMethodLinkByCodeAndProcessType(code string, processType string) entity.PaymentMethodLink {
+	result := entity.PaymentMethodLink{}
+	result = *dummyPaymentMethodLink[0]
+	return result
+}
+
+func (s *paymentMethodLinkRouteMock) ProcessPaymentForSettlement(proposalNumber string, paymentMethodLink entity.PaymentMethodLink) {
+	
 }
 
 type PaymentMethodLinkRouteTestSuite struct {
