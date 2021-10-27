@@ -44,6 +44,12 @@ func Api() {
 	)
 	deliveries.NewPaymentMethodLinkController(router, API_PREFIX, paymentMethodLinkService)
 
+	var (
+		userInvoiceLogRepository repositories.UserInvoiceLogRepository = repositories.NewUserInvoiceLogRepository()
+		userInvoiceLogService    usecases.UserInvoiceLogService = usecases.NewUserInvoiceLogService(userInvoiceLogRepository)
+	)
+	deliveries.NewUserInvoiceLogController(router, API_PREFIX, userInvoiceLogService)
+
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	console.Schedule()
 	router.Run(":"+os.Getenv("MAIN_PORT"))
