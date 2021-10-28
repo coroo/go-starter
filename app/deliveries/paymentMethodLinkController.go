@@ -160,7 +160,7 @@ func (deliveries *paymentMethodLinkController) PaymentMethodLinkDelete(c *gin.Co
 // @Produce  json
 // @Param policy_group_number query string true "Policy Group Number"
 // @Param payment_method_code query string true "Payment Method Code"
-// @Param process_type query string true "Policy Group Number"
+// @Param process_type query string true "Process Type"
 // @Success 200 {object} dto.Response
 // @Failure 400 {object} dto.Response
 // @Failure 401 {object} dto.Response
