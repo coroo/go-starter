@@ -33,6 +33,8 @@ func NewPaymentMethodController(router *gin.Engine, apiPrefix string, paymentMet
 		// paymentMethodsGroup.GET("index", handlerPaymentMethod.GetAllPaymentMethod)
 		paymentMethodsGroup.GET("index", handlerPaymentMethod.PaymentMethodsIndex)
 		paymentMethodsGroup.GET("detail/:id", handlerPaymentMethod.PaymentMethodsDetail)
+		paymentMethodsGroup.GET("fastpay/generate-va-signature", handlerPaymentMethod.GenerateVaSignature)
+		paymentMethodsGroup.GET("fastpay/connection-test", handlerPaymentMethod.ConnectionTest)
 		paymentMethodsGroup.GET("detail-by-code/:code", handlerPaymentMethod.PaymentMethodsDetailByCode)
 		paymentMethodsGroup.POST("create", handlerPaymentMethod.PaymentMethodCreate)
 		paymentMethodsGroup.PUT("update", handlerPaymentMethod.PaymentMethodUpdate)
@@ -47,12 +49,19 @@ func NewPaymentMethodController(router *gin.Engine, apiPrefix string, paymentMet
 // @Tags PaymentMethods
 // @Accept  json
 // @Produce  json
-// @Param  total_premium query string true "Total Premium"
+// @Param  total_premium query string false "Total Premium"
+// @Param  status query string false "status"
 // @Success 200 {array} entity.PaymentMethod
 // @Failure 401 {object} dto.Response
 // @Router /paymentMethod/index [get]
 func (deliveries *paymentMethodController) PaymentMethodsIndex(ctx *gin.Context) {
-	paymentMethods := deliveries.usecases.GetAllPaymentMethods(ctx.Query("total_premium"))
+	status := ""
+	if (ctx.Query("status") == ""){
+		status = "active"
+	} else {
+		status = ctx.Query("status")
+	}
+	paymentMethods := deliveries.usecases.GetAllPaymentMethods(ctx.Query("total_premium"), status)
 	ctx.JSON(http.StatusOK, gin.H{"data": paymentMethods})
 }
 
@@ -79,10 +88,10 @@ func (deliveries *paymentMethodController) PaymentMethodsDetail(c *gin.Context) 
 // @Tags PaymentMethods
 // @Accept  json
 // @Produce  json
-// @Param  id path int true "Master Question ID"
+// @Param  code path string true "Code"
 // @Success 200 {array} entity.PaymentMethod
 // @Failure 401 {object} dto.Response
-// @Router /paymentMethod/detail/{id} [get]
+// @Router /paymentMethod/detail-by-code/{code} [get]
 func (deliveries *paymentMethodController) PaymentMethodsDetailByCode(c *gin.Context) {
 	paymentMethod := deliveries.usecases.GetPaymentMethodByCode(c.Param("code"))
 	c.JSON(http.StatusOK, gin.H{"data": paymentMethod})
@@ -148,4 +157,38 @@ func (deliveries *paymentMethodController) PaymentMethodDelete(c *gin.Context) {
 	c.ShouldBindJSON(&paymentMethodEntity)
 	paymentMethod := deliveries.usecases.DeletePaymentMethod(paymentMethodEntity)
 	c.JSON(http.StatusOK, paymentMethod)
+}
+
+// generateVaSignature godoc
+// @Security basicAuth
+// @Summary Generate VA Signature
+// @Description Generate VA (Virtual Account) Signature
+// @Tags PaymentMethods
+// @Accept  json
+// @Produce  json
+// @Param  payment_channel query string true "Payment Channel"
+// @Param  proposal_group_number query string true "Proposal Group Number"
+// @Success 200 {object} dto.Response
+// @Failure 400 {object} dto.Response
+// @Failure 401 {object} dto.Response
+// @Router /paymentMethod/fastpay/generate-va-signature [get]
+func (deliveries *paymentMethodController) GenerateVaSignature(ctx *gin.Context) {
+	virtualAccount := deliveries.usecases.GenerateVaSignature(ctx.Query("payment_channel"), ctx.Query("proposal_group_number"))
+	ctx.JSON(http.StatusOK, virtualAccount)
+}
+
+// generateVaSignature godoc
+// @Security basicAuth
+// @Summary Connection Test
+// @Description debit connection test
+// @Tags PaymentMethods
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} dto.Response
+// @Failure 400 {object} dto.Response
+// @Failure 401 {object} dto.Response
+// @Router /paymentMethod/fastpay/connection-test [get]
+func (deliveries *paymentMethodController) ConnectionTest(ctx *gin.Context) {
+	connectionTest := deliveries.usecases.ConnectionTest()
+	ctx.JSON(http.StatusOK, connectionTest)
 }

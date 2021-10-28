@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"os"
 	"time"
 	"gorm.io/gorm/clause"
 	"github.com/coroo/go-starter/config"
@@ -16,9 +17,10 @@ type PaymentMethodRepository interface {
 	SavePaymentMethod(paymentMethod entity.PaymentMethod) (int, error)
 	UpdatePaymentMethod(paymentMethod entity.PaymentMethod) error
 	DeletePaymentMethod(paymentMethod entity.PaymentMethod) error
-	GetAllPaymentMethods() []entity.PaymentMethod
+	GetAllPaymentMethods(status string) []entity.PaymentMethod
 	GetPaymentMethod(id string) []entity.PaymentMethod
-	GetPaymentMethodByCode(code string) []entity.PaymentMethod
+	GetPaymentMethodByCode(code string) entity.PaymentMethod
+	GetActivePaymentMethodByCode(code string) entity.PaymentMethod
 }
 
 type paymentMethodDatabase struct {
@@ -31,7 +33,11 @@ func NewPaymentMethodRepository() PaymentMethodRepository {
 		panic("Failed to connect database")
 	}
 	// db.AutoMigrate(&entity.PaymentMethod{}, &entity.Person{})
-	db.AutoMigrate(&entity.PaymentMethod{})
+	if (os.Getenv("DB_HOST_PAYMENT") != ""){
+		db.AutoMigrate(&entity.PaymentMethod{})
+	} else {
+		db.AutoMigrate(&entity.PaymentMethodTesting{})
+	}
 	return &paymentMethodDatabase{
 		connection: db,
 	}
@@ -60,9 +66,13 @@ func (db *paymentMethodDatabase) DeletePaymentMethod(paymentMethod entity.Paymen
 	return nil
 }
 
-func (db *paymentMethodDatabase) GetAllPaymentMethods() []entity.PaymentMethod {
+func (db *paymentMethodDatabase) GetAllPaymentMethods(status string) []entity.PaymentMethod {
 	var paymentMethods []entity.PaymentMethod
-	db.connection.Preload(clause.Associations).Find(&paymentMethods)
+	query := db.connection.Preload(clause.Associations)
+	if status == "active" || status == "inactive"{
+		query = query.Where("status = ?", status)
+	}
+	query = query.Find(&paymentMethods)
 	return paymentMethods
 }
 
@@ -71,8 +81,15 @@ func (db *paymentMethodDatabase) GetPaymentMethod(id string) []entity.PaymentMet
 	db.connection.Preload(clause.Associations).Where("id = ?", id).First(&paymentMethod)
 	return paymentMethod
 }
-func (db *paymentMethodDatabase) GetPaymentMethodByCode(code string) []entity.PaymentMethod {
-	var paymentMethod []entity.PaymentMethod
+
+func (db *paymentMethodDatabase) GetPaymentMethodByCode(code string) entity.PaymentMethod {
+	var paymentMethod entity.PaymentMethod
 	db.connection.Preload(clause.Associations).Where("code = ?", code).First(&paymentMethod)
+	return paymentMethod
+}
+
+func (db *paymentMethodDatabase) GetActivePaymentMethodByCode(code string) entity.PaymentMethod {
+	var paymentMethod entity.PaymentMethod
+	db.connection.Preload(clause.Associations).Where("code = ?", code).Where("status = ?", "active").First(&paymentMethod)
 	return paymentMethod
 }

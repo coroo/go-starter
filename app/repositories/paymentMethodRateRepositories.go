@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"os"
 	"time"
 	"gorm.io/gorm/clause"
 	"github.com/coroo/go-starter/config"
@@ -30,7 +31,12 @@ func NewPaymentMethodRateRepository() PaymentMethodRateRepository {
 		panic("Failed to connect database")
 	}
 	// db.AutoMigrate(&entity.PaymentMethodRateRate{}, &entity.Person{})
-	db.AutoMigrate(&entity.PaymentMethodRate{})
+	
+	if (os.Getenv("DB_HOST_PAYMENT") != ""){
+		db.AutoMigrate(&entity.PaymentMethodRate{})
+	} else {
+		db.AutoMigrate(&entity.PaymentMethodRateTesting{})
+	}
 	return &paymentMethodRateDatabase{
 		connection: db,
 	}

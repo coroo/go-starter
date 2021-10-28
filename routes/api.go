@@ -28,7 +28,6 @@ func Api() {
 	var (
 		paymentMethodRepository repositories.PaymentMethodRepository = repositories.NewPaymentMethodRepository()
 		paymentMethodService    usecases.PaymentMethodService = usecases.NewPaymentMethodService(paymentMethodRepository)
-		// userController deliveries.UserController   = deliveries.NewUser(userService)
 	)
 	deliveries.NewPaymentMethodController(router, API_PREFIX, paymentMethodService)
 
@@ -36,9 +35,20 @@ func Api() {
 	var (
 		paymentMethodRateRepository repositories.PaymentMethodRateRepository = repositories.NewPaymentMethodRateRepository()
 		paymentMethodRateService    usecases.PaymentMethodRateService = usecases.NewPaymentMethodRateService(paymentMethodRateRepository)
-		// userController deliveries.UserController   = deliveries.NewUser(userService)
 	)
 	deliveries.NewPaymentMethodRateController(router, API_PREFIX, paymentMethodRateService)
+
+	var (
+		paymentMethodLinkRepository repositories.PaymentMethodLinkRepository = repositories.NewPaymentMethodLinkRepository()
+		paymentMethodLinkService    usecases.PaymentMethodLinkService = usecases.NewPaymentMethodLinkService(paymentMethodLinkRepository)
+	)
+	deliveries.NewPaymentMethodLinkController(router, API_PREFIX, paymentMethodLinkService)
+
+	var (
+		userInvoiceLogRepository repositories.UserInvoiceLogRepository = repositories.NewUserInvoiceLogRepository()
+		userInvoiceLogService    usecases.UserInvoiceLogService = usecases.NewUserInvoiceLogService(userInvoiceLogRepository)
+	)
+	deliveries.NewUserInvoiceLogController(router, API_PREFIX, userInvoiceLogService)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	console.Schedule()

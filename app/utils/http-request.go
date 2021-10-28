@@ -13,7 +13,7 @@ func CreateHttpRequest(method string, url string, body []byte) (response *http.R
 	}
 	req, _ := http.NewRequest(method, url, bodyRequest)
 	req.Header.Set("Content-type", "application/json")
-	req.Header.Add("Authorization", CreateAuth())
+	// req.Header.Add("Authorization", CreateAuth())
 	res, err := client.Do(req)
 	return res, err
 }
