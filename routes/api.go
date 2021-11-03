@@ -50,6 +50,12 @@ func Api() {
 	)
 	deliveries.NewUserInvoiceLogController(router, API_PREFIX, userInvoiceLogService)
 
+	var (
+		gopayLinkingRepository repositories.GopayLinkingRepository = repositories.NewGopayLinkingRepository()
+		gopayLinkingService    usecases.GopayLinkingService = usecases.NewGopayLinkingService(gopayLinkingRepository)
+	)
+	deliveries.NewGopayLinkingController(router, API_PREFIX, gopayLinkingService)
+
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	console.Schedule()
 	router.Run(":"+os.Getenv("MAIN_PORT"))
