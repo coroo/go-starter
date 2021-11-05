@@ -11,4 +11,5 @@ func main() {
 	
 	// optional seed
 	// seeds.SeedUserInvoiceLogs()
+	// seeds.SeedGopayLinkings()
 }
